@@ -1,0 +1,23 @@
+# This YAML file holds some of the content of the website, for convenience.
+# Learn YAML, it's worth it: http://sweetohm.net/article/introduction-yaml.html
+
+# Metadata about this website
+meta:
+  title: Travel Carbon Footprint Calculator
+  description: A travel carbon footprint calculator for researchers.
+  authors:
+    - name:  Didier Barret
+      email: dbarret@irap.omp.eu
+    - name:  Antoine Goutenoir
+      email: agoutenoir@irap.omp.eu
+
+
+# The hero block (aka. jumbotron) is the top-level, salient block
+# It's like a welcoming mat :)
+hero:
+  title: Estimate your travel carbon footprint
+  # Using a pipe (|) allows you to set multiline content
+  # Careful, indentation matters.
+  description: |
+    Travel footpint calculator provided by D. Barret
+    (IRAP, CNRS, twitter:@DidierBarret, didier.barret@gmail.com).
