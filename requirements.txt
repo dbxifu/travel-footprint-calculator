@@ -15,6 +15,7 @@ cssmin==0.2.0
 jsmin==2.2.1
 pyyaml==5.1.2
 Markdown==3.1.1
+numpy==1.16.5
 
 
 # Testing
