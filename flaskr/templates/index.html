@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+    <div class="jumbotron">
+        <h1>{{ content.hero.title }}</h1>
+        <p>{{ content.hero.description }}</p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>What's Included</h1>
+        </div>
+    </div>
+
+    {% for section in content.home.sections -%}
+    <div class="row">
+        {% for block in section.blocks -%}
+        <div class="col-md-4">
+            {% if block.title -%}
+            <h3>{{ block.title }}</h3>
+            {%- endif %}
+            <p>{{ block.content | markdown | safe }}</p>
+        </div>
+        {%- endfor %}
+    </div>
+    {%- endfor %}
+
+{% endblock %}
