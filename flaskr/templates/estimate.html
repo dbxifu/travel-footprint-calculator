@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Estimate{% endblock %}
+
+{% block hero %}
+    <div class="jumbotron">
+        <h1>{{ content.estimate.hero.title | safe }}</h1>
+        <p>{{ content.estimate.hero.description | markdown | safe }}</p>
+    </div>
+{% endblock %}
+
+{% macro render_field(field) %}
+<dt>
+    {{ field.label }}
+    {% if not field.flags.optional %}
+    <span class="required-asterisk" title="This field is required.">*</span>
+    {% endif %}
+</dt>
+<dd>
+    {{ field(title=field.description, class_="form-control", **kwargs) | safe }}
+    {% if field.errors -%}
+    <ul class=errors>
+    {% for error in field.errors %}
+        <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+    {%- endif %}
+</dd>
+{% endmacro %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <form role="form" action="{{ url_for('.estimate') }}" method="post">
+                {{ form.hidden_tag() }}
+
+                <div class="form-group">
+                    {{ render_field(form.email) }}
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                    {{ render_field(form.first_name) }}
+                    </div>
+                    <div class="col-md-6">
+                    {{ render_field(form.last_name) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.institution) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.origin_addresses) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.destination_addresses) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.comment) }}
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Submit
+                </button>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+{% endblock %}
