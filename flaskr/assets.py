@@ -9,7 +9,8 @@ common_css = Bundle(
 )
 
 common_js = Bundle(
-    'js/vendor/jquery.min.js',
+    'js/vendor/jquery-3.2.1.slim.min.js',
+    'js/vendor/popper.min.js',
     'js/vendor/bootstrap.min.js',
     Bundle(
         'js/main.js',
