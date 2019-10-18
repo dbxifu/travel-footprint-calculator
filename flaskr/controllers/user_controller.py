@@ -1,17 +1,10 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for
 from flask_login import login_user, logout_user, login_required
 
-from flaskr.extensions import cache
 from flaskr.forms import LoginForm
-from flaskr.models import User
+from flaskr.models import db, User
 
-main = Blueprint('main', __name__)
-
-
-@main.route('/')
-@cache.cached(timeout=1000)
-def home():
-    return render_template('index.html')
+from flaskr.controllers.main_controller import main
 
 
 @main.route("/login", methods=["GET", "POST"])
@@ -36,7 +29,7 @@ def logout():
     return redirect(url_for(".home"))
 
 
-@main.route("/restricted")
-@login_required
-def restricted():
-    return "You can only see this if you are logged in!", 200
+# @main.route("/restricted")
+# @login_required
+# def restricted():
+#     return "You can only see this if you are logged in!", 200
