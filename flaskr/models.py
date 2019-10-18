@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+import enum
 
 db = SQLAlchemy()
 
@@ -41,3 +42,24 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+class StatusEnum(enum.Enum):
+    pending = 'pending'
+    success = 'success'
+    failed = 'failed'
+
+
+class Estimation(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    email = db.Column(db.Unicode(1024))
+    first_name = db.Column(db.Unicode(1024))  # Antoine
+    last_name = db.Column(db.Unicode(1024))   # Goutenoir
+    status = db.Column(db.Enum(StatusEnum))
+
+    # destination_address = db.Column(db.Unicode(1024))
+
+    # City, Country
+    # One address per line
+    origin_addresses = db.Column(db.Unicode())
+    destination_addresses = db.Column(db.Unicode())
