@@ -1,13 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Estimate{% endblock %}
+
+{% block title %}Request an estimation of your travel footprint{% endblock %}
+
 
 {% block hero %}
-    <div class="jumbotron">
-        <h1>{{ content.estimate.hero.title | safe }}</h1>
-        <p>{{ content.estimate.hero.description | markdown | safe }}</p>
-    </div>
+<div class="jumbotron">
+    <h1>{{ content.estimate.hero.title | safe }}</h1>
+    <p>{{ content.estimate.hero.description | markdown | safe }}</p>
+</div>
 {% endblock %}
+
 
 {% macro render_field(field) %}
 <dt>
@@ -28,43 +31,59 @@
 </dd>
 {% endmacro %}
 
+
+{% macro render_checkbox(field) %}
+{{ field(class="form-check-input") }}
+{{ field.label(
+    class="form-check-label",
+    title=field.description
+) }}
+{% endmacro %}
+
+
 {% block body %}
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <form role="form" action="{{ url_for('.estimate') }}" method="post">
+            {{ form.hidden_tag() }}
 
-    <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <form role="form" action="{{ url_for('.estimate') }}" method="post">
-                {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ render_field(form.email) }}
+                <small id="emailHelp" class="form-text text-muted">We will never share your email with anyone.</small>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">
+                {{ render_field(form.first_name) }}
+                </div>
+                <div class="col-md-6">
+                {{ render_field(form.last_name) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ render_field(form.institution) }}
+            </div>
+            <div class="form-group">
+                {{ render_field(form.origin_addresses) }}
+            </div>
+            <div class="form-group">
+                {{ render_field(form.destination_addresses) }}
+            </div>
+            <div class="form-check form-group">
+                {{ render_checkbox(form.compute_optimal_destination) }}
+            </div>
+            <div class="form-check form-group">
+                {{ render_checkbox(form.use_atmosfair_rfi) }}
+            </div>
+            <div class="form-group">
+                {{ render_field(form.comment) }}
+            </div>
 
-                <div class="form-group">
-                    {{ render_field(form.email) }}
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-6">
-                    {{ render_field(form.first_name) }}
-                    </div>
-                    <div class="col-md-6">
-                    {{ render_field(form.last_name) }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {{ render_field(form.institution) }}
-                </div>
-                <div class="form-group">
-                    {{ render_field(form.origin_addresses) }}
-                </div>
-                <div class="form-group">
-                    {{ render_field(form.destination_addresses) }}
-                </div>
-                <div class="form-group">
-                    {{ render_field(form.comment) }}
-                </div>
-
-                <button type="submit" class="btn btn-primary">
-                    Submit
-                </button>
-            </form>
-        </div>
-        <div class="col-md-2"></div>
+            <button type="submit" class="btn btn-primary">
+                Submit a Request
+            </button>
+        </form>
     </div>
+    <div class="col-md-2"></div>
+</div>
 {% endblock %}
