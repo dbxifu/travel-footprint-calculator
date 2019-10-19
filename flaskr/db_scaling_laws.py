@@ -33,26 +33,26 @@ def db_direct_emission(method, dist_min, x):
     if method == "ICAO":
         if x < 1000.:
             return 23.339 + 0.10108 * x
-        if 1000. <= x < 4000.:
+        elif 1000. <= x < 4000.:
             return 70.851 + 0.050821 * x
-        if x > 4000.:
+        elif x > 4000.:
             return 121.08 + 0.035461 * x
 
     if method == "DEFRA":
         if x < 500.:
             return x * 0.13483
-        if 500. <= x < 3700.:
+        elif 500. <= x < 3700.:
             return x * 0.08233
-        if x >= 3700.:
+        elif x >= 3700.:
             return x * 0.5 * (0.0792 + 0.073195)
 
     if method == "ATMOSFAIR":
         x += 50.
         if x < 1000.:
             return 25.922 + 0.079107 * x
-        if 1000. <= x < 4000.:
+        elif 1000. <= x < 4000.:
             return 35.041 + 0.066183 * x
-        if x > 4000.:
+        elif x > 4000.:
             return (-80.835) + 0.095998 * x
 
     if method == "ADEME":
