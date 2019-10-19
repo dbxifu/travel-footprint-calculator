@@ -7,73 +7,85 @@ from wtforms import \
 from wtforms import validators
 
 from .models import User
+from .content import content
+
+form_content = content['estimate']['form']
 
 
 # ESTIMATION FORM #############################################################
 
 class EstimateForm(Form):
     email = StringField(
-        label=u"Email Address",
-        description=u"Make sure you provide a valid address "
-                    u"or you won't receive the results.",
+        label=form_content['email']['label'],
+        description=form_content['email']['description'],
         validators=[
             validators.DataRequired(),
             validators.Email(),
         ],
     )
     first_name = StringField(
-        label=u"First Name",
-        description=u"Also known as given name, eg. `Didier`.",
+        label=form_content['first_name']['label'],
+        description=form_content['first_name']['description'],
         validators=[
             validators.Optional(),
             validators.Length(max=1024),
         ],
     )
     last_name = StringField(
-        label=u"Last Name",
-        description=u"Also known as family name, eg. `Barret`.",
+        label=form_content['last_name']['label'],
+        description=form_content['last_name']['description'],
         validators=[
             validators.Optional(),
             validators.Length(max=1024),
         ],
     )
     institution = StringField(
-        label=u"Institution / Enterprise",
-        description=u"If any.",
+        label=form_content['institution']['label'],
+        description=form_content['institution']['description'],
         validators=[
             validators.Optional(),
             validators.Length(max=1024),
         ],
     )
     comment = TextAreaField(
-        label=u"Leave a comment",
-        description=u"Any input is appreciated.  Everyone's a critic.",
+        label=form_content['comment']['label'],
+        description=form_content['comment']['description'],
         validators=[
             validators.Optional(),
             validators.Length(max=2048),
         ],
     )
     origin_addresses = TextAreaField(
-        label=u"Origin Cities",
-        description=u"One address per line, in the form `City, Country`. "
-                    u"Make sure your addresses are correctly spelled.",
+        label=form_content['origin_addresses']['label'],
+        description=form_content['origin_addresses']['description'],
         validators=[
             validators.DataRequired(),
         ],
+        render_kw={
+            "placeholder": form_content['origin_addresses']['placeholder']
+        },
     )
     destination_addresses = TextAreaField(
-        label=u"Destination Cities",
-        description=u"One address per line, in the form `City, Country`. "
-                    u"Make sure your addresses are correctly spelled.",
+        label=form_content['destination_addresses']['label'],
+        description=form_content['destination_addresses']['description'],
         validators=[
             validators.DataRequired(),
         ],
+        render_kw={
+            "placeholder": form_content['destination_addresses']['placeholder']
+        },
     )
-    should_compute_optimal_destination = BooleanField(
-        label=u"Compute the destination city "
-              u"that will minimize emissions? <br>"
-              u"(useful when setting up a meeting/conference)",
-        description=u"",
+    compute_optimal_destination = BooleanField(
+        label=form_content['compute_optimal_destination']['label'],
+        description=form_content['compute_optimal_destination']['description'],
+        default=False,
+        validators=[
+            validators.Optional(),
+        ],
+    )
+    use_atmosfair_rfi = BooleanField(
+        label=form_content['use_atmosfair_rfi']['label'],
+        description=form_content['use_atmosfair_rfi']['description'],
         default=False,
         validators=[
             validators.Optional(),

@@ -5,7 +5,7 @@ from webassets.loaders import PythonLoader as PythonAssetsLoader
 
 from flaskr import assets
 from flaskr.models import db
-from flaskr.controllers.main import main
+from flaskr.controllers.main_controller import main
 
 from flaskr.extensions import (
     cache,
@@ -14,7 +14,7 @@ from flaskr.extensions import (
     login_manager
 )
 
-from yaml import safe_load as yaml_safe_load
+from flaskr.content import content
 
 from markdown import markdown
 
@@ -57,12 +57,7 @@ def create_app(object_name):
     # register our blueprints
     app.register_blueprint(main)
 
-    # Load content data from the YAML file
-    content = {}
-    with open('content.yml', 'r') as content_file:
-        content = yaml_safe_load(content_file.read())
-
-    # VERSION
+    # VERSION (move to version.py is necessary)
     version = "0.0.0"
     with open('VERSION', 'r') as version_file:
         version = version_file.read().strip()
