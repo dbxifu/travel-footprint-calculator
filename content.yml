@@ -1,5 +1,6 @@
 # This YAML file holds some of the content of the website, for convenience.
 # Learn YAML, it's worth it: http://sweetohm.net/article/introduction-yaml.html
+# /!. IF YOU BREAK THIS FILE YOU BREAK THE WEBSITE.  TREAD CAREFULLY.
 
 # Metadata about this website
 meta:
@@ -12,12 +13,341 @@ meta:
       email: agoutenoir@irap.omp.eu
 
 
-# The hero block (aka. jumbotron) is the top-level, salient block
-# It's like a welcoming mat :)
-hero:
-  title: Estimate your travel carbon footprint
-  # Using a pipe (|) allows you to set multiline content
-  # Careful, indentation matters.
-  description: |
-    Travel footpint calculator provided by D. Barret
-    (IRAP, CNRS, twitter:@DidierBarret, didier.barret@gmail.com).
+# The content is Markdown.  HTML is also allowed.
+# If you also want Markdown in the titles, just ask.
+home:
+  # The hero block (aka. jumbotron) is the top-level, salient block
+  # It's like a welcoming mat :)
+  hero:
+    title: Estimate your travel carbon footprint
+    # Using a pipe (|) allows you to set multiline content
+    # Careful, indentation matters.
+    description: |
+      Travel footpint calculator provided by Didier Barret
+      <br>
+      <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+      CNRS,
+      <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+      [IRAP](http://www.irap.omp.eu),
+      <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+      [@DidierBarret](https://twitter.com/DidierBarret),
+      <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+      [didier.barret@gmail.com](mailto:didier.barret@gmail.com)
+
+
+  sections:
+    # Add as many sections as you want.
+    # Three blocks per section ; if you want another amount, it can be done, please ask.
+    - blocks:
+
+      - title: What does this do?
+        content: |
+          The tool helps computing your travel carbon footprint
+          for a **round trip** from a given location,
+          for a set of visited cities (listed in the input excel sheet).
+
+          Similarly, the tool allows to compute the travel footprint
+          of a conference/meeting/etc.
+          (the originating city of each participant is provided in the input excel sheet).
+
+          It can also return the city that would minimize the travel footprint
+          assuming the same audience of the conference/meeting.
+
+          While online CO<sub>2</sub> calculators enable to compute the footprint
+          for a limited number of trips with detailed trip information
+          (e.g. connecting flights),
+          this tool enables to compute the footprint of a larger number of travels,
+          making some assumptions, e.g. to model connecting flights.
+
+          For short distance travels, the CO<sub>2</sub> footprint associated with trains
+          is calculated and added to the air travel footprint.
+
+          ### Original Motivation
+
+          Global warming is a threat for life on our planet.
+          Emissions of carbon dioxide by aircraft were 0.14 Gt C/year in 1992.
+          This was between 2% of total anthropogenic carbon dioxide emissions in 1992
+          or about 13% of carbon dioxide emissions from all transportation sources
+          (Intergovernmental panel on climate change, report 1999).
+
+          Due to an increasing demand and the growth of the world economy,
+          the number has grown since then, reaching closer to 3% nowadays,
+          a number which will keep growing.
+
+          Carrying scientific research requires traveling all across the world,
+          but time has come to critically look at the way we carry research,
+          with the aim of raising awareness and reducing our environmental impact,
+          whenever possible.
+          In this context, it is worth looking at what the carbon footprint
+          of travels associated with the development of a large project,
+          such as the Athena X-ray Integral Field Unit,
+          is and implement actions to reduce it.
+          The consortium involved in the development of the X-ray Integral Field Unit
+          for the flagship Athena Space X-ray observatory of the European Space Agency
+          involves currently 13 countries, 11 in Europe plus Japan and the United States.
+          The amount of traveling required for the project is necessarily large.
+          As PI of the X-IFU, my original motivation was to estimate what large meant,
+          as an input to discussing actions to reduce our footprint with the members of the consortium.
+
+      - title: Which data are used?
+        content: |
+          There is a growing interest in getting the travel footprint of scientific events,
+          such as conferences or large meetings.
+
+          Those are based on freely available CO<sub>2</sub> calculators,
+          some being relatively to use, requiring very limited user inputs.
+
+          However, just by running some of them (including those from Carbon offset companies),
+          it is amazing to see how their estimates can differ quite significantly
+          (up to a factor of a few for the same trip).
+
+          This is because they use different input data and consider different perimeters and assumptions,
+          e.g. excluding freight or not, assuming different radiative forcing indices,
+          seat accommodation in the plane…
+
+          The straight numbers provided should therefore not be taken at face value,
+          but should be looked at, for what they include and mean.
+          It is also striking to me that there is hardly any scientific literature
+          on the comparison between CO<sub>2</sub> calculators,
+          although often discrepancies are noticed in some communications,
+          more particularly for long distance flights.
+
+          Relying on one calculator is therefore not possible.
+          This is why I am computing estimates based on different methods.
+          This tool thus enables to compute your travel carbon footprint (for round trips),
+          based on data provided by 4 independent state-of-the-art emission calculators:
+
+          1. the International Civil Aviation Organization (ICAO),
+          2. the UK Department for Environment, Food & Rural Affairs (DEFRA),
+          3. the ATMOSFAIR German Carbon offsetting company, and finally
+          4. the French Environment & Energy Management Agency (ADEME).
+
+          ICAO, DEFRA and ATMOSFAIR have their methodology very well described
+          (see resources section below).
+
+          I have enquired to ADEME to get more about their methodology.
+          ADEME and DEFRA provide mean emission factors as a function of flight distance.
+          ADEME considers seat capacity and DEFRA gives emission factors
+          as a function of seat type (from economy to first class seat).
+          The ADEME emission factors are averaged over the seat capacity
+          the coefficients are provided for.
+          ATMOSFAIR and ICAO provide on line emission calculators requiring limited user inputs.
+          Those on-line calculators have been run for a variety of flight distances,
+          so that the estimates (without error bars) could be fitted with linear functions,
+          between boundaries arbitrarily set (below 1000 km, between 1000 and 4000 km and above 4000 km).
+
+      - title: How does this tool work?
+        content: |
+          For estimating your own travel footprint,
+          the only thing you have to provide is an excel file
+          which contains only the different final destinations that you traveled to,
+          while the main city (origin) is entered on the form below.
+          For estimating the travel footprint of a conference,
+          you must provide the city from which each participant departs from
+          and enter the host city of the conference in the form below.
+
+          The tool then decodes the list of cities in the input excel sheet
+          (please check the spelling when filling it up),
+          and finds the closest airport within 100 km
+          (large airport first and and if no large airports exists, it finds a medium one)
+          using the google geolocator.
+          This returns the longitude and latitude of the closest airport.
+          Cities that cannot be located are ignored from the computation.
+          To resolve ambiguity between cities of similar names (e.g. Cambridge),
+          I require the name of the country.
+
+          From the longitude and latitude of two airports
+          (e.g. the host city of a conference and the departing city of an attendee),
+          the tool computes the great circle distance (GCD).
+          This is the shortest path a plane can follow.
+          Short trips (e.g. shorter than 300 km) are accounted by trains.
+          Traveling between cities often involve connexions.
+          Here I consider a 5% increase of the GCD, as a mean value,
+          understanding that it may be less on long flights and more on shorter flights.
+
+          The emission factors of DEFRA include a 8% uplift to account for the fact that planes,
+          even during direct flight, do not strictly follow the shortest path,
+          e.g. to avoid bad weather conditions.
+          ICAO adds some constants depending on the flight distance:
+          the GCD correction factor is 50 km for GCD less than to 550 km,
+          100 km for GCD between 550 and 5500 km, and 125 km for for GCD above 5500 km.
+          ATMOSFAIR adds a systematic 50 km to the GCD.
+          For ADEME, there is no indication on whether any GCD correction applies,
+          so I will assume the ICAO GCD correction.
+
+          CO<sub>2</sub> emissions per passenger take into consideration the load factor
+          and are based only on passenger operations
+          (i.e. fuel burn associated with belly freight is not charged to the passenger).
+
+          Given the corrected GCD so computed,
+          I use either the mean emission coefficients or the linear functions
+          fitting the data of the on-line calculators.
+          Note that there are no error bars on the estimates and very little literature on the topic.
+          Only ATMOSFAIR returns whenever available,
+          the data from different possible flights,
+          considering different airlines.
+          It also returns the the average over all airlines.
+
+    # Second row of "blocks"
+    - blocks:
+
+      - title: What about Radiative Forcing?
+        content: |
+          CO<sub>2</sub> emissions is computed from the total fuel burnt during the flight.
+          For ICAO one of ton of fuel leads to `3.16` tons of CO<sub>2</sub> emissions
+          (this number accounts for the fuel burning itself and the prep-production and transport phase).
+
+          A radiative forcing index of `1.9` is then applied as a multiplier
+          to account for the fact that aviation contributes to climate change
+          more than just from the emission of CO<sub>2</sub> from burning fuels,
+          by releasing gases and particles directly into the upper troposphere
+          and lower stratosphere where they have an impact on atmospheric composition.
+          These gases and particles include carbon dioxide (CO<sub>2</sub>),
+          ozone (O<sub>3</sub>), and methane (CH<sub>4</sub>);
+          trigger formation of condensation trails (contrails);
+          and may increase cirrus cloudiness;
+          all of which contribute to climate change.
+          1.9/2 is recommended by DEFRA and ADEME.
+          ATMOSFAIR considers a multiplier of 3, for all emissions above 9000 km.
+          ICAO, on the other hand does not include a multiplier,
+          waiting for the scientific community to settle on a value.
+          So 1.9 seems reasonable, but keep in mind that it comes with some uncertainty.
+          You may want to select the ATMOSFAIR forcing index,
+          instead of the 1.9 constant.
+          The multiplier reaches about 2.8 for flights longer than 5000 km.
+
+      - title: Which seat category are you considering?
+        content: |
+          I am considering only economy seats for the time being.
+          Note that DEFRA emission factors are a factor of 3 larger for business class seat
+          (which occupy a larger area in the plane).
+          A factor of 1.5 should be considered when flying on Premium economy seats
+          (ICAO would consider a factor of 2).
+
+      - title: What about uncertainties?
+        content: |
+          I believe that each estimate has an uncertainty between 10 and 25%
+          (really this is a best guess, and not substantiated by any statistical analysis and it could be more probably),
+          the uncertainty being smaller for shorter flights for which there are more data.
+          I would therefore refrain from using the numbers derived as absolute values.
+          The results given should be considered indicative, although likely in the right ball park,
+          for the assumptions that I make, and the approximation I use,
+          e.g. in fitting ICAO and ATMOSFAIR data.
+          For flights of average distance less than a few thousands kilometers,
+          the results agree reasonably well, between the various estimators,
+          which is a good sign.
+          Larger differences are found when long distance flights are considered.
+          In all cases, the estimates can be used for relative comparisons.
+
+    # Third row, etc.
+    - blocks:
+
+      - title: Considering train travel for short travel distance
+        content: |
+          There is a minimum distance (by default 300 km)
+          under which the calculator excludes flight travel.
+          The calculator proposes instead to compute the travel footprint associated with train.
+          The French emission factors are between 4 and 5 grams of CO2eq per km per passenger.
+          This low value is likely due to the fact that electricity is provided by nuclear plants.
+          It is larger by some factor accross Europe.
+          Here I am assuming that the French factor are multiplied by a factor of 5.
+          This makes train typically 10% less emitting than plane (including radiative forcing).
+
+      - title: Additional resources
+        content: |
+          - Offset your flight with [atmosfair](https://www.atmosfair.de/en/offset/flight)
+          - [ADEME](https://www.ecologique-solidaire.gouv.fr/sites/default/files/Info%20GES_Guide%20m%C3%A9thodo.pdf)
+            (French Environment & Energy Management Agency)
+          - [DEFRA](https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019)
+            emission conversion factors 2019
+          - [DGAC](https://eco-calculateur.dta.aviation-civile.gouv.fr)
+            Direction Générale de l'Aviation Civile
+          - [ICAO](https://www.icao.int/environmental-protection/carbonoffset/pages/default.aspx)
+            Carbon Emissions Calculator
+          - L. Hackel [travel footprint calculator](https://lhackel.shinyapps.io/travel_footprint/)
+            based on DEFRA emission factors
+
+      - content: |
+          ### Disclaimer
+
+          I am obviously not a carbon footprint authority.
+          I provide this as a service to members of the science community
+          to get some ideas of travel footprints associated with scientific projects and activities.
+
+          ### Confidentiality
+
+          The data provided will remain confidential, as will be the results.
+
+          There is a minimum distance (by default 300 km)
+          under which the calculator excludes flight travel.
+          The calculator proposes instead to compute the travel footprint associated with train.
+          The French emission factors are between 4 and 5 grams of CO2eq per km per passenger.
+          This low value is likely due to the fact that electricity is provided by nuclear plants.
+          It is larger by some factor accross Europe.
+          Here I am assuming that the French factor are multiplied by a factor of 5.
+          This makes train typically 10% less emitting than plane (including radiative forcing).
+
+
+estimate:
+  hero:
+    title: Request an estimation
+    description: |
+      The results will be sent to the email address you provided,
+      once they are available.
+      <br>
+      It may take from a few minutes up to a few hours,
+      depending on the amount of locations you provided.
+  # Labels accept HTML, but not markdown
+  # Descriptions accept neither, since we use the HTML title attribute
+  form:
+    email:
+      label: Email Address
+      description: Make sure you provide a valid address or you won't receive the results!
+    first_name:
+      label: First Name
+      description: Also known as given name, eg. `Didier`.
+    last_name:
+      label: Last Name
+      description: Also known as family name, eg. `Barret`.
+    institution:
+      label: Institution / Enterprise
+      description: If any?
+    comment:
+      label: Leave a comment
+      description: Any input is appreciated.  Everyone's a critic.
+    origin_addresses:
+      label: Origin Cities
+      description: |
+        One address per line, in the form `City, Country`.
+        Make sure your addresses are correctly spelled.
+      placeholder: |
+        Paris, France
+        Berlin, Germany
+    destination_addresses:
+      label: Destination Cities
+      description: |
+        One address per line, in the form `City, Country`.
+        Make sure your addresses are correctly spelled.
+      placeholder: |
+        Washington, United States of America
+    compute_optimal_destination:
+      label: |
+        Compute the destination city that will minimize emissions <br>
+        (useful when setting up a meeting/conference)
+      description: |
+        We will only look through Cities specified in the Destination Cities.
+    use_atmosfair_rfi:
+      label: |
+        Use the <acronym title="Radiative Forcing Index">RFI</acronym>
+        multiplier recommended by <a href="https://www.atmosfair.de">atmosfair</a>
+        (i.e. <code>3</code> for all emissions above <code>9km</code>)
+        <br>
+        For long flights, the multiplier may reach <code>2.8</code> or so.
+        Otherwise, by default, <code>1.9</code> will be used.
+      description: |
+        We will only look through Cities specified in the Destination Cities.
+
+
+footer:
+  credits: |
+    Didier Barret © 2019
