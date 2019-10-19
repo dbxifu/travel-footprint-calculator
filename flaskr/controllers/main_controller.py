@@ -21,17 +21,16 @@ def estimate():
 
     if form.validate_on_submit():
 
-        # FIXME: do things here with the form
-
         id = generate_unique_id()
-
-        # estimation = form.data
 
         estimation = Estimation()
         estimation.email = form.email.data
         estimation.first_name = form.first_name.data
         estimation.last_name = form.last_name.data
         estimation.status = 'pending'
+        estimation.origin_addresses = form.origin_addresses
+        estimation.destination_addresses = form.destination_addresses
+        estimation.compute_optimal_destination = form.compute_optimal_destination
 
         db.session.add(estimation)
         db.session.commit()
@@ -42,3 +41,11 @@ def estimate():
 
     return render_template("estimate.html", form=form)
 
+
+@main.route("/compute")
+def compute():
+    response = ""
+
+    # TODO
+
+    return response
