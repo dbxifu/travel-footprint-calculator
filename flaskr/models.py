@@ -57,9 +57,9 @@ class Estimation(db.Model):
     last_name = db.Column(db.Unicode(1024))   # Goutenoir
     status = db.Column(db.Enum(StatusEnum))
 
-    # destination_address = db.Column(db.Unicode(1024))
-
     # City, Country
     # One address per line
     origin_addresses = db.Column(db.Unicode())
     destination_addresses = db.Column(db.Unicode())
+
+    compute_optimal_destination = db.Column(db.Boolean())
