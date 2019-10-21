@@ -3,8 +3,39 @@ from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 import enum
 
+
+# These are not the emission "models" in the scientific meaning of the word.
+# They are the SQL Database Models.
+# These are also named Entities, in other conventions (we're following flasks")
+# If you're looking for the Emission Models (aka scaling laws),
+# look in `flaskr/laws/`.
+
+
 db = SQLAlchemy()
 
+
+class StatusEnum(enum.Enum):
+    pending = 'pending'
+    success = 'success'
+    failed = 'failed'
+
+
+class Estimation(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    email = db.Column(db.Unicode(1024))
+    first_name = db.Column(db.Unicode(1024))  # Antoine
+    last_name = db.Column(db.Unicode(1024))   # Goutenoir
+    status = db.Column(db.Enum(StatusEnum))
+
+    # City, Country
+    # One address per line
+    origin_addresses = db.Column(db.Unicode())
+    destination_addresses = db.Column(db.Unicode())
+
+    compute_optimal_destination = db.Column(db.Boolean())
+
+
+# USERS #######################################################################
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer(), primary_key=True)
@@ -42,24 +73,3 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return '<User %r>' % self.username
-
-
-class StatusEnum(enum.Enum):
-    pending = 'pending'
-    success = 'success'
-    failed = 'failed'
-
-
-class Estimation(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
-    email = db.Column(db.Unicode(1024))
-    first_name = db.Column(db.Unicode(1024))  # Antoine
-    last_name = db.Column(db.Unicode(1024))   # Goutenoir
-    status = db.Column(db.Enum(StatusEnum))
-
-    # City, Country
-    # One address per line
-    origin_addresses = db.Column(db.Unicode())
-    destination_addresses = db.Column(db.Unicode())
-
-    compute_optimal_destination = db.Column(db.Boolean())
