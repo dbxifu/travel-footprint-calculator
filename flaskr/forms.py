@@ -7,7 +7,7 @@ from wtforms import \
 from wtforms import validators
 
 from .models import User
-from .content import content
+from .content import content_dict as content
 
 form_content = content['estimate']['form']
 

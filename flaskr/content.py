@@ -21,6 +21,7 @@ class Struct(object):
 
 content = Struct(content_dict)
 
+
 # For Python3?
 # def dict2obj(d):
 #     """
