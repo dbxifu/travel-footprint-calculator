@@ -1,8 +1,8 @@
+from flaskr.core import generate_unique_id
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 import enum
-
 
 # These are not the emission "models" in the scientific meaning of the word.
 # They are the SQL Database Models.
@@ -22,10 +22,15 @@ class StatusEnum(enum.Enum):
 
 class Estimation(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
+    public_id = db.Column(
+        db.Unicode(),
+        default=lambda: generate_unique_id(),
+        unique=True
+    )
     email = db.Column(db.Unicode(1024))
     first_name = db.Column(db.Unicode(1024))  # Antoine
     last_name = db.Column(db.Unicode(1024))   # Goutenoir
-    status = db.Column(db.Enum(StatusEnum))
+    status = db.Column(db.Enum(StatusEnum), default=StatusEnum.pending)
 
     # City, Country
     # One address per line
@@ -33,6 +38,10 @@ class Estimation(db.Model):
     destination_addresses = db.Column(db.Unicode())
 
     compute_optimal_destination = db.Column(db.Boolean())
+
+    output_as_yaml = db.Column(db.UnicodeText())
+    warnings = db.Column(db.UnicodeText())
+    errors = db.Column(db.UnicodeText())
 
 
 # USERS #######################################################################
