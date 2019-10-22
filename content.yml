@@ -9,8 +9,46 @@ meta:
   authors:
     - name:  Didier Barret
       email: dbarret@irap.omp.eu
+      role:  Principal Investigator
     - name:  Antoine Goutenoir
       email: agoutenoir@irap.omp.eu
+      role:  Software Ninja
+
+
+# Aka. Laws
+models:
+  - name: Atmosfair
+    # Slugged version of the display name above
+    # Only lowercase alphanumeric, starting with a letter, using - as liaison
+    # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
+    # MUST be unique, two models MUST NOT have the same slug.
+    slug: atmosfair
+    # There MUST exist a python file named like this in `flaskr/laws`
+    # And it MUST contain a class named EmissionModel
+    # Please keep this lowercased, letters-only (or I will breathe fire)
+    file: atmosfair
+    # The configuration that will be fed to the model.
+    # May be anything, really.  Go bonkers!
+    config:
+      plane_emission_linear_fit:
+        intervals:
+          # Distances [dmin, dmax[ are in kilometers.
+          - dmin: 0
+            dmax: 500
+            # The scaling law for this interval of distances. Defaults to 1.
+            scale: 5
+            # Offset is optional and defaults to 0.
+            offset: 0
+          - dmin: 500
+            dmax: 5000
+            scale: 50
+            offset: 0
+          # dmin dmax a b
+          # for a fitting of (a*x + b) on the interval [dmin dmax[
+          # b is optional and defaults to 0
+#          - "0 500 4"
+#          - 500 1000 8
+        offset: 50
 
 
 # The content is Markdown.  HTML is also allowed.
