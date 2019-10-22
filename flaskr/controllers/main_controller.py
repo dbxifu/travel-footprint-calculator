@@ -64,7 +64,7 @@ def compute():  # process the queue of estimation requests
     try:
         estimation = Estimation.query \
             .filter_by(status=StatusEnum.pending) \
-            .order_by(Estimation.id.desc()) \
+            .order_by(Estimation.id.asc()) \
             .first()
     except sqlalchemy.orm.exc.NoResultFound:
         return _respond("No estimation in the queue.")
@@ -121,14 +121,14 @@ def compute():  # process the queue of estimation requests
         try:
             destination = geocoder.geocode(destination_address)
         except geopy.exc.GeopyError as e:
-            response += u"Failed to geolocalize destination `%s`.\n%s" % (
+            response += u"Failed to geocode destination `%s`.\n%s" % (
                 destination_address, e,
             )
             _handle_failure(estimation, response)
             return _respond(response)
 
         if destination is None:
-            response += u"Failed to geolocalize destination `%s`." % (
+            response += u"Failed to geocode destination `%s`." % (
                 destination_address,
             )
             _handle_failure(estimation, response)
@@ -177,11 +177,11 @@ def compute():  # process the queue of estimation requests
     # In this scenario, we compute the sum of each of the travels' footprint,
     # for each of the Emission Models, and present a mean of all Models.
     #
-
     if 1 == len(origins):
 
         footprints = {}
 
+        cities_sum = {}
         for model in emission_models:
             cities = {}
             for destination in destinations:
@@ -189,23 +189,41 @@ def compute():  # process the queue of estimation requests
                     origin.latitude, origin.longitude,
                     destination.latitude, destination.longitude,
                 )
-                cities[destination.address] = footprint
+                cities[destination.address] += footprint
+                if destination.address not in cities:
+                    cities[destination.address] = 0.0
+                if destination.address not in cities_sum:
+                    cities_sum[destination.address] = 0.0
+                cities_sum[destination.address] += footprint
+
             footprints[model.config.name] = {
                 'cities': cities,
             }
 
-        response += repr(footprints)
-
         results['footprints'] = footprints
+
+        cities_mean = {}
+        for city in cities_sum.keys():
+            cities_mean[city] = 1.0 * cities_sum[city] / len(emission_models)
+
+        results['mean_footprint'] = {
+            'cities': cities_mean
+        }
 
     # SCENARIO B : At Least One Origin, One Destination #######################
     #
     # Same as A for now.
     #
+    elif 1 == len(destinations):
+        pass
 
     # SCENARIO C : At Least One Origin, At Least One Destination ##############
     #
     # Run Scenario A for each Destination, and expose optimum Destination.
     #
+    else:
+        pass
+
+    response += repr(results) + "\n"
 
     return _respond(response)
