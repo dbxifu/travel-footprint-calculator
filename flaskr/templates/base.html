@@ -15,6 +15,8 @@
         <meta name="author" content="{{ author.name }} <{{ author.email }}>">
         {% endfor %}
         {% endblock %}
+        {% block extra_meta %}
+        {% endblock %}
 
         {% assets "common_css" %}
         <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
