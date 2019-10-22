@@ -10,6 +10,8 @@ from flaskr.geocoder import CachedGeocoder
 from flaskr.core import generate_unique_id
 from flaskr.content import content
 
+from yaml import safe_dump as yaml_dump
+
 import sqlalchemy
 import geopy
 
@@ -57,6 +59,7 @@ def compute():  # process the queue of estimation requests
 
     def _handle_failure(_estimation, _failure_message):
         _estimation.status = StatusEnum.failed
+        _estimation.errors = _failure_message
         db.session.commit()
 
     response = ""
@@ -142,18 +145,18 @@ def compute():  # process the queue of estimation requests
             destination.latitude, destination.longitude,
         )
 
-    # GTFO IF NO ORIGINS OR DESTINATIONS ######################################
+    # GTFO IF NO ORIGINS OR NO DESTINATIONS ###################################
 
     if 0 == len(origins):
-        response += u"Failed to geolocalize all the origin(s)."
+        response += u"Failed to geocode all the origin(s)."
         _handle_failure(estimation, response)
         return _respond(response)
     if 0 == len(destinations):
-        response += u"Failed to geolocalize all the destination(s)."
+        response += u"Failed to geocode all the destination(s)."
         _handle_failure(estimation, response)
         return _respond(response)
 
-    # RECOVER THE EMISSION MODELS #############################################
+    # GRAB AND CONFIGURE THE EMISSION MODELS ##################################
 
     emission_models_confs = content.models
     emission_models = []
@@ -173,51 +176,82 @@ def compute():  # process the queue of estimation requests
 
     results = {}
 
+    # UTILITY PRIVATE FUNCTION(S) #############################################
+
+    def compute_one_to_many(
+            _origin,
+            _destinations,
+            use_train_below=0.0
+    ):
+        _results = {}
+        footprints = {}
+
+        cities_sum = {}
+        for model in emission_models:
+            cities = {}
+            for _destination in _destinations:
+                footprint = model.compute_travel_footprint(
+                    origin_latitude=_origin.latitude,
+                    origin_longitude=_origin.longitude,
+                    destination_latitude=_destination.latitude,
+                    destination_longitude=_destination.longitude,
+                )
+
+                # print(repr(_destination.raw))
+
+                city_key = _destination.address
+                if 'address100' in _destination.raw['address']:
+                    city_key = _destination.raw['address']['address100']
+                elif 'city' in _destination.raw['address']:
+                    city_key = _destination.raw['address']['city']
+                elif 'state' in _destination.raw['address']:
+                    city_key = _destination.raw['address']['state']
+
+                if city_key not in cities:
+                    cities[city_key] = 0.0
+                cities[city_key] += footprint
+                if city_key not in cities_sum:
+                    cities_sum[city_key] = 0.0
+                cities_sum[city_key] += footprint
+
+            footprints[model.slug] = {
+                'cities': cities,
+            }
+
+        _results['footprints'] = footprints
+
+        cities_mean = {}
+        for city in cities_sum.keys():
+            cities_mean[city] = 1.0 * cities_sum[city] / len(emission_models)
+
+        _results['mean_footprint'] = {
+            'cities': cities_mean
+        }
+
+        return _results
+
     # SCENARIO A : One Origin, At Least One Destination #######################
     #
     # In this scenario, we compute the sum of each of the travels' footprint,
     # for each of the Emission Models, and present a mean of all Models.
     #
     if 1 == len(origins):
-
-        footprints = {}
-
-        cities_sum = {}
-        for model in emission_models:
-            cities = {}
-            origin = origins[0]
-            for destination in destinations:
-                footprint = model.compute_travel_footprint(
-                    origin.latitude, origin.longitude,
-                    destination.latitude, destination.longitude,
-                )
-                if destination.address not in cities:
-                    cities[destination.address] = 0.0
-                cities[destination.address] += footprint
-                if destination.address not in cities_sum:
-                    cities_sum[destination.address] = 0.0
-                cities_sum[destination.address] += footprint
-
-            footprints[model.config.name] = {
-                'cities': cities,
-            }
-
-        results['footprints'] = footprints
-
-        cities_mean = {}
-        for city in cities_sum.keys():
-            cities_mean[city] = 1.0 * cities_sum[city] / len(emission_models)
-
-        results['mean_footprint'] = {
-            'cities': cities_mean
-        }
+        results = compute_one_to_many(
+            _origin=origins[0],
+            _destinations=destinations,
+            use_train_below=0,
+        )
 
     # SCENARIO B : At Least One Origin, One Destination #######################
     #
     # Same as A for now.
     #
     elif 1 == len(destinations):
-        pass
+        results = compute_one_to_many(
+            _origin=destinations[0],
+            _destinations=origins,
+            use_train_below=0,
+        )
 
     # SCENARIO C : At Least One Origin, At Least One Destination ##############
     #
@@ -226,6 +260,6 @@ def compute():  # process the queue of estimation requests
     else:
         pass
 
-    response += repr(results) + "\n"
+    response += yaml_dump(results) + "\n"
 
     return _respond(response)

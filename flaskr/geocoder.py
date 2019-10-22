@@ -13,5 +13,10 @@ class CachedGeocoder:
         if address not in self.cache:
             time.sleep(max(0, 1 - (time.time() - self.timestamp)))
             self.timestamp = time.time()
-            self.cache[address] = self.geocoder.geocode(address)
+            self.cache[address] = self.geocoder.geocode(
+                query=address,
+                timeout=5,
+                language='en_US',  # urgh
+                addressdetails=True,  # only works with Nominatim /!.
+            )
         return self.cache[address]
