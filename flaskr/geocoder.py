@@ -4,6 +4,7 @@ import time
 
 
 class CachedGeocoder:
+
     def __init__(self, source="Nominatim", geocache="geocache.db"):
         self.geocoder = getattr(geopy.geocoders, source)()
         self.cache = shelve.open(geocache, writeback=True)
