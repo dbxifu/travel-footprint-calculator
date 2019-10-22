@@ -17,7 +17,7 @@ db = SQLAlchemy()
 class StatusEnum(enum.Enum):
     pending = 'pending'
     success = 'success'
-    failed = 'failed'
+    failure = 'failure'
 
 
 class Estimation(db.Model):
@@ -43,6 +43,8 @@ class Estimation(db.Model):
     warnings = db.Column(db.UnicodeText())
     errors = db.Column(db.UnicodeText())
 
+    def has_failed(self):
+        return self.status == StatusEnum.failure
 
 # USERS #######################################################################
 
