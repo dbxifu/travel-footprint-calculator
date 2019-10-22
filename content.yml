@@ -338,6 +338,8 @@ estimate:
       <br>
       It may take from a few minutes up to a few hours,
       depending on the amount of locations you provided.
+
+
   # Labels accept HTML, but not markdown
   # Descriptions accept neither, since we use the HTML title attribute
   form:
@@ -388,6 +390,29 @@ estimate:
       description: |
         We will only look through Cities specified in the Destination Cities.
 
+estimate_queue:
+  hero:
+    title: Please wait…
+    description: |
+      Your estimation is being computed.
+      This may take several minutes.
+      <br>
+      This webpage will automatically update when it is done.
+
+estimation:
+  hero:
+    title: Your estimation is now available!
+    description: |
+      Thank you for using our service.
+      <br>
+      Bookmark this webpage, it is private and unlisted.
+  failure:
+    hero:
+      title: Your estimation has failed!
+      description: |
+        Sorry about that.  Please find the error message below.
+        <br>
+        Thank you for using our service.
 
 footer:
   credits: |
