@@ -71,7 +71,8 @@ def compute():  # process the queue of estimation requests
     except Exception as e:
         return _respond("Database error: %s" % (e,))
 
-    assert estimation
+    if not estimation:
+        return _respond("No estimation in the queue.")
 
     response += u"Processing estimation `%s` of `%s`...\n" % (estimation.id, estimation.email)
 
@@ -184,14 +185,15 @@ def compute():  # process the queue of estimation requests
         cities_sum = {}
         for model in emission_models:
             cities = {}
+            origin = origins[0]
             for destination in destinations:
                 footprint = model.compute_travel_footprint(
                     origin.latitude, origin.longitude,
                     destination.latitude, destination.longitude,
                 )
-                cities[destination.address] += footprint
                 if destination.address not in cities:
                     cities[destination.address] = 0.0
+                cities[destination.address] += footprint
                 if destination.address not in cities_sum:
                     cities_sum[destination.address] = 0.0
                 cities_sum[destination.address] += footprint
