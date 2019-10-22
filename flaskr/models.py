@@ -39,7 +39,7 @@ class Estimation(db.Model):
 
     compute_optimal_destination = db.Column(db.Boolean())
 
-    output_pickle = db.Column(db.UnicodeText())
+    output_yaml = db.Column(db.UnicodeText())
     warnings = db.Column(db.UnicodeText())
     errors = db.Column(db.UnicodeText())
 
