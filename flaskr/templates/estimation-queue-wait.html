@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Estimation {{ estimation.public_id }} is computing… Please wait.
+{% endblock %}
+
+
+{% block hero %}
+<div class="jumbotron">
+    <h1>{{ content.estimate_queue.hero.title | safe }}</h1>
+    {{ content.estimate_queue.hero.description | markdown | safe }}
+</div>
+{% endblock %}
+
+
+{% block extra_meta %}
+<meta http-equiv="refresh" content="20">
+{% endblock %}
+
+
+{% block body %}
+{% endblock %}
