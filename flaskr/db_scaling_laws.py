@@ -1,6 +1,9 @@
 import numpy as np
 
 
+# Legacy code, for inspiration.  Not actually used.
+
+
 def correct_gcd_from_icao(d):
     if d <= 550.:
         return d + 50.
