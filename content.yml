@@ -31,6 +31,9 @@ models:
     # May be anything, really.  Go bonkers!
     config:
       plane_emission_linear_fit:
+        # A coefficient applied to the distance
+        connecting_flights_scale: 1.05
+        # First interval found will apply its scale and offset
         intervals:
           # Distances [dmin, dmax[ are in kilometers.
           - dmin: 0
