@@ -3,19 +3,26 @@ from geopy.distance import great_circle
 
 
 class EmissionModel():
-    def __init__(self, config):
-        self.config = config
+    def __init__(self, config):  # Constructor
+        self.name = config.name
+        self.slug = config.slug
+        self.config = config.config
 
-    def __repr__(self):
+    def __repr__(self):  # Cast to String
         return "Emission model\n" + \
                "==============\n" + \
+               "%s (%s)" % (self.name, self.slug) + \
                repr(self.config)
 
     def compute_travel_footprint(
             self,
-            origin_latitude, origin_longitude,
-            destination_latitude, destination_longitude):
-        footprint = 0
+            origin_latitude,        # degrees
+            origin_longitude,       # degrees
+            destination_latitude,   # degrees
+            destination_longitude,  # degrees
+            prefer_train_under_distance=0,  # meters
+    ):
+        footprint = 0.0
 
         #############################################
         # FIXME: find closest airport(s) and pick one
@@ -38,33 +45,63 @@ class EmissionModel():
         #############################################
         #############################################
 
+        # I.a Train travel footprint
+        # ... TODO
+
+        # I.b Airplane travel footprint
         footprint += self.compute_airplane_footprint(
-            origin_airport.latitude,
-            origin_airport.longitude,
-            destination_airport.latitude,
-            destination_airport.longitude
+            origin_latitude=origin_airport.latitude,
+            origin_longitude=origin_airport.longitude,
+            destination_latitude=destination_airport.latitude,
+            destination_longitude=destination_airport.longitude,
         )
+
+        # II.a Double the footprint if it's a round-trip
+        footprint *= 2.0
 
         return footprint
 
     def compute_airplane_footprint(
             self,
-            origin_latitude, origin_longitude,
-            destination_latitude, destination_longitude):
-        footprint = 0
+            origin_latitude,
+            origin_longitude,
+            destination_latitude,
+            destination_longitude
+    ):
+        config = self.config.plane_emission_linear_fit
 
-        distance = self.get_distance_between(
+        great_circle_distance = self.get_distance_between(
             origin_latitude, origin_longitude,
             destination_latitude, destination_longitude
         )
-        footprint += distance  # FIXME
+
+        distance = config.connecting_flights_scale * great_circle_distance
+
+        footprint = self.apply_scaling_law(
+            distance,
+            config.intervals
+        )
+
+        return footprint
+
+    def apply_scaling_law(self, distance, intervals):
+        footprint = distance
+        for interval in intervals:
+            if interval.dmin <= distance < interval.dmax:
+                offset = interval.offset if interval.offset else 0
+                scale = interval.scale if interval.scale else 1
+                footprint = footprint * scale + offset
+                break
 
         return footprint
 
     def get_distance_between(
             self,
-            origin_latitude, origin_longitude,
-            destination_latitude, destination_longitude):
+            origin_latitude,
+            origin_longitude,
+            destination_latitude,
+            destination_longitude
+    ):
         """
         :param origin_latitude:
         :param origin_longitude:
