@@ -29,6 +29,7 @@ violations.flake8.txt
 nosetests.xml
 __pycache__
 database.db
+geocache.db
 
 # Sphinx
 docs/_build
