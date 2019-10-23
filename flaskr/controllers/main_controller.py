@@ -1,4 +1,6 @@
 import importlib
+import geopy
+import sqlalchemy
 
 from flask import Blueprint, render_template, flash, request, redirect, \
     url_for, abort
@@ -14,8 +16,6 @@ from flaskr.content import content
 # from io import StringIO
 from yaml import safe_dump as yaml_dump
 
-import sqlalchemy
-import geopy
 
 main = Blueprint('main', __name__)
 
@@ -144,6 +144,8 @@ def compute():  # process the queue of estimation requests
             _handle_failure(estimation, response)
             return _respond(response)
 
+        print(repr(destination.raw))
+
         destinations.append(destination)
 
         response += u"Destination: %s == %s (%f, %f)\n" % (
@@ -184,6 +186,16 @@ def compute():  # process the queue of estimation requests
 
     # UTILITY PRIVATE FUNCTION(S) #############################################
 
+    def get_city_key(_location):
+        _city_key = _location.address
+        # if 'address100' in _location.raw['address']:
+        #     _city_key = _location.raw['address']['address100']
+        if 'city' in _location.raw['address']:
+            _city_key = _location.raw['address']['city']
+        elif 'state' in _location.raw['address']:
+            _city_key = _location.raw['address']['state']
+        return _city_key
+
     def compute_one_to_many(
             _origin,
             _destinations,
@@ -203,15 +215,7 @@ def compute():  # process the queue of estimation requests
                     destination_longitude=_destination.longitude,
                 )
 
-                # print(repr(_destination.raw))
-
-                city_key = _destination.address
-                if 'address100' in _destination.raw['address']:
-                    city_key = _destination.raw['address']['address100']
-                elif 'city' in _destination.raw['address']:
-                    city_key = _destination.raw['address']['city']
-                elif 'state' in _destination.raw['address']:
-                    city_key = _destination.raw['address']['state']
+                city_key = get_city_key(_destination)
 
                 if city_key not in cities:
                     cities[city_key] = 0.0
@@ -226,13 +230,19 @@ def compute():  # process the queue of estimation requests
 
         _results['footprints'] = footprints
 
+        total = 0.0
+
         cities_mean = {}
         for city in cities_sum.keys():
-            cities_mean[city] = 1.0 * cities_sum[city] / len(emission_models)
+            city_mean = 1.0 * cities_sum[city] / len(emission_models)
+            cities_mean[city] = city_mean
+            total += city_mean
 
         _results['mean_footprint'] = {
             'cities': cities_mean
         }
+
+        _results['total'] = total
 
         return _results
 
@@ -264,7 +274,21 @@ def compute():  # process the queue of estimation requests
     # Run Scenario A for each Destination, and expose optimum Destination.
     #
     else:
-        pass
+        results = {
+            'cities': [],
+        }
+        for destination in destinations:
+            city_key = get_city_key(destination)
+
+            city_results = compute_one_to_many(
+                _origin=destinations[0],
+                _destinations=origins,
+                use_train_below=0,
+            )
+            city_results['city'] = city_key
+            results['cities'].append(city_results)
+
+            # Todo: sort cities, and perhaps extract optimum
 
     # WRITE RESULTS INTO THE DATABASE #########################################
 
@@ -296,6 +320,7 @@ def consult_estimation(public_id, format):
     #     abort(404)
 
     if 'html' == format:
+
         if estimation.status in [StatusEnum.pending]:
             return render_template(
                 "estimation-queue-wait.html",
