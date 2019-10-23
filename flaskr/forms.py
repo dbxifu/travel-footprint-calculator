@@ -15,14 +15,14 @@ form_content = content['estimate']['form']
 # ESTIMATION FORM #############################################################
 
 class EstimateForm(Form):
-    email = StringField(
-        label=form_content['email']['label'],
-        description=form_content['email']['description'],
-        validators=[
-            validators.DataRequired(),
-            validators.Email(),
-        ],
-    )
+    # email = StringField(
+    #     label=form_content['email']['label'],
+    #     description=form_content['email']['description'],
+    #     validators=[
+    #         validators.DataRequired(),
+    #         validators.Email(),
+    #     ],
+    # )
     first_name = StringField(
         label=form_content['first_name']['label'],
         description=form_content['first_name']['description'],
@@ -30,6 +30,9 @@ class EstimateForm(Form):
             validators.Optional(),
             validators.Length(max=1024),
         ],
+        render_kw={
+            "placeholder": form_content['first_name']['placeholder']
+        },
     )
     last_name = StringField(
         label=form_content['last_name']['label'],
@@ -38,6 +41,9 @@ class EstimateForm(Form):
             validators.Optional(),
             validators.Length(max=1024),
         ],
+        render_kw={
+            "placeholder": form_content['last_name']['placeholder']
+        },
     )
     institution = StringField(
         label=form_content['institution']['label'],
