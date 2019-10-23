@@ -9,7 +9,7 @@
 /** NAVBAR *******************************************************************/
 
 .navbar-inverse {
-    background-color: #0e6191dd;
+    background-color: rgba(14, 97, 145, 0.87);
     border-color: #080808;
 }
 
@@ -23,14 +23,14 @@
 }
 
 .navbar-toggler-icon {
-        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
 }
 
 
 /** HERO *********************************************************************/
 
 div.jumbotron {
-    background-color: #eeeeeebb;
+    background-color: rgba(238, 238, 238, 0.8);
 }
 
 #image-background {
