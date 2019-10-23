@@ -1,4 +1,4 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import \
     StringField, \
     PasswordField, \
@@ -14,7 +14,7 @@ form_content = content['estimate']['form']
 
 # ESTIMATION FORM #############################################################
 
-class EstimateForm(Form):
+class EstimateForm(FlaskForm):
     # email = StringField(
     #     label=form_content['email']['label'],
     #     description=form_content['email']['description'],
@@ -110,7 +110,7 @@ class EstimateForm(Form):
 
 # LOGIN FORM ##################################################################
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     username = StringField(u'Username', validators=[validators.required()])
     password = PasswordField(u'Password', validators=[validators.optional()])
 
