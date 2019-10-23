@@ -39,7 +39,7 @@ div.jumbotron {
     z-index: -1;
     width: 100%;
     height: 22.2rem;
-    background-image: url('../public/img/plane-with-chemtrails.jpg');
+    background-image: url('../../public/img/plane-with-chemtrails.jpg');
     background-size: cover;
     background-repeat: no-repeat;
 }
