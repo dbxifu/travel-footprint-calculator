@@ -1,6 +1,7 @@
 import importlib
 
-from flask import Blueprint, render_template, flash, request, redirect, url_for
+from flask import Blueprint, render_template, flash, request, redirect, \
+    url_for, abort
 
 from flaskr.extensions import cache
 from flaskr.forms import LoginForm, EstimateForm
@@ -10,6 +11,7 @@ from flaskr.geocoder import CachedGeocoder
 from flaskr.core import generate_unique_id
 from flaskr.content import content
 
+# from io import StringIO
 from yaml import safe_dump as yaml_dump
 
 import sqlalchemy
@@ -33,7 +35,7 @@ def estimate():
         id = generate_unique_id()
 
         estimation = Estimation()
-        estimation.email = form.email.data
+        # estimation.email = form.email.data
         estimation.first_name = form.first_name.data
         estimation.last_name = form.last_name.data
         estimation.status = StatusEnum.pending
@@ -45,7 +47,11 @@ def estimate():
         db.session.commit()
 
         flash("Estimation request submitted successfully.", "success")
-        return redirect(url_for(".home"))
+        return redirect(url_for(
+            endpoint=".consult_estimation",
+            public_id=estimation.public_id,
+            format='html'
+        ))
         # return render_template("estimate-debrief.html", form=form)
 
     return render_template("estimate.html", form=form)
@@ -58,7 +64,7 @@ def compute():  # process the queue of estimation requests
         return "<pre>%s</pre>" % _msg
 
     def _handle_failure(_estimation, _failure_message):
-        _estimation.status = StatusEnum.failed
+        _estimation.status = StatusEnum.failure
         _estimation.errors = _failure_message
         db.session.commit()
 
@@ -260,6 +266,62 @@ def compute():  # process the queue of estimation requests
     else:
         pass
 
+    # WRITE RESULTS INTO THE DATABASE #########################################
+
+    estimation.status = StatusEnum.success
+    estimation.output_yaml = yaml_dump(results)
+    db.session.commit()
+
+    # FINALLY, RESPOND ########################################################
+
     response += yaml_dump(results) + "\n"
 
     return _respond(response)
+
+
+@main.route("/estimation/<public_id>.<format>")
+def consult_estimation(public_id, format):
+    try:
+        estimation = Estimation.query \
+            .filter_by(public_id=public_id) \
+            .one()
+    except sqlalchemy.orm.exc.NoResultFound:
+        return abort(404)
+    except Exception as e:
+        # TODO: log
+        return abort(500)
+
+    # allowed_formats = ['html']
+    # if format not in allowed_formats:
+    #     abort(404)
+
+    if 'html' == format:
+        if estimation.status in [StatusEnum.pending]:
+            return render_template(
+                "estimation-queue-wait.html",
+                estimation=estimation
+            )
+        else:
+            return render_template(
+                "estimation.html",
+                estimation=estimation
+            )
+
+    elif 'csv' == format:
+
+        import csv
+        from cStringIO import StringIO
+
+        si = StringIO()
+        cw = csv.writer(si, quoting=csv.QUOTE_ALL)
+        cw.writerow([u"city", u"co2 (g)"])
+
+        results = estimation.get_output_dict()
+        for city_name in results['mean_footprint']['cities'].keys():
+            cw.writerow([city_name, results['mean_footprint']['cities'][city_name]])
+
+        # Where are the headers?
+        return si.getvalue().strip('\r\n')
+
+    else:
+        abort(404)
