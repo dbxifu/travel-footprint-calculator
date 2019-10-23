@@ -9,7 +9,7 @@ class Config(object):
 
 class ProductionConfig(Config):
     ENV = 'production'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///../database.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///../database_prod.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     CACHE_TYPE = 'simple'
