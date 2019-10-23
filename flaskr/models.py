@@ -2,6 +2,7 @@ from flaskr.core import generate_unique_id
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from yaml import safe_load as yaml_load
 import enum
 
 # These are not the emission "models" in the scientific meaning of the word.
@@ -45,6 +46,10 @@ class Estimation(db.Model):
 
     def has_failed(self):
         return self.status == StatusEnum.failure
+
+    def get_output_dict(self):
+        return yaml_load(self.output_yaml)
+
 
 # USERS #######################################################################
 
