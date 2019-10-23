@@ -1,6 +1,7 @@
 #! ../venv/bin/python
 
 from flask import Flask
+from flask.cli import ScriptInfo
 from webassets.loaders import PythonLoader as PythonAssetsLoader
 
 from flaskr import assets
@@ -31,8 +32,9 @@ def create_app(object_name):
 
     app = Flask(__name__)
 
-    # We bypass object_name (for now)
-    object_name = 'flaskr.settings.DevelopmentConfig'
+    # We bypass object_name (for dev)
+    if type(object_name) == ScriptInfo:
+        object_name = 'flaskr.settings.DevelopmentConfig'
 
     # Load configuration
     app.config.from_object(object_name)
