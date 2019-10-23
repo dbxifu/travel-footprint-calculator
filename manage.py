@@ -9,7 +9,7 @@ from flaskr.models import db, User
 
 # default to dev config because no one should use this in
 # production anyway
-env = os.environ.get('APPNAME_ENV', 'dev')
+env = os.environ.get('APPNAME_ENV', 'development')
 app = create_app('flaskr.settings.%sConfig' % env.capitalize())
 
 manager = Manager(app)
