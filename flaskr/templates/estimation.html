@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+
+{% block title %}Estimation {{ estimation.public_id }} of your ✈ travel footprint{% endblock %}
+
+
+{% block hero %}
+<div class="jumbotron">
+{% if estimation.has_failed() %}
+    <h1>{{ content.estimation.failure.hero.title | safe }}</h1>
+    <p>{{ content.estimation.failure.hero.description | markdown | safe }}</p>
+{% else %}
+    <h1>{{ content.estimation.hero.title | safe }}</h1>
+    <p>{{ content.estimation.hero.description | markdown | safe }}</p>
+{% endif %}
+</div>
+{% endblock %}
+
+
+
+{% block body %}
+<h2>
+    {{ estimation.public_id }} ({{ estimation.status.name }})
+</h2>
+{% if estimation.errors or estimation.warnings %}
+<div class="row">
+{% if estimation.warnings %}
+    <div class="col-md-6 alert-warning card">
+        <div class="card-body">
+            <h3 class="card-title">Warnings</h3>
+            <pre>
+{{ estimation.warnings }}
+            </pre>
+        </div>
+    </div>
+{% endif %}
+{% if estimation.errors %}
+    <div class="col-md-6 alert-danger card">
+        <div class="card-body">
+            <h3 class="card-title">Errors</h3>
+            <pre>
+{{ estimation.errors }}
+            </pre>
+        </div>
+    </div>
+{% endif %}
+</div>
+{% endif %}
+{% if not estimation.has_failed() %}
+    <div class="row">
+        <div class="col-md-6">
+        <pre>
+{{ estimation.output_yaml }}
+        </pre>
+    </div>
+    <div class="col-md-6">
+        <a href="/estimation/{{ estimation.public_id }}.csv" class="btn btn-lg btn-primary">
+            Download CSV
+        </a>
+        <a href="/estimation/{{ estimation.public_id }}.xls" class="btn btn-lg btn-secondary disabled">
+            Download XLS
+        </a>
+        <a href="/estimation/{{ estimation.public_id }}.ods" class="btn btn-lg btn-secondary disabled">
+            Download ODS
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
