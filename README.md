@@ -27,4 +27,5 @@ Then, visit http://localhost:5000
 
 Content is in `content.yml`.
 HTML templates are in `flaskr/templates`.
+Estimation Models are in `flaskr/laws`.
 Controllers are in `flaskr/controllers`.
