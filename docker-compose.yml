@@ -1,3 +1,6 @@
+# Orchestrate docker containers to host an instance of the project.
+# You *can* use this for development.  Don't.
+
 version: '2.0'
 services:
     com_goutenoir_apps_travel-footprint-calculator:
@@ -13,7 +16,7 @@ services:
 #        - "5000:5000"
 
         environment:
-#            DEBUG: true
+            STATIC_PATH: /app/flaskr/static
             # Config for server's nginx-reverse-proxy container
             LETSENCRYPT_HOST: travel-footprint-calculator.apps.goutenoir.com
             LETSENCRYPT_EMAIL: antoine@goutenoir.com
@@ -27,11 +30,10 @@ services:
         container_name: com_goutenoir_apps_travel-footprint-calculator_mahcron
         image: jsonfry/curl-cron
         environment:
-            OPTIONS: travel-footprint-calculator.apps.goutenoir.com/compute
+            # https is important because all you'll get from http is a 301 ;)
+            OPTIONS: "https://travel-footprint-calculator.apps.goutenoir.com/compute"
             CRON_SCHEDULE: "*/3 * * * *"
-#        - OPTIONS=localhost/compute
-#        - OPTIONS=travel-footprint-calculator.apps.goutenoir.com/compute
-#        - CRON_SCHEDULE="*/3 * * * *"
+
 
 # Tip from https://github.com/jwilder/nginx-proxy/issues/1132#issuecomment-392460028
 # Create it first: docker network create webproxy
