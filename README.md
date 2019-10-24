@@ -1,8 +1,18 @@
 
 # Travel Carbon Footprint Calculator
 
+## Overview
+
+- Content is in `content.yml`.
+- Configuration is in `content.yml`.
+- HTML templates are in `flaskr/templates`.
+- Estimation Models are in `flaskr/laws`.
+- Controllers are in `flaskr/controllers`.
+
 
 ## Installation
+
+Tested only on Python `2.7`.  _Sprint._ 
 
     virtualenv venv
     source venv/bin/activate
@@ -23,9 +33,3 @@ Then, visit http://localhost:5000
 > We're trying to remove the need for the `export` statements, but…
 
 
-## Overview
-
-Content is in `content.yml`.
-HTML templates are in `flaskr/templates`.
-Estimation Models are in `flaskr/laws`.
-Controllers are in `flaskr/controllers`.
