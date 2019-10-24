@@ -13,9 +13,10 @@ services:
 #        - "5000:5000"
 
         environment:
+#            DEBUG: true
             # Config for server's nginx-reverse-proxy container
             LETSENCRYPT_HOST: travel-footprint-calculator.apps.goutenoir.com
-            LETSENCRYPT_EMAIL: antoine@ljbac.com
+            LETSENCRYPT_EMAIL: antoine@goutenoir.com
             VIRTUAL_HOST: travel-footprint-calculator.apps.goutenoir.com
             # 80 is the default port
             VIRTUAL_PORT: 80
