@@ -43,3 +43,4 @@ venv*
 .DS_Store
 *.sublime-*
 .cache/
+.idea
