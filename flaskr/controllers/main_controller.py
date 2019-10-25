@@ -57,6 +57,20 @@ def estimate():
     return render_template("estimate.html", form=form)
 
 
+@main.route("/invalidate")
+def invalidate():
+    stuck_estimations = Estimation.query \
+        .filter_by(status=StatusEnum.working) \
+        .all()
+
+    for estimation in stuck_estimations:
+        estimation.status = StatusEnum.failure
+        estimation.errors = "Invalidated. Try again."
+        db.session.commit()
+
+    return ""
+
+
 @main.route("/compute")
 def compute():  # process the queue of estimation requests
 
@@ -298,6 +312,7 @@ def compute():  # process the queue of estimation requests
                 use_train_below=0,
             )
             city_results['city'] = city_key
+            city_results['address'] = destination.address
             results['cities'].append(city_results)
 
             # Todo: sort cities, and perhaps extract optimum
