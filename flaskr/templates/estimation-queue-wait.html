@@ -15,11 +15,21 @@ Estimation {{ estimation.public_id }} is computing… Please wait.
 
 
 {% block extra_meta %}
+{# push notifs are good but this complies w/ nojs #}
 <meta http-equiv="refresh" content="4">
 {% endblock %}
 
 
 {% block body %}
+
+<div class="text-center">
+    <div class="lds-ripple">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
+
 {#<a href="/compute" id="compute" class="nojs btn btn-danger btn-lg" target="_blank">WORK!</a>#}
 <script type="text/javascript">
 var compute_now = function() {
