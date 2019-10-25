@@ -54,15 +54,24 @@
         </pre>
     </div>
     <div class="col-md-6">
-        <a href="/estimation/{{ estimation.public_id }}.csv" class="btn btn-lg btn-primary">
-            Download CSV
-        </a>
-        <a href="/estimation/{{ estimation.public_id }}.xls" class="btn btn-lg btn-secondary disabled">
-            Download XLS
-        </a>
-        <a href="/estimation/{{ estimation.public_id }}.ods" class="btn btn-lg btn-secondary disabled">
-            Download ODS
-        </a>
+        <ul class="nav">
+            <li class="nav-item m-4">
+                <a href="/estimation/{{ estimation.public_id }}.csv" class="btn btn-lg btn-primary">
+                    Download CSV
+                </a>
+            </li>
+            <li class="nav-item m-4">
+                <a href="/estimation/{{ estimation.public_id }}.xls" class="btn btn-lg btn-secondary disabled">
+                    Download XLS
+                </a>
+            </li>
+            <li class="nav-item m-4">
+                <a href="/estimation/{{ estimation.public_id }}.ods" class="btn btn-lg btn-secondary disabled">
+                    Download ODS
+                </a>
+            </li>
+        </ul>
+
     </div>
 </div>
 {% endif %}
