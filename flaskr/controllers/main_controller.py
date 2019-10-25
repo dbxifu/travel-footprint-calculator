@@ -3,7 +3,8 @@ import geopy
 import sqlalchemy
 
 from flask import Blueprint, render_template, flash, request, redirect, \
-    url_for, abort
+    url_for, abort, send_from_directory
+from os.path import join
 
 from flaskr.extensions import cache
 from flaskr.forms import LoginForm, EstimateForm
@@ -18,6 +19,14 @@ from yaml import safe_dump as yaml_dump
 
 
 main = Blueprint('main', __name__)
+
+
+@main.route('/favicon.ico')
+def favicon():  # we want it served from the root, not from static/
+    return send_from_directory(
+        join(main.root_path, '..', 'static', 'img'),
+        'favicon.ico', mimetype='image/vnd.microsoft.icon'
+    )
 
 
 @main.route('/')
@@ -115,7 +124,7 @@ def compute():  # process the queue of estimation requests
 
     # GEOCODE ORIGINS #########################################################
 
-    origins_addresses = estimation.origin_addresses.split("\n")
+    origins_addresses = estimation.origin_addresses.strip().split("\n")
     origins = []
 
     for i in range(len(origins_addresses)):
@@ -147,7 +156,7 @@ def compute():  # process the queue of estimation requests
 
     # GEOCODE DESTINATIONS ####################################################
 
-    destinations_addresses = estimation.destination_addresses.split("\n")
+    destinations_addresses = estimation.destination_addresses.strip().split("\n")
     destinations = []
 
     for i in range(len(destinations_addresses)):
@@ -213,14 +222,17 @@ def compute():  # process the queue of estimation requests
     # UTILITY PRIVATE FUNCTION(S) #############################################
 
     def get_city_key(_location):
-        _city_key = _location.address
-        # if 'address100' in _location.raw['address']:
-        #     _city_key = _location.raw['address']['address100']
-        if 'city' in _location.raw['address']:
-            _city_key = _location.raw['address']['city']
-        elif 'state' in _location.raw['address']:
-            _city_key = _location.raw['address']['state']
-        return _city_key
+
+        return _location.address.split(',')[0]
+
+        # _city_key = _location.address
+        # # if 'address100' in _location.raw['address']:
+        # #     _city_key = _location.raw['address']['address100']
+        # if 'city' in _location.raw['address']:
+        #     _city_key = _location.raw['address']['city']
+        # elif 'state' in _location.raw['address']:
+        #     _city_key = _location.raw['address']['state']
+        # return _city_key
 
     def compute_one_to_many(
             _origin,
