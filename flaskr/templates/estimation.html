@@ -47,6 +47,30 @@
 </div>
 {% endif %}
 {% if not estimation.has_failed() %}
+
+{% if estimation.has_many_to_many() %}
+
+    <p>
+    For each city, the sum of the travels from all the origins.
+    </p>
+
+    <ul class="numbered-list">
+    {% for city in estimation.get_output_dict().cities %}
+        <li>
+        {% if loop.first %}
+            <strong>
+            {{ city.city }}
+            </strong>
+        {% else %}
+            {{ city.city }}
+        {% endif %}
+            –
+            {{ "%.d" | format(city.total | round(0) | int) }} CO<sub>2</sub><small>EQ</small>
+        </li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
     <div class="row">
         <div class="col-md-6">
         <pre>

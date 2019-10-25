@@ -51,6 +51,9 @@ class Estimation(db.Model):
     def get_output_dict(self):
         return yaml_load(self.output_yaml)
 
+    def has_many_to_many(self):
+        return 'cities' in self.get_output_dict()
+
 
 # USERS #######################################################################
 
