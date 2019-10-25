@@ -70,6 +70,13 @@ def compute():  # process the queue of estimation requests
 
     response = ""
 
+    count_working = Estimation.query \
+        .filter_by(status=StatusEnum.working) \
+        .count()
+
+    if 0 < count_working:
+        return _respond("Already working on estimation.")
+
     try:
         estimation = Estimation.query \
             .filter_by(status=StatusEnum.pending) \
@@ -83,7 +90,12 @@ def compute():  # process the queue of estimation requests
     if not estimation:
         return _respond("No estimation in the queue.")
 
-    response += u"Processing estimation `%s` of `%s`...\n" % (estimation.id, estimation.email)
+    estimation.status = StatusEnum.working
+    db.session.commit()
+
+    response += u"Processing estimation `%s`...\n" % (
+        estimation.public_id
+    )
 
     geocoder = CachedGeocoder()
 

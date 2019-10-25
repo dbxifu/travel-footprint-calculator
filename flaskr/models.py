@@ -17,6 +17,7 @@ db = SQLAlchemy()
 
 class StatusEnum(enum.Enum):
     pending = 'pending'
+    working = 'working'
     success = 'success'
     failure = 'failure'
 
