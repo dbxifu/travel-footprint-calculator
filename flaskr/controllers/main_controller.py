@@ -348,7 +348,7 @@ def consult_estimation(public_id, format):
 
     if 'html' == format:
 
-        if estimation.status in [StatusEnum.pending]:
+        if estimation.status in [StatusEnum.pending, StatusEnum.working]:
             return render_template(
                 "estimation-queue-wait.html",
                 estimation=estimation
