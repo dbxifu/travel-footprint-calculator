@@ -15,9 +15,19 @@ Estimation {{ estimation.public_id }} is computing… Please wait.
 
 
 {% block extra_meta %}
-<meta http-equiv="refresh" content="20">
+<meta http-equiv="refresh" content="4">
 {% endblock %}
 
 
 {% block body %}
+{#<a href="/compute" id="compute" class="nojs btn btn-danger btn-lg" target="_blank">WORK!</a>#}
+<script type="text/javascript">
+var compute_now = function() {
+    var xhr = new XMLHttpRequest();
+    xhr.onerror = function(e){console.warn("Computation fails.", e)};
+    xhr.open('GET', "/compute", true);
+    xhr.send(null);
+};
+compute_now();
+</script>
 {% endblock %}
