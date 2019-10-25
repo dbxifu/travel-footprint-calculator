@@ -129,10 +129,10 @@ def compute():  # process the queue of estimation requests
 
     for i in range(len(origins_addresses)):
 
-        origin_address = str(origins_addresses[i]).strip()
+        origin_address = origins_addresses[i].strip()
 
         try:
-            origin = geocoder.geocode(origin_address)
+            origin = geocoder.geocode(origin_address.encode('utf-8'))
         except geopy.exc.GeopyError as e:
             response += u"Failed to geolocalize origin `%s`.\n%s" % (
                 origin_address, e,
@@ -161,10 +161,10 @@ def compute():  # process the queue of estimation requests
 
     for i in range(len(destinations_addresses)):
 
-        destination_address = str(destinations_addresses[i]).strip()
+        destination_address = destinations_addresses[i].strip()
 
         try:
-            destination = geocoder.geocode(destination_address)
+            destination = geocoder.geocode(destination_address.encode('utf-8'))
         except geopy.exc.GeopyError as e:
             response += u"Failed to geocode destination `%s`.\n%s" % (
                 destination_address, e,
@@ -179,7 +179,7 @@ def compute():  # process the queue of estimation requests
             _handle_failure(estimation, response)
             return _respond(response)
 
-        print(repr(destination.raw))
+        # print(repr(destination.raw))
 
         destinations.append(destination)
 
@@ -400,10 +400,14 @@ def consult_estimation(public_id, format):
         cw.writerow([u"city", u"co2 (g)"])
 
         results = estimation.get_output_dict()
-        for city_name in results['mean_footprint']['cities'].keys():
-            cw.writerow([city_name, results['mean_footprint']['cities'][city_name]])
+        if 'mean_footprint' in results:
+            for city in results['mean_footprint']['cities']:
+                cw.writerow([city['city'], city['address'], city['footprint']])
+        elif 'cities' in results:
+            for city in results['cities']:
+                cw.writerow([city['city'], city['address'], city['total']])
 
-        # Where are the headers?
+        # HTTP headers?
         return si.getvalue().strip('\r\n')
 
     else:
