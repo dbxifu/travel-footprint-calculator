@@ -1,5 +1,6 @@
 # Orchestrate docker containers to host an instance of the project.
 # You *can* use this for development.  Don't.
+# You *can* use this for production.  Don't.
 
 version: '2.0'
 services:
@@ -29,6 +30,7 @@ services:
     com_goutenoir_apps_travel-footprint-calculator_mahcron:
         container_name: com_goutenoir_apps_travel-footprint-calculator_mahcron
         image: jsonfry/curl-cron
+        restart: always
         environment:
             # https is important because all you'll get from http is a 301 ;)
             OPTIONS: "https://travel-footprint-calculator.apps.goutenoir.com/compute"
@@ -39,6 +41,6 @@ services:
 # Create it first: docker network create webproxy
 networks:
     default:
-       external:
-          name: webproxy
+        external:
+            name: webproxy
 
