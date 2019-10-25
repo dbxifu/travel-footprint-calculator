@@ -26,32 +26,42 @@ models:
     # There MUST exist a python file named like this in `flaskr/laws`
     # And it MUST contain a class named EmissionModel
     # Please keep this lowercased, letters-only (or I will breathe fire)
-    file: atmosfair
+    file: travel_emission_linear_fit
     # The configuration that will be fed to the model.
     # May be anything, really.  Go bonkers!
     config:
       plane_emission_linear_fit:
         # A coefficient applied to the distance
         connecting_flights_scale: 1.05
+        # Radiative Forcing Index
+        # Multiplier after scaling
+        rfi: 1.9
+        # Flat scalar to add before scaling with intervals
+        offset_before: 50
+        # Flat scalar to multiply before scaling with intervals
+        scale_before: 1
         # First interval found will apply its scale and offset
         intervals:
-          # Distances [dmin, dmax[ are in kilometers.
+          # Distances [dmin, dmax[ are in kilometers, here.
           - dmin: 0
-            dmax: 500
+            dmax: 1000
             # The scaling law for this interval of distances. Defaults to 1.
-            scale: 5
+            scale: 0.079107
             # Offset is optional and defaults to 0.
-            offset: 0
-          - dmin: 500
-            dmax: 5000
-            scale: 50
-            offset: 0
+            offset: 25.922
+          - dmin: 1000
+            dmax: 4000
+            scale: 0.066183
+            offset: 35.041
+          - dmin: 4000
+            dmax: 999999999
+            scale: 0.095998
+            offset: -80.835
           # dmin dmax a b
           # for a fitting of (a*x + b) on the interval [dmin dmax[
           # b is optional and defaults to 0
 #          - "0 500 4"
 #          - 500 1000 8
-        offset: 50
 
 
 # The content is Markdown.  HTML is also allowed.

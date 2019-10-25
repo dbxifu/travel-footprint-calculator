@@ -2,7 +2,7 @@ import numpy as np
 from geopy.distance import great_circle
 
 
-class EmissionModel():
+class BaseEmissionModel():
     def __init__(self, config):  # Constructor
         self.name = config.name
         self.slug = config.slug
@@ -14,6 +14,11 @@ class EmissionModel():
                "%s (%s)" % (self.name, self.slug) + \
                repr(self.config)
 
+    # def compute_travel_footprint()
+
+
+class EmissionModel(BaseEmissionModel):
+    # @abc
     def compute_travel_footprint(
             self,
             origin_latitude,        # degrees
@@ -25,7 +30,7 @@ class EmissionModel():
         footprint = 0.0
 
         #############################################
-        # FIXME: find closest airport(s) and pick one
+        # TODO: find closest airport(s) and pick one
         # We're going to need caching here as well.
         from collections import namedtuple
         origin_airport = namedtuple('Position', [
@@ -75,14 +80,24 @@ class EmissionModel():
             destination_latitude, destination_longitude
         )
 
-        distance = config.connecting_flights_scale * great_circle_distance
+        distance = great_circle_distance
+
+        distance = config.connecting_flights_scale * distance
+
+        distance = distance * config.scale_before + config.offset_before
 
         footprint = self.apply_scaling_law(
             distance,
             config.intervals
         )
 
+        footprint = self.adjust_footprint_for_rfi(footprint, config)
+
         return footprint
+
+    def adjust_footprint_for_rfi(self, footprint, config):
+        # Todo: grab data from config merged with form input?
+        return config.rfi * footprint
 
     def apply_scaling_law(self, distance, intervals):
         footprint = distance
