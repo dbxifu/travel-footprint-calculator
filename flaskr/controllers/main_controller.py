@@ -230,9 +230,11 @@ def compute():  # process the queue of estimation requests
         _results = {}
         footprints = {}
 
+        destinations_by_city_key = {}
+
         cities_sum = {}
         for model in emission_models:
-            cities = {}
+            cities_dict = {}
             for _destination in _destinations:
                 footprint = model.compute_travel_footprint(
                     origin_latitude=_origin.latitude,
@@ -243,12 +245,21 @@ def compute():  # process the queue of estimation requests
 
                 city_key = get_city_key(_destination)
 
-                if city_key not in cities:
-                    cities[city_key] = 0.0
-                cities[city_key] += footprint
+                destinations_by_city_key[city_key] = _destination
+
+                if city_key not in cities_dict:
+                    cities_dict[city_key] = {
+                        'city': city_key,
+                        'address': _destination.address,
+                        'footprint': 0.0,
+                    }
+                cities_dict[city_key]['footprint'] += footprint
                 if city_key not in cities_sum:
                     cities_sum[city_key] = 0.0
                 cities_sum[city_key] += footprint
+
+            cities = [cities_dict[k] for k in cities_dict.keys()]
+            cities = sorted(cities, key=lambda c: c['footprint'])
 
             footprints[model.slug] = {
                 'cities': cities,
@@ -258,11 +269,18 @@ def compute():  # process the queue of estimation requests
 
         total = 0.0
 
-        cities_mean = {}
+        cities_mean_dict = {}
         for city in cities_sum.keys():
             city_mean = 1.0 * cities_sum[city] / len(emission_models)
-            cities_mean[city] = city_mean
+            cities_mean_dict[city] = {
+                'address': destinations_by_city_key[city].address,
+                'city': city,
+                'footprint': city_mean,
+            }
             total += city_mean
+
+        cities_mean = [cities_mean_dict[k] for k in cities_mean_dict.keys()]
+        cities_mean = sorted(cities_mean, key=lambda c: c['footprint'])
 
         _results['mean_footprint'] = {
             'cities': cities_mean
@@ -300,22 +318,23 @@ def compute():  # process the queue of estimation requests
     # Run Scenario A for each Destination, and expose optimum Destination.
     #
     else:
-        results = {
-            'cities': [],
-        }
+        result_cities = []
         for destination in destinations:
             city_key = get_city_key(destination)
 
             city_results = compute_one_to_many(
-                _origin=destinations[0],
+                _origin=destination,
                 _destinations=origins,
                 use_train_below=0,
             )
             city_results['city'] = city_key
             city_results['address'] = destination.address
-            results['cities'].append(city_results)
+            result_cities.append(city_results)
 
-            # Todo: sort cities, and perhaps extract optimum
+        result_cities = sorted(result_cities, key=lambda c: int(c['total']))
+        results = {
+            'cities': result_cities,
+        }
 
     # WRITE RESULTS INTO THE DATABASE #########################################
 
