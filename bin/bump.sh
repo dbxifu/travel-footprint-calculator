@@ -19,6 +19,7 @@ White='\033[0;37m'        # White
 
 # BUSINESS ####################################################################
 
+MY_DIR="${0%/*}"
 VERSION=`git describe --tags`
 echo -e "${Green}Setting new version : ${Yellow}${VERSION}${Off}"
-echo ${VERSION} > VERSION
+echo ${VERSION} > ${MY_DIR}/../VERSION
