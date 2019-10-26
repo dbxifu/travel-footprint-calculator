@@ -21,6 +21,9 @@ from yaml import safe_dump as yaml_dump
 main = Blueprint('main', __name__)
 
 
+OUT_ENCODING = 'utf-8'
+
+
 @main.route('/favicon.ico')
 def favicon():  # we want it served from the root, not from static/
     return send_from_directory(
@@ -397,15 +400,23 @@ def consult_estimation(public_id, format):
 
         si = StringIO()
         cw = csv.writer(si, quoting=csv.QUOTE_ALL)
-        cw.writerow([u"city", u"co2 (g)"])
+        cw.writerow([u"city", u"address", u"co2 (g)"])
 
         results = estimation.get_output_dict()
         if 'mean_footprint' in results:
             for city in results['mean_footprint']['cities']:
-                cw.writerow([city['city'], city['address'], city['footprint']])
+                cw.writerow([
+                    city['city'].encode(OUT_ENCODING),
+                    city['address'].encode(OUT_ENCODING),
+                    city['footprint']
+                ])
         elif 'cities' in results:
             for city in results['cities']:
-                cw.writerow([city['city'], city['address'], city['total']])
+                cw.writerow([
+                    city['city'].encode(OUT_ENCODING),
+                    city['address'].encode(OUT_ENCODING),
+                    city['total']
+                ])
 
         # HTTP headers?
         return si.getvalue().strip('\r\n')
