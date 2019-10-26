@@ -380,9 +380,11 @@ def consult_estimation(public_id, format):
     # if format not in allowed_formats:
     #     abort(404)
 
-    if 'html' == format:
+    unavailable_statuses = [StatusEnum.pending, StatusEnum.working]
 
-        if estimation.status in [StatusEnum.pending, StatusEnum.working]:
+    if format in ['xhtml', 'html', 'htm']:
+
+        if estimation.status in unavailable_statuses:
             return render_template(
                 "estimation-queue-wait.html",
                 estimation=estimation
@@ -393,7 +395,17 @@ def consult_estimation(public_id, format):
                 estimation=estimation
             )
 
+    elif format in ['yaml', 'yml']:
+
+        if estimation.status in unavailable_statuses:
+            abort(404)
+
+        return estimation.output_yaml
+
     elif 'csv' == format:
+
+        if estimation.status in unavailable_statuses:
+            abort(404)
 
         import csv
         from cStringIO import StringIO
