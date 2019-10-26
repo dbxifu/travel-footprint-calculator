@@ -343,10 +343,9 @@ estimate:
   hero:
     title: Request an estimation
     description: |
-      The results will be sent to the email address you provided,
-      once they are available.
+      The results will available <small>(almost)</small> immediately.
       <br>
-      It may take from a few minutes up to a few hours,
+      It may take from a few seconds up to a few hours,
       depending on the amount of locations you provided.
 
 
@@ -375,9 +374,11 @@ estimate:
       description: |
         One address per line, in the form `City, Country`.
         Make sure your addresses are correctly spelled.
-      placeholder: |
-        Paris, France
-        Berlin, Germany
+      # We MUST use the dumb CRLF pair for windows users
+      placeholder: "Paris, France\r\nBerlin, Germany"
+#      placeholder: |
+#        Paris, France
+#        Berlin, Germany
     destination_addresses:
       label: Destination Cities
       description: |
