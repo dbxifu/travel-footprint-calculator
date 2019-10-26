@@ -301,7 +301,8 @@ def compute():  # process the queue of estimation requests
             'cities': cities_mean
         }
 
-        _results['total'] = total
+        _results['total'] = total  # DEPRECATED
+        _results['footprint'] = total
 
         return _results
 
@@ -333,9 +334,15 @@ def compute():  # process the queue of estimation requests
     # Run Scenario A for each Destination, and expose optimum Destination.
     #
     else:
+        unique_city_keys = []
         result_cities = []
         for destination in destinations:
             city_key = get_city_key(destination)
+
+            if city_key in unique_city_keys:
+                continue
+            else:
+                unique_city_keys.append(city_key)
 
             city_results = compute_one_to_many(
                 _origin=destination,
