@@ -1,6 +1,10 @@
 #! ../venv/bin/python
+import os
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
-from flask import Flask
+
+from flask import Flask, url_for
 from flask.cli import ScriptInfo
 from webassets.loaders import PythonLoader as PythonAssetsLoader
 
@@ -14,7 +18,8 @@ from flaskr.extensions import (
     cache,
     assets_env,
     debug_toolbar,
-    login_manager
+    login_manager,
+    basic_auth
 )
 
 from flaskr.content import content
@@ -48,6 +53,7 @@ def create_app(object_name):
     login_manager.init_app(app)
     admin.init_app(app)
     admin.add_view(EstimationView(Estimation, db.session))
+    basic_auth.init_app(app)
 
     # Import and register the different asset bundles
     assets_env.init_app(app)
@@ -57,6 +63,9 @@ def create_app(object_name):
 
     # register our blueprints
     app.register_blueprint(main)
+
+    app.config['BASIC_AUTH_USERNAME'] = os.getenv('ADMIN_USERNAME')
+    app.config['BASIC_AUTH_PASSWORD'] = os.getenv('ADMIN_PASSWORD')
 
     # VERSION (move to version.py is necessary)
     version = "0.0.0"
@@ -75,5 +84,21 @@ def create_app(object_name):
     @app.template_filter('markdown')
     def markdown_filter(text):
         return markdown(text)
+
+    # Authentication Gate for the Admin
+    @app.before_first_request
+    def restrict_admin_url():
+
+        # print('VF', app.view_functions)
+
+        endpoint = 'admin.index'
+        url = url_for(endpoint)
+        admin_index = app.view_functions.pop(endpoint)
+
+        @app.route(url, endpoint=endpoint)
+        @basic_auth.required
+        # @roles_required('admin')
+        def secure_admin_index():
+            return admin_index()
 
     return app

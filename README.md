@@ -18,6 +18,8 @@ Tested only on Python `2.7`.  _Sprint._
     source venv/bin/activate
     pip install -r requirements.txt
     python manage.py createdb
+    cp .env.dist .env
+    nano .env
 
 
 ## Development

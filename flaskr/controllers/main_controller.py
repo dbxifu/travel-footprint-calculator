@@ -6,7 +6,7 @@ from flask import Blueprint, render_template, flash, request, redirect, \
     url_for, abort, send_from_directory
 from os.path import join
 
-from flaskr.extensions import cache
+from flaskr.extensions import cache, basic_auth
 from flaskr.forms import LoginForm, EstimateForm
 from flaskr.models import db, User, Estimation, StatusEnum
 from flaskr.geocoder import CachedGeocoder
@@ -54,7 +54,7 @@ def estimate():
         estimation.status = StatusEnum.pending
         estimation.origin_addresses = form.origin_addresses.data
         estimation.destination_addresses = form.destination_addresses.data
-        estimation.compute_optimal_destination = form.compute_optimal_destination.data
+        # estimation.compute_optimal_destination = form.compute_optimal_destination.data
 
         db.session.add(estimation)
         db.session.commit()
@@ -376,8 +376,8 @@ def compute():  # process the queue of estimation requests
     return _respond(response)
 
 
-@main.route("/estimation/<public_id>.<format>")
-def consult_estimation(public_id, format):
+@main.route("/estimation/<public_id>.<extension>")
+def consult_estimation(public_id, extension):
     try:
         estimation = Estimation.query \
             .filter_by(public_id=public_id) \
@@ -394,7 +394,7 @@ def consult_estimation(public_id, format):
 
     unavailable_statuses = [StatusEnum.pending, StatusEnum.working]
 
-    if format in ['xhtml', 'html', 'htm']:
+    if extension in ['xhtml', 'html', 'htm']:
 
         if estimation.status in unavailable_statuses:
             return render_template(
@@ -407,14 +407,14 @@ def consult_estimation(public_id, format):
                 estimation=estimation
             )
 
-    elif format in ['yaml', 'yml']:
+    elif extension in ['yaml', 'yml']:
 
         if estimation.status in unavailable_statuses:
             abort(404)
 
         return estimation.output_yaml
 
-    elif 'csv' == format:
+    elif 'csv' == extension:
 
         if estimation.status in unavailable_statuses:
             abort(404)
@@ -447,3 +447,11 @@ def consult_estimation(public_id, format):
 
     else:
         abort(404)
+
+
+@main.route("/test")
+@basic_auth.required
+def dev_test():
+    import os
+
+    return os.getenv('ADMIN_USERNAME')
