@@ -94,6 +94,10 @@ def compute():  # process the queue of estimation requests
         _estimation.errors = _failure_message
         db.session.commit()
 
+    def _handle_warning(_estimation, _warning_message):
+        _estimation.warnings = _warning_message
+        db.session.commit()
+
     response = ""
 
     count_working = Estimation.query \
@@ -137,18 +141,18 @@ def compute():  # process the queue of estimation requests
         try:
             origin = geocoder.geocode(origin_address.encode('utf-8'))
         except geopy.exc.GeopyError as e:
-            response += u"Failed to geolocalize origin `%s`.\n%s" % (
+            response += u"Failed to geocode origin `%s`.\n%s" % (
                 origin_address, e,
             )
-            _handle_failure(estimation, response)
-            return _respond(response)
+            _handle_warning(estimation, response)
+            continue
 
         if origin is None:
-            response += u"Failed to geolocalize origin `%s`." % (
+            response += u"Failed to geocode origin `%s`." % (
                 origin_address,
             )
-            _handle_failure(estimation, response)
-            return _respond(response)
+            _handle_warning(estimation, response)
+            continue
 
         origins.append(origin)
 
@@ -172,15 +176,15 @@ def compute():  # process the queue of estimation requests
             response += u"Failed to geocode destination `%s`.\n%s" % (
                 destination_address, e,
             )
-            _handle_failure(estimation, response)
-            return _respond(response)
+            _handle_warning(estimation, response)
+            continue
 
         if destination is None:
             response += u"Failed to geocode destination `%s`." % (
                 destination_address,
             )
-            _handle_failure(estimation, response)
-            return _respond(response)
+            _handle_warning(estimation, response)
+            continue
 
         # print(repr(destination.raw))
 
