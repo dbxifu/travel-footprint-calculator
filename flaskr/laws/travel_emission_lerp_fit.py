@@ -1,6 +1,5 @@
 import numpy as np
 from .travel_emission_linear_fit import EmissionModel as BaseEmissionModel
-from flaskr.content import Struct
 
 
 class EmissionModel(BaseEmissionModel):
@@ -13,6 +12,8 @@ class EmissionModel(BaseEmissionModel):
         footprint = None
 
         sample_points = sorted(config.points, key=lambda p: float(p[0]))
+
+        # Numpy!
 
         previous_point = [0, 0]
         for i, sample_point in enumerate(sample_points):
