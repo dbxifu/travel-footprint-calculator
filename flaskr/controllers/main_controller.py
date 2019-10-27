@@ -3,7 +3,7 @@ import geopy
 import sqlalchemy
 
 from flask import Blueprint, render_template, flash, request, redirect, \
-    url_for, abort, send_from_directory
+    url_for, abort, send_from_directory, Response
 from os.path import join
 
 from flaskr.extensions import cache, basic_auth
@@ -14,14 +14,37 @@ from flaskr.geocoder import CachedGeocoder
 from flaskr.core import generate_unique_id
 from flaskr.content import content
 
-# from io import StringIO
 from yaml import safe_dump as yaml_dump
 
+import csv
+# from io import StringIO
+from cStringIO import StringIO
 
 main = Blueprint('main', __name__)
 
 
 OUT_ENCODING = 'utf-8'
+
+
+# -----------------------------------------------------------------------------
+# refactor this outta here, like in core?
+
+def get_emission_models():
+    emission_models_confs = content.models
+    emission_models = []
+
+    for model_conf in emission_models_confs:
+        model_file = model_conf.file
+        the_module = importlib.import_module("flaskr.laws.%s" % model_file)
+
+        model = the_module.EmissionModel(model_conf)
+        # model.configure(extra_model_conf)
+
+        emission_models.append(model)
+
+    return emission_models
+
+# -----------------------------------------------------------------------------
 
 
 @main.route('/favicon.ico')
@@ -209,17 +232,7 @@ def compute():  # process the queue of estimation requests
 
     # GRAB AND CONFIGURE THE EMISSION MODELS ##################################
 
-    emission_models_confs = content.models
-    emission_models = []
-
-    for model_conf in emission_models_confs:
-        model_file = model_conf.file
-        the_module = importlib.import_module("flaskr.laws.%s" % model_file)
-
-        model = the_module.EmissionModel(model_conf)
-        # model.configure(extra_model_conf)
-
-        emission_models.append(model)
+    emission_models = get_emission_models()
 
     # print(emission_models)
 
@@ -419,9 +432,6 @@ def consult_estimation(public_id, extension):
         if estimation.status in unavailable_statuses:
             abort(404)
 
-        import csv
-        from cStringIO import StringIO
-
         si = StringIO()
         cw = csv.writer(si, quoting=csv.QUOTE_ALL)
         cw.writerow([u"city", u"address", u"co2 (g)"])
@@ -443,10 +453,46 @@ def consult_estimation(public_id, extension):
                 ])
 
         # HTTP headers?
-        return si.getvalue().strip('\r\n')
+        # return si.getvalue().strip('\r\n')
+        return Response(
+            response=si.getvalue().strip('\r\n'),
+            headers={
+                'Content-type': 'text/csv',
+                'Content-disposition': "attachment; filename=%s.csv"%public_id,
+            },
+        )
 
     else:
         abort(404)
+
+
+@main.route("/scaling_laws.csv")
+def get_scaling_laws_csv():
+    distances = [
+        500., 1000., 1500., 2500., 3000., 4500.,
+        5000., 8000., 10000., 12000.,
+    ]
+    models = get_emission_models()
+
+    si = StringIO()
+    cw = csv.writer(si, quoting=csv.QUOTE_ALL)
+
+    header = ['distance'] + [model.slug for model in models]
+    cw.writerow(header)
+
+    for distance in distances:
+        row = [distance]
+        for model in models:
+            row.append(model.compute_airplane_distance_footprint(distance))
+        cw.writerow(row)
+
+    return Response(
+        response=si.getvalue().strip('\r\n'),
+        headers={
+            'Content-type': 'text/csv',
+            'Content-disposition': 'attachment; filename=scaling_laws.csv',
+        },
+    )
 
 
 @main.route("/test")
