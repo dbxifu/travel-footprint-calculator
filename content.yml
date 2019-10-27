@@ -386,11 +386,11 @@ estimate:
     first_name:
       label: First Name
       description: Also known as given name, eg. `Didier`.
-      placeholder: Antoine
+      placeholder: Adèle
     last_name:
       label: Last Name
       description: Also known as family name, eg. `Barret`.
-      placeholder: Goutenoir
+      placeholder: Bellego
     institution:
       label: Institution / Enterprise
       description: If any?
