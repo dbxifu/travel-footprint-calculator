@@ -86,10 +86,7 @@ class EmissionModel(BaseEmissionModel):
 
         distance = distance * config.scale_before + config.offset_before
 
-        footprint = self.apply_scaling_law(
-            distance,
-            config.intervals
-        )
+        footprint = self.apply_scaling_law(distance, config)
 
         footprint = self.adjust_footprint_for_rfi(footprint, config)
 
@@ -99,9 +96,9 @@ class EmissionModel(BaseEmissionModel):
         # Todo: grab data from config merged with form input?
         return config.rfi * footprint
 
-    def apply_scaling_law(self, distance, intervals):
+    def apply_scaling_law(self, distance, config):
         footprint = distance
-        for interval in intervals:
+        for interval in config.intervals:
             if interval.dmin <= distance < interval.dmax:
                 offset = interval.offset if interval.offset else 0
                 scale = interval.scale if interval.scale else 1
