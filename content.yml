@@ -81,10 +81,12 @@ models:
         # Radiative Forcing Index
         # Multiplier after scaling
         rfi: 1.9
-        # Flat scalar to add before scaling with intervals
+        # Flat scalar to add before scaling with laws
         offset_before: 0
-        # Flat scalar to multiply before scaling with intervals
+        # Flat scalar to multiply before scaling with laws
         scale_before: 1
+        # The travel_emission_lerp_fit uses points instead of intervals
+        # List of (distance in km, footprint in ??)
         points:
           - [   300.0,  120.42928309 ]
           - [  1500.0,  278.88301355 ]
