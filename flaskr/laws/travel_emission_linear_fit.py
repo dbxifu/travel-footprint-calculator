@@ -84,10 +84,15 @@ class EmissionModel(BaseEmissionModel):
 
         distance = config.connecting_flights_scale * distance
 
+        footprint = self.compute_airplane_distance_footprint(distance, config)
+
+        return footprint
+
+    def compute_airplane_distance_footprint(self, distance, config=None):
+        if config is None:
+            config = self.config.plane_emission_linear_fit
         distance = distance * config.scale_before + config.offset_before
-
         footprint = self.apply_scaling_law(distance, config)
-
         footprint = self.adjust_footprint_for_rfi(footprint, config)
 
         return footprint
