@@ -62,6 +62,34 @@ models:
           # b is optional and defaults to 0
 #          - "0 500 4"
 #          - 500 1000 8
+  - name: MyClimate
+    # Slugged version of the display name above
+    # Only lowercase alphanumeric, starting with a letter, using - as liaison
+    # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
+    # MUST be unique, two models MUST NOT have the same slug.
+    slug: my-climate
+    # There MUST exist a python file named like this in `flaskr/laws`
+    # And it MUST contain a class named EmissionModel
+    # Please keep this lowercased, letters-only (or I will breathe fire)
+    file: travel_emission_lerp_fit
+    # The configuration that will be fed to the model.
+    # May be anything, really.  Go bonkers!
+    config:
+      plane_emission_linear_fit:
+        # A coefficient applied to the distance
+        connecting_flights_scale: 1.05
+        # Radiative Forcing Index
+        # Multiplier after scaling
+        rfi: 1.9
+        # Flat scalar to add before scaling with intervals
+        offset_before: 0
+        # Flat scalar to multiply before scaling with intervals
+        scale_before: 1
+        points:
+          - [   300.0,  120.42928309 ]
+          - [  1500.0,  278.88301355 ]
+          - [  2500.0,  438.31863895 ]
+          - [ 20000.0, 3335.62849772 ]
 
 
 # The content is Markdown.  HTML is also allowed.
