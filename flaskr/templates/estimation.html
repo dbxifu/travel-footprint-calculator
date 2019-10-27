@@ -18,6 +18,27 @@
 
 
 
+{% macro render_cities(cities) %}
+<ul class="numbered-list">
+{% for city in cities %}
+    <li>
+        <span class="city-name" title="{{ city.address }}">
+    {% if loop.first %}
+        <strong>
+        {{ city.city }}
+        </strong>
+    {% else %}
+        {{ city.city }}
+    {% endif %}
+        </span>
+        –
+        {{ "%.d" | format(city.footprint | round(0) | int) }} CO<sub>2</sub><small>EQ</small>
+    </li>
+{% endfor %}
+</ul>
+{% endmacro %}
+
+
 {% block body %}
 <h2>
     {{ estimation.public_id }} ({{ estimation.status.name }})
@@ -46,37 +67,37 @@
 {% endif %}
 </div>
 {% endif %}
+
+
+<div class="row">
+    <h4>Total CO<sub>2</sub> footprint (in grams-equivalent) of each city</h4>
+    <div id="cities_footprints_d3viz"></div>
+{#    <br>#}
+{#    <p>A Legend here</p>#}
+</div>
+
+<hr>
+
+<div class="row">
+
 {% if not estimation.has_failed() %}
-
+{% set estimation_output = estimation.get_output_dict() %}
 {% if estimation.has_many_to_many() %}
-
+    <div class="col-md-6">
     <p>
-    For each city, the sum of the travels from all the origins.
+        For each destination city, the sum of the travels from all the origins.
     </p>
-
-    <ul class="numbered-list">
-    {% for city in estimation.get_output_dict().cities %}
-        <li>
-        {% if loop.first %}
-            <strong>
-            {{ city.city }}
-            </strong>
-        {% else %}
-            {{ city.city }}
-        {% endif %}
-            –
-            {{ "%.d" | format(city.total | round(0) | int) }} CO<sub>2</sub><small>EQ</small>
-        </li>
-    {% endfor %}
-    </ul>
+    {{ render_cities(estimation_output.cities) }}
+    </div>
+{% else %}
+    <div class="col-md-6">
+    <p>
+        Carbon footprint for each city.
+    </p>
+    {{ render_cities(estimation_output.mean_footprint.cities) }}
+    </div>
 {% endif %}
 
-    <div class="row">
-        <div class="col-md-6">
-        <pre>
-{{ estimation.output_yaml }}
-        </pre>
-    </div>
     <div class="col-md-6">
         <ul class="nav">
             <li class="nav-item m-4">
@@ -85,18 +106,144 @@
                 </a>
             </li>
             <li class="nav-item m-4">
-                <a href="/estimation/{{ estimation.public_id }}.xls" class="btn btn-lg btn-secondary disabled">
-                    Download XLS
+                <a href="/estimation/{{ estimation.public_id }}.yml" class="btn btn-lg btn-warning">
+                    Download Raw YAML
                 </a>
             </li>
-            <li class="nav-item m-4">
-                <a href="/estimation/{{ estimation.public_id }}.ods" class="btn btn-lg btn-secondary disabled">
-                    Download ODS
-                </a>
-            </li>
+{#            <li class="nav-item m-4">#}
+{#                <a href="/estimation/{{ estimation.public_id }}.xls" class="btn btn-lg btn-secondary disabled">#}
+{#                    Download XLS#}
+{#                </a>#}
+{#            </li>#}
+{#            <li class="nav-item m-4">#}
+{#                <a href="/estimation/{{ estimation.public_id }}.ods" class="btn btn-lg btn-secondary disabled">#}
+{#                    Download ODS#}
+{#                </a>#}
+{#            </li>#}
         </ul>
-
     </div>
+
 </div>
+
+<hr>
+
+{#<div class="row">#}
+{#    <div class="col-md-6">#}
+{#        <h3>Raw Output <small>(YAML)</small></h3>#}
+{#        <pre>#}
+{#{{ estimation.output_yaml }}#}
+{#        </pre>#}
+{#    </div>#}
+{#</div>#}
 {% endif %}
 {% endblock %}
+{% block js %}
+<script src="https://d3js.org/d3.v4.js"></script>
+<script type="text/javascript">
+
+/** POLYFILLS **/
+Math.log10 = Math.log10 || function(x) {
+  return Math.log(x) * Math.LOG10E;
+};
+
+/**
+ *
+ * @param value
+ * @returns {number}
+ */
+var ceil_value_to_magnitude = function(value) {
+    var sign = 1;
+    if (value < 0) {
+        value = Math.abs(value);
+        sign = -1;
+    }
+    if (value < 1) {
+        return sign;
+    }
+
+    var low = Math.pow(10, Math.floor(Math.log10(value)));
+
+    var cursor = low;
+    var follop = 0;
+    while ((cursor < value) && (follop <= 100)) {
+        cursor += 0.1 * low;
+        follop += 1;
+    }
+
+    return sign * cursor;
+};
+
+
+/** PLOTS **/
+jQuery(document).ready(function($){
+
+    var vizid = "#cities_footprints_d3viz";
+
+    // Set the dimensions and margins of the graph
+    var margin = {top: 10, right: 30, bottom: 100, left: 100},
+        height = 666 - margin.top - margin.bottom;
+    var width = Math.max(880, $(vizid).parent().width());
+    width = width - margin.left - margin.right;
+
+    // Append the svg object to the body of the page
+    var svg = d3.select(vizid)
+      .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
+
+    // Parse the Data
+    d3.csv("/estimation/{{ estimation.public_id }}.csv", function(data) {
+
+        // Extrema
+        var data_y_max = d3.max(data, function(d) { return parseFloat(d['co2 (g)']); });
+        var axis_y_max = ceil_value_to_magnitude(data_y_max);
+
+        // X axis
+        var x = d3.scaleBand()
+          .range([ 0, width ])
+          .domain(data.map(function(d) { return d.city; }))
+          .padding(0.2);
+        svg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x))
+          .selectAll("text")
+            .attr("transform", "translate(-10,0)rotate(-45)")
+            .style("text-anchor", "end");
+
+        // Add Y axis
+        var y = d3.scaleLinear()
+          .range([ height, 0 ])
+          .domain([ 0, axis_y_max ]);
+        svg.append("g")
+          .call(d3.axisLeft(y));
+
+        // Bars
+        svg.selectAll("mybar")
+          .data(data)
+          .enter()
+          .append("rect")
+            .attr("x", function(d) { return x(d['city']); })
+            .attr("width", x.bandwidth())
+            .attr("fill", "#d0808b")
+            // Hide bar at the beginning
+            .attr("height", function(d) { return height - y(0); }) // always equal to 0
+            .attr("y", function(d) { return y(0); });
+
+        // Animation
+        svg.selectAll("rect")
+          .transition()
+          .duration(800)
+          .attr("y", function(d) { return y(d['co2 (g)']); })
+          .attr("height", function(d) { return height - y(d['co2 (g)']); })
+          .delay(function(d, i) { return(i*100); });
+
+        // …
+    });
+
+});
+</script>
+{% endblock %}
+
