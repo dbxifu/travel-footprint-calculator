@@ -50,6 +50,7 @@ def estimate():
         # estimation.email = form.email.data
         estimation.first_name = form.first_name.data
         estimation.last_name = form.last_name.data
+        estimation.institution = form.institution.data
         estimation.status = StatusEnum.pending
         estimation.origin_addresses = form.origin_addresses.data
         estimation.destination_addresses = form.destination_addresses.data

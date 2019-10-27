@@ -1,3 +1,5 @@
+from flask_admin.contrib.sqla import ModelView
+
 from flaskr.core import generate_unique_id
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, AnonymousUserMixin
@@ -32,12 +34,13 @@ class Estimation(db.Model):
     email = db.Column(db.Unicode(1024))
     first_name = db.Column(db.Unicode(1024))  # Antoine
     last_name = db.Column(db.Unicode(1024))   # Goutenoir
+    institution = db.Column(db.Unicode(1024))   # IRAP
     status = db.Column(db.Enum(StatusEnum), default=StatusEnum.pending)
 
     # City, Country
     # One address per line
-    origin_addresses = db.Column(db.Unicode())
-    destination_addresses = db.Column(db.Unicode())
+    origin_addresses = db.Column(db.UnicodeText())
+    destination_addresses = db.Column(db.UnicodeText())
 
     compute_optimal_destination = db.Column(db.Boolean())
 
@@ -53,6 +56,27 @@ class Estimation(db.Model):
 
     def has_many_to_many(self):
         return 'cities' in self.get_output_dict()
+
+
+class EstimationView(ModelView):
+    # Show only name and email columns in list view
+    column_list = (
+        'public_id',
+        'status',
+        'first_name',
+        'last_name',
+        'origin_addresses',
+        'destination_addresses',
+        'warnings',
+        'errors',
+    )
+
+    # Enable search functionality - it will search for terms in
+    # name and email fields
+    # column_searchable_list = ('name', 'email')
+
+    # Add filters for name and email columns
+    column_filters = ('first_name', 'last_name')
 
 
 # USERS #######################################################################

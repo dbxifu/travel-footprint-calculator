@@ -4,11 +4,13 @@ from flask import Flask
 from flask.cli import ScriptInfo
 from webassets.loaders import PythonLoader as PythonAssetsLoader
 
+
 from flaskr import assets
-from flaskr.models import db
+from flaskr.models import db, Estimation, EstimationView
 from flaskr.controllers.main_controller import main
 
 from flaskr.extensions import (
+    admin,
     cache,
     assets_env,
     debug_toolbar,
@@ -39,16 +41,13 @@ def create_app(object_name):
     # Load configuration
     app.config.from_object(object_name)
 
-    # initialize the cache
+    # Initialize
     cache.init_app(app)
-
-    # initialize the debug tool bar
     debug_toolbar.init_app(app)
-
-    # initialize SQLAlchemy
     db.init_app(app)
-
     login_manager.init_app(app)
+    admin.init_app(app)
+    admin.add_view(EstimationView(Estimation, db.session))
 
     # Import and register the different asset bundles
     assets_env.init_app(app)

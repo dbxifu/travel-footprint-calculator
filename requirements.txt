@@ -1,6 +1,7 @@
 Flask==1.1.1
 
 # Flask Extensions
+Flask-Admin==1.5.4
 Flask-Assets==0.12
 Flask-Caching==1.7.2
 Flask-DebugToolbar==0.10.0
