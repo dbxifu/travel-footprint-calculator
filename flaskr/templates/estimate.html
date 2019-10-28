@@ -67,11 +67,19 @@
             </div>
             <div class="form-group">
                 {{ render_field(form.origin_addresses) }}
-                <small class="form-text text-muted">Use <code>en_US</code> city and country names. No diacritics. The comma matters.</small>
+                <small class="form-text text-muted">
+                    Use <code>en_US</code> city and country names, without diacritics. The comma matters.
+                    <br>
+                    These usually are the addresses of your participants.
+                </small>
             </div>
             <div class="form-group">
                 {{ render_field(form.destination_addresses) }}
-                <small class="form-text text-muted">Provide multiple destinations to compare them.</small>
+                <small class="form-text text-muted">
+                    Provide multiple destinations to compare them.
+                    <br>
+                    These usually are the possible locations for an event.
+                </small>
             </div>
 {#            <div class="form-check form-group">#}
 {#                {{ render_checkbox(form.compute_optimal_destination) }}#}
