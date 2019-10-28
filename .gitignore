@@ -3,6 +3,8 @@
 *.swp
 *~
 
+.env
+
 # Packages
 *.egg
 *.egg-info
