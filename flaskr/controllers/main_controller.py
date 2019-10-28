@@ -91,7 +91,7 @@ def estimate():
         return redirect(url_for(
             endpoint=".consult_estimation",
             public_id=estimation.public_id,
-            format='html'
+            extension='html'
         ))
         # return render_template("estimate-debrief.html", form=form)
 
@@ -320,9 +320,10 @@ def compute():  # process the queue of estimation requests
         cities_mean = [cities_mean_dict[k] for k in cities_mean_dict.keys()]
         cities_mean = sorted(cities_mean, key=lambda c: c['footprint'])
 
-        _results['mean_footprint'] = {
+        _results['mean_footprint'] = {  # DEPRECATED?
             'cities': cities_mean
         }
+        _results['cities'] = cities_mean
 
         _results['total'] = total  # DEPRECATED
         _results['footprint'] = total
@@ -422,7 +423,8 @@ def consult_estimation(public_id, extension):
         else:
             return render_template(
                 "estimation.html",
-                estimation=estimation
+                estimation=estimation,
+                estimation_output=estimation.get_output_dict(),
             )
 
     elif extension in ['yaml', 'yml']:
