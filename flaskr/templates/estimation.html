@@ -72,6 +72,9 @@
 <div class="row">
     <h4>Total CO<sub>2</sub> footprint (in grams-equivalent) of each city</h4>
     <div id="cities_footprints_d3viz"></div>
+    <br>
+    <hr>
+    <div id="cities_footprints_d3viz_lollipop"></div>
 {#    <br>#}
 {#    <p>A Legend here</p>#}
 </div>
@@ -81,7 +84,7 @@
 <div class="row">
 
 {% if not estimation.has_failed() %}
-{% set estimation_output = estimation.get_output_dict() %}
+{#{% set estimation_output = estimation.get_output_dict() %}#}
 {% if estimation.has_many_to_many() %}
     <div class="col-md-6">
     <p>
@@ -94,7 +97,7 @@
     <p>
         Carbon footprint for each city.
     </p>
-    {{ render_cities(estimation_output.mean_footprint.cities) }}
+    {{ render_cities(estimation_output.cities) }}
     </div>
 {% endif %}
 
@@ -175,6 +178,7 @@ var ceil_value_to_magnitude = function(value) {
 
 
 /** PLOTS **/
+
 jQuery(document).ready(function($){
 
     var vizid = "#cities_footprints_d3viz";
@@ -247,6 +251,106 @@ jQuery(document).ready(function($){
     });
 
 });
+
+
+jQuery(document).ready(function($){
+    var vizid = "#cities_footprints_d3viz_lollipop";
+    var csvUrl = "/estimation/{{ estimation.public_id }}.csv";
+    var y_key = 'city';
+    var x_key = 'co2 (g)';
+
+    var margin = {top: 10, right: 30, bottom: 100, left: 100},
+        height = Math.max(300, 100+16*{{ estimation_output.cities | length }}) - margin.top - margin.bottom;
+    var width = Math.max(880, $(vizid).parent().width());
+    width = width - margin.left - margin.right;
+
+    var svg = d3.select(vizid)
+      .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
+
+    d3.csv(csvUrl, function (data) {
+
+        // Extrema
+        var data_x_max = d3.max(data, function(d) { return parseFloat(d[x_key]); });
+        var axis_x_max = ceil_value_to_magnitude(data_x_max);
+
+        // Add X axis
+        var x = d3.scaleLinear()
+            .domain([0, axis_x_max])
+            .range([0, width]);
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .attr("transform", "translate(-10,0)rotate(-45)")
+            .style("text-anchor", "end");
+
+        // Y axis
+        var y = d3.scaleBand()
+            .range([0, height])
+            .domain(data.map(function (d) {
+                return d[y_key];
+            }))
+            .padding(1);
+        svg.append("g")
+            .call(d3.axisLeft(y));
+
+
+        // Lines
+        svg.selectAll("myline")
+            .data(data)
+            .enter()
+            .append("line")
+//            .attr("x1", function (d) {
+//                return x(d[x_key]);
+//            })
+            .attr("x1", x(0))
+            .attr("x2", x(0))
+            .attr("y1", function (d) {
+                return y(d[y_key]);
+            })
+            .attr("y2", function (d) {
+                return y(d[y_key]);
+            })
+            .attr("stroke", "grey");
+
+        // Circles
+        svg.selectAll("mycircle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", function (d) {
+                return x(d[x_key]);
+            })
+            .attr("cy", function (d) {
+                return y(d[y_key]);
+            })
+            .attr("r", "0")
+            .style("fill", "#69b3a2")
+            .attr("stroke", "black");
+
+        var animation_duration = 300;
+        var animation_delay = 100;
+
+        svg.selectAll("circle")
+            .transition()
+            .duration(animation_duration)
+            .attr("r", "4")
+            .delay(function(d, i) { return(i*animation_delay); });
+
+        svg.selectAll("line")
+            .transition()
+            .duration(animation_duration)
+            .attr("x1", function (d) { return x(d[x_key]); })
+            .delay(function(d, i) { return(i*animation_delay); });
+    });
+
+});
+
 </script>
 {% endblock %}
 
