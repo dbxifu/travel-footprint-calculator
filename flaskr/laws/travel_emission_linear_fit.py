@@ -6,6 +6,7 @@ class BaseEmissionModel():
     def __init__(self, config):  # Constructor
         self.name = config.name
         self.slug = config.slug
+        self.color = config.color
         self.config = config.config
 
     def __repr__(self):  # Cast to String

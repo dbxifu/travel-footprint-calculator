@@ -73,6 +73,21 @@ span.required-asterisk {
 }
 
 
+
+/** PLOTS ********************************************************************/
+
+.legend-list {
+    list-style: none;
+}
+.legend-color-badge {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    position: relative;
+    top: 2px;
+}
+
+
 /** SPINNER ******************************************************************/
 
 .lds-ripple {

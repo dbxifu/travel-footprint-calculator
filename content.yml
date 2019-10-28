@@ -27,6 +27,8 @@ models:
     # And it MUST contain a class named EmissionModel
     # Please keep this lowercased, letters-only (or I will breathe fire)
     file: travel_emission_linear_fit
+    # Color MUST be in the hex form, without alpha
+    color: "#ff3399"
     # The configuration that will be fed to the model.
     # May be anything, really.  Go bonkers!
     config:
@@ -72,6 +74,8 @@ models:
     # And it MUST contain a class named EmissionModel
     # Please keep this lowercased, letters-only (or I will breathe fire)
     file: travel_emission_lerp_fit
+    # Color MUST be in the hex form, without alpha
+    color: "#ff9933"
     # The configuration that will be fed to the model.
     # May be anything, really.  Go bonkers!
     config:

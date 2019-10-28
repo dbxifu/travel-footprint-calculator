@@ -58,7 +58,12 @@ def favicon():  # we want it served from the root, not from static/
 @main.route('/')
 @cache.cached(timeout=1000)
 def home():
-    return render_template('index.html')
+    models = get_emission_models()
+    return render_template(
+        'home.html',
+        models=models,
+        colors=[model.color for model in models],
+    )
 
 
 @main.route("/estimate", methods=["GET", "POST"])
