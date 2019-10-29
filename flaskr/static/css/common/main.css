@@ -75,7 +75,10 @@ span.required-asterisk {
 
 
 /** PLOTS ********************************************************************/
-
+.plot-container {
+    /*background: #ff3399;*/
+    border: 2px dotted #888;
+}
 .legend-list {
     list-style: none;
 }

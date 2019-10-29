@@ -71,10 +71,9 @@
 
 <div class="row">
     <h4>Total CO<sub>2</sub> footprint (in grams-equivalent) of each city</h4>
-    <div id="cities_footprints_d3viz"></div>
-    <br>
+    <div id="cities_footprints_d3viz" class="plot-container"></div>
     <hr>
-    <div id="cities_footprints_d3viz_lollipop"></div>
+    <div id="cities_footprints_d3viz_lollipop" class="plot-container"></div>
 {#    <br>#}
 {#    <p>A Legend here</p>#}
 </div>
@@ -141,7 +140,11 @@
 {% endif %}
 {% endblock %}
 {% block js %}
-<script src="https://d3js.org/d3.v4.js"></script>
+<script src="/static/js/vendor/d3.v4.js"></script>
+<script src="/static/js/vendor/d3-legend.js"></script>
+{#<script src="https://d3js.org/d3.v4.js"></script>#}
+{#<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>#}
+
 <script type="text/javascript">
 
 /** POLYFILLS **/
@@ -167,15 +170,20 @@ var ceil_value_to_magnitude = function(value) {
     var low = Math.pow(10, Math.floor(Math.log10(value)));
 
     var cursor = low;
-    var follop = 0;
-    while ((cursor < value) && (follop <= 100)) {
+    var noloop = 0;
+    while ((cursor < value) && (noloop <= 100)) {
         cursor += 0.1 * low;
-        follop += 1;
+        noloop += 1;
     }
 
     return sign * cursor;
 };
 
+/** CONFIG **/
+
+var plots_config = {
+    'cities_count': {{ estimation_output.cities | length }}
+};
 
 /** PLOTS **/
 
@@ -187,7 +195,7 @@ jQuery(document).ready(function($){
     var y_key = 'co2 (g)';
 
     // Set the dimensions and margins of the graph
-    var margin = {top: 10, right: 30, bottom: 100, left: 100},
+    var margin = {top: 10, right: 30, bottom: 150, left: 150},
         height = 666 - margin.top - margin.bottom;
     var width = Math.max(880, $(vizid).parent().width());
     width = width - margin.left - margin.right;
@@ -259,8 +267,8 @@ jQuery(document).ready(function($){
     var y_key = 'city';
     var x_key = 'co2 (g)';
 
-    var margin = {top: 10, right: 30, bottom: 100, left: 100},
-        height = Math.max(300, 100+16*{{ estimation_output.cities | length }}) - margin.top - margin.bottom;
+    var margin = {top: 10, right: 30, bottom: 150, left: 150},
+        height = Math.max(300, 100+16*plots_config['cities_count']) - margin.top - margin.bottom;
     var width = Math.max(880, $(vizid).parent().width());
     width = width - margin.left - margin.right;
 
@@ -299,6 +307,25 @@ jQuery(document).ready(function($){
         svg.append("g")
             .call(d3.axisLeft(y));
 
+        {#svg.append("g")#}
+        {#    .attr("class", "legendQuant")#}
+        {#    .attr("transform", "translate(20,20)");#}
+        {##}
+        {#var legend = d3.legendColor()#}
+        {#    .labelFormat(d3.format(".2f"))#}
+        {#    .useClass(true)#}
+        {#    .title("Legend")#}
+        {#    .titleWidth(100)#}
+        {#    .scale(y);#}
+        {##}
+        {#svg.select(".legendQuant")#}
+        {#    .call(legend);#}
+
+        svg.append("g")
+            .append('text')
+            .attr("transform", "translate("+(-180+width/2.0)+","+(height+111)+")")
+            {#.text("CO2 emissions as a function of travelling distance");#}
+            .text("CO\u2082 emissions equivalent per target city.");
 
         // Lines
         svg.selectAll("myline")
@@ -344,7 +371,7 @@ jQuery(document).ready(function($){
 
         svg.selectAll("line")
             .transition()
-            .duration(animation_duration)
+            .duration(animation_duration*0.618)
             .attr("x1", function (d) { return x(d[x_key]); })
             .delay(function(d, i) { return(i*animation_delay); });
     });
