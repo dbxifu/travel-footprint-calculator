@@ -81,22 +81,22 @@ class EstimateForm(FlaskForm):
             "placeholder": form_content['destination_addresses']['placeholder']
         },
     )
-    compute_optimal_destination = BooleanField(
-        label=form_content['compute_optimal_destination']['label'],
-        description=form_content['compute_optimal_destination']['description'],
-        default=False,
-        validators=[
-            validators.Optional(),
-        ],
-    )
-    use_atmosfair_rfi = BooleanField(
-        label=form_content['use_atmosfair_rfi']['label'],
-        description=form_content['use_atmosfair_rfi']['description'],
-        default=False,
-        validators=[
-            validators.Optional(),
-        ],
-    )
+    # compute_optimal_destination = BooleanField(
+    #     label=form_content['compute_optimal_destination']['label'],
+    #     description=form_content['compute_optimal_destination']['description'],
+    #     default=False,
+    #     validators=[
+    #         validators.Optional(),
+    #     ],
+    # )
+    # use_atmosfair_rfi = BooleanField(
+    #     label=form_content['use_atmosfair_rfi']['label'],
+    #     description=form_content['use_atmosfair_rfi']['description'],
+    #     default=False,
+    #     validators=[
+    #         validators.Optional(),
+    #     ],
+    # )
 
     def validate(self):
         check_validate = super(EstimateForm, self).validate()

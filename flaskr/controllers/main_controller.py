@@ -48,6 +48,7 @@ def get_emission_models():
 
 
 @main.route('/favicon.ico')
+@cache.cached(timeout=10000)
 def favicon():  # we want it served from the root, not from static/
     return send_from_directory(
         join(main.root_path, '..', 'static', 'img'),
