@@ -164,14 +164,14 @@ home:
         content: |
           The tool helps computing your travel carbon footprint
           for a **round trip** from a given location,
-          for a set of visited cities (listed in the input excel sheet).
+          for a set of visited cities.
 
           Similarly, the tool allows to compute the travel footprint
           of a conference/meeting/etc.
-          (the originating city of each participant is provided in the input excel sheet).
+          (the originating city of each participant has then to be provided).
 
           It can also return the city that would minimize the travel footprint
-          assuming the same audience of the conference/meeting.
+          assuming the same audience of the conference/meeting for a set of city hosts.
 
           While online CO<sub>2</sub> calculators enable to compute the footprint
           for a limited number of trips with detailed trip information
