@@ -17,53 +17,6 @@ meta:
 
 # Aka. Laws
 models:
-  - name: Atmosfair_old
-    # Slugged version of the display name above
-    # Only lowercase alphanumeric, starting with a letter, using - as liaison
-    # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
-    # MUST be unique, two models MUST NOT have the same slug.
-    slug: atmosfair_old
-    # There MUST exist a python file named like this in `flaskr/laws`
-    # And it MUST contain a class named EmissionModel
-    # Please keep this lowercased, letters-only (or I will breathe fire)
-    file: travel_emission_linear_fit
-    # Color MUST be in the hex form, without alpha
-    color: "#ff3399"
-    # The configuration that will be fed to the model.
-    # May be anything, really.  Go bonkers!
-    config:
-      plane_emission_linear_fit:
-        # A coefficient applied to the distance
-        connecting_flights_scale: 1.05
-        # Radiative Forcing Index
-        # Multiplier after scaling
-        rfi: 1.9
-        # Flat scalar to add before scaling with intervals
-        offset_before: 50
-        # Flat scalar to multiply before scaling with intervals
-        scale_before: 1
-        # First interval found will apply its scale and offset
-        intervals:
-          # Distances [dmin, dmax[ are in kilometers, here.
-          - dmin: 0
-            dmax: 1000
-            # The scaling law for this interval of distances. Defaults to 1.
-            scale: 0.079107
-            # Offset is optional and defaults to 0.
-            offset: 25.922
-          - dmin: 1000
-            dmax: 4000
-            scale: 0.066183
-            offset: 35.041
-          - dmin: 4000
-            dmax: 999999999
-            scale: 0.095998
-            offset: -80.835
-          # dmin dmax a b
-          # for a fitting of (a*x + b) on the interval [dmin dmax[
-          # b is optional and defaults to 0
-#          - "0 500 4"
-#          - 500 1000 8
   - name: MyClimate
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
@@ -96,41 +49,6 @@ models:
           - [  1500.0,  278.88301355 ]
           - [  2500.0,  438.31863895 ]
           - [ 20000.0, 3335.62849772 ]
-
-# This is the addition by Didier
-  - name: atmosfair
-    # Slugged version of the display name above
-    # Only lowercase alphanumeric, starting with a letter, using - as liaison
-    # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
-    # MUST be unique, two models MUST NOT have the same slug.
-    slug: atmosfair
-    # There MUST exist a python file named like this in `flaskr/laws`
-    # And it MUST contain a class named EmissionModel
-    # Please keep this lowercased, letters-only (or I will breathe fire)
-    file: travel_emission_lerp_fit
-    # Color MUST be in the hex form, without alpha
-    color: "#9933ff"
-    # The configuration that will be fed to the model.
-    # May be anything, really.  Go bonkers!
-    config:
-      plane_emission_linear_fit:
-        # A coefficient applied to the distance
-        connecting_flights_scale: 1.05
-        # Radiative Forcing Index
-        # Multiplier after scaling
-        rfi: 1.0
-        # Flat scalar to add before scaling with laws
-        offset_before: 0
-        # Flat scalar to multiply before scaling with laws
-        scale_before: 1
-        # The travel_emission_lerp_fit uses points instead of intervals
-        # List of (distance in km, footprint in ??)
-        points:
-          - [   300.0,  420.42928309 ]
-          - [  1500.0,  478.88301355 ]
-          - [  2500.0,  838.31863895 ]
-          - [ 20000.0, 6335.62849772 ]
-
 
 
 # The content is Markdown.  HTML is also allowed.
