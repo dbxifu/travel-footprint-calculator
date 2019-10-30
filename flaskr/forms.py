@@ -8,6 +8,7 @@ from wtforms import validators
 
 from .models import User
 from .content import content_dict as content
+from .core import models
 
 form_content = content['estimate']['form']
 
@@ -15,6 +16,7 @@ form_content = content['estimate']['form']
 # ESTIMATION FORM #############################################################
 
 class EstimateForm(FlaskForm):
+
     # email = StringField(
     #     label=form_content['email']['label'],
     #     description=form_content['email']['description'],
@@ -23,6 +25,7 @@ class EstimateForm(FlaskForm):
     #         validators.Email(),
     #     ],
     # )
+
     first_name = StringField(
         label=form_content['first_name']['label'],
         description=form_content['first_name']['description'],
@@ -81,6 +84,7 @@ class EstimateForm(FlaskForm):
             "placeholder": form_content['destination_addresses']['placeholder']
         },
     )
+
     # compute_optimal_destination = BooleanField(
     #     label=form_content['compute_optimal_destination']['label'],
     #     description=form_content['compute_optimal_destination']['description'],
@@ -105,7 +109,38 @@ class EstimateForm(FlaskForm):
         if not check_validate:
             return False
 
+        uses_at_least_one_model = False
+        for model in models:
+            use_model = getattr(self, 'use_model_%s' % model.slug)
+            #print("Model data", model.slug, use_model.data)
+            if use_model.data:
+                uses_at_least_one_model = True
+
+        if not uses_at_least_one_model:
+            last_model = getattr(self, 'use_model_%s' % models[-1].slug)
+            last_model.errors.append("Please select at least one model."
+                                      "&nbsp;&nbsp;"  # It's been a while
+                                      "<em>What are you doing?</em>")
+            return False
+
         return True
+
+
+# Add the models' checkboxes to the above Form
+for model in models:
+    setattr(  # setattr() takes no keyword arguments -.-
+        EstimateForm,
+        'use_model_%s' % model.slug,
+        BooleanField(
+            label=model.name,
+            # description=model.short_description,
+            default=True,
+            # default=model.default,  # todo: from config
+            validators=[
+                validators.Optional(),
+            ],
+        )
+    )
 
 
 # LOGIN FORM ##################################################################

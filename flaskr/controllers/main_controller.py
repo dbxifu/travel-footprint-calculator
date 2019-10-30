@@ -1,4 +1,3 @@
-import importlib
 import geopy
 import sqlalchemy
 
@@ -11,7 +10,7 @@ from flaskr.forms import LoginForm, EstimateForm
 from flaskr.models import db, User, Estimation, StatusEnum
 from flaskr.geocoder import CachedGeocoder
 
-from flaskr.core import generate_unique_id
+from flaskr.core import generate_unique_id, get_emission_models
 from flaskr.content import content
 
 from yaml import safe_dump as yaml_dump
@@ -29,20 +28,6 @@ OUT_ENCODING = 'utf-8'
 # -----------------------------------------------------------------------------
 # refactor this outta here, like in core?
 
-def get_emission_models():
-    emission_models_confs = content.models
-    emission_models = []
-
-    for model_conf in emission_models_confs:
-        model_file = model_conf.file
-        the_module = importlib.import_module("flaskr.laws.%s" % model_file)
-
-        model = the_module.EmissionModel(model_conf)
-        # model.configure(extra_model_conf)
-
-        emission_models.append(model)
-
-    return emission_models
 
 # -----------------------------------------------------------------------------
 
@@ -69,6 +54,7 @@ def home():
 
 @main.route("/estimate", methods=["GET", "POST"])
 def estimate():
+    models = get_emission_models()
     form = EstimateForm()
 
     if form.validate_on_submit():
@@ -84,6 +70,11 @@ def estimate():
         estimation.origin_addresses = form.origin_addresses.data
         estimation.destination_addresses = form.destination_addresses.data
         # estimation.compute_optimal_destination = form.compute_optimal_destination.data
+        models_slugs = []
+        for model in models:
+            if getattr(form, 'use_model_' % model.slug).data:
+                models_slugs.append(model.slug)
+        estimation.models_slugs = "\n".join(models_slugs)
 
         db.session.add(estimation)
         db.session.commit()
@@ -96,7 +87,7 @@ def estimate():
         ))
         # return render_template("estimate-debrief.html", form=form)
 
-    return render_template("estimate.html", form=form)
+    return render_template("estimate.html", form=form, models=models)
 
 
 @main.route("/invalidate")

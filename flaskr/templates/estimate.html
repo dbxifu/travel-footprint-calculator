@@ -12,6 +12,11 @@
 {% endblock %}
 
 
+
+{#############################################################################}
+{# MACROS ######################################################################}
+
+
 {% macro render_field(field) %}
 <dt>
     {{ field.label }}
@@ -21,8 +26,9 @@
 </dt>
 <dd>
     {{ field(title=field.description, class_="form-control", **kwargs) | safe }}
+
     {% if field.errors -%}
-    <ul class=errors>
+    <ul class="errors text-danger has-error">
     {% for error in field.errors %}
         <li>{{ error }}</li>
     {% endfor %}
@@ -38,7 +44,16 @@
     class="form-check-label",
     title=field.description
 ) }}
+
+{% if field.errors -%}
+<p class="text-danger help-block">{{ field.errors[0] }}</p>
+{%- endif %}
 {% endmacro %}
+
+
+
+{#############################################################################}
+{# BODY ######################################################################}
 
 
 {% block body %}
@@ -68,7 +83,9 @@
             <div class="form-group">
                 {{ render_field(form.origin_addresses) }}
                 <small class="form-text text-muted">
-                    Use <code>en_US</code> city and country names, without diacritics. The comma matters.
+                    Use <code>en_US</code> city and country names, without diacritics.
+                    &nbsp;
+                    The comma matters.
                     <br>
                     These usually are the addresses of your participants.
                 </small>
@@ -88,6 +105,24 @@
 {#                {{ render_checkbox(form.use_atmosfair_rfi) }}#}
 {#                <small class="form-text text-muted">Disabled. Work in Progress. RFI=1.9</small>#}
 {#            </div>#}
+
+            <div class="form-group">
+
+            <h6>Emission Models to consider</h6>
+            <div class="form-check">
+                {% for model in models %}
+                <div>
+                {{ render_checkbox(form['use_model_'~model.slug]) }}
+                </div>
+                {% endfor %}
+            </div>
+            <small class="form-text text-muted">
+                We will use a mean of the selected models.
+                &nbsp;
+                Please select at least one.
+            </small>
+            </div>
+
             <div class="form-group">
                 {{ render_field(form.comment) }}
             </div>
