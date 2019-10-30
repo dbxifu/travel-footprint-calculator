@@ -72,7 +72,7 @@ def estimate():
         # estimation.compute_optimal_destination = form.compute_optimal_destination.data
         models_slugs = []
         for model in models:
-            if getattr(form, 'use_model_' % model.slug).data:
+            if getattr(form, 'use_model_%s' % model.slug).data:
                 models_slugs.append(model.slug)
         estimation.models_slugs = "\n".join(models_slugs)
 
@@ -229,8 +229,8 @@ def compute():  # process the queue of estimation requests
 
     # GRAB AND CONFIGURE THE EMISSION MODELS ##################################
 
-    emission_models = get_emission_models()
-
+    mdl_slugs = estimation.models_slugs.split("\n")
+    emission_models = [m for m in get_emission_models() if m.slug in mdl_slugs]
     # print(emission_models)
 
     # PREPARE RESULT DICTIONARY THAT WILL BE STORED ###########################
