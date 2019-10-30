@@ -61,6 +61,10 @@ footer.page-footer a {
 
 /** FORM *********************************************************************/
 
+h6 {
+    font-weight: 700;
+}
+
 span.required-asterisk {
     color: #901524;
 }
