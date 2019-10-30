@@ -273,8 +273,8 @@ home:
           this tool enables to compute the footprint of a larger number of travels,
           making some assumptions, e.g. to model connecting flights.
 
-          For short distance travels, the CO<sub>2</sub> footprint associated with trains
-          is calculated and added to the air travel footprint.
+          #For short distance travels, the CO<sub>2</sub> footprint associated with trains
+          #is calculated and added to the air travel footprint.
 
           ### Original Motivation
 
@@ -291,17 +291,7 @@ home:
           Carrying scientific research requires traveling all across the world,
           but time has come to critically look at the way we carry research,
           with the aim of raising awareness and reducing our environmental impact,
-          whenever possible.
-          In this context, it is worth looking at what the carbon footprint
-          of travels associated with the development of a large project,
-          such as the Athena X-ray Integral Field Unit,
-          is and implement actions to reduce it.
-          The consortium involved in the development of the X-ray Integral Field Unit
-          for the flagship Athena Space X-ray observatory of the European Space Agency
-          involves currently 13 countries, 11 in Europe plus Japan and the United States.
-          The amount of traveling required for the project is necessarily large.
-          As PI of the X-IFU, my original motivation was to estimate what large meant,
-          as an input to discussing actions to reduce our footprint with the members of the consortium.
+          whenever possible. 
 
       - title: Which data are used?
         content: |
@@ -326,20 +316,19 @@ home:
           although often discrepancies are noticed in some communications,
           more particularly for long distance flights.
 
-          Relying on one calculator is therefore not possible.
-          This is why I am computing estimates based on different methods.
-          This tool thus enables to compute your travel carbon footprint (for round trips),
-          based on data provided by 4 independent state-of-the-art emission calculators:
+          Relying on one calculator is therefore not possible. This tool thus enables to compute your travel carbon footprint (for round trips),
+          based on data provided by 6 independent state-of-the-art emission calculators:
 
           1. the International Civil Aviation Organization (ICAO),
           2. the UK Department for Environment, Food & Rural Affairs (DEFRA),
-          3. the ATMOSFAIR German Carbon offsetting company, and finally
-          4. the French Environment & Energy Management Agency (ADEME).
+          3. the ATMOSFAIR German Carbon offsetting company,
+          4. the French Environment & Energy Management Agency (ADEME)
+          5. the data provided on the KLM website to introduce their CO2 compensation service (KLM)
+          6. the MyClimate Carbon offseting company (used by Lufthansa)
 
-          ICAO, DEFRA and ATMOSFAIR have their methodology very well described
+          ICAO, DEFRA and MyClimate, ATMOSFAIR have their methodology very well described
           (see resources section below).
 
-          I have enquired to ADEME to get more about their methodology.
           ADEME and DEFRA provide mean emission factors as a function of flight distance.
           ADEME considers seat capacity and DEFRA gives emission factors
           as a function of seat type (from economy to first class seat).
@@ -352,56 +341,29 @@ home:
 
       - title: How does this tool work?
         content: |
-          For estimating your own travel footprint,
-          the only thing you have to provide is an excel file
-          which contains only the different final destinations that you traveled to,
-          while the main city (origin) is entered on the form below.
-          For estimating the travel footprint of a conference,
-          you must provide the city from which each participant departs from
-          and enter the host city of the conference in the form below.
+          The tool starts by decoding the origin cities listed in the form, and geolocate them. 
+          It then decodes the destination cities and geolocate them as well. 
+          
+          Cities that cannot be located are ignored from the computation. To resolve ambiguity 
+          between cities of similar names (e.g. Cambridge), the name of the country is required.
 
-          The tool then decodes the list of cities in the input excel sheet
-          (please check the spelling when filling it up),
-          and finds the closest airport within 100 km
-          (large airport first and and if no large airports exists, it finds a medium one)
-          using the google geolocator.
-          This returns the longitude and latitude of the closest airport.
-          Cities that cannot be located are ignored from the computation.
-          To resolve ambiguity between cities of similar names (e.g. Cambridge),
-          I require the name of the country.
-
-          From the longitude and latitude of two airports
-          (e.g. the host city of a conference and the departing city of an attendee),
-          the tool computes the great circle distance (GCD).
-          This is the shortest path a plane can follow.
-          Short trips (e.g. shorter than 300 km) are accounted by trains.
-          Traveling between cities often involve connexions.
-          Here I consider a 5% increase of the GCD, as a mean value,
-          understanding that it may be less on long flights and more on shorter flights.
-
-          The emission factors of DEFRA include a 8% uplift to account for the fact that planes,
-          even during direct flight, do not strictly follow the shortest path,
+          From the longitude and lattitude of the origin and destination cities, the great 
+          circle distance is computed. This is the shortest path a plane can follow. However,
+          traveling between cities often involves connexion. A 5% increase of the great circle 
+          distance is considered as a mean value.
+          
+          DEFRA, ICAO, Atmosfair and MyClimate include uplift factors to account for the fact 
+          than planes, even during direct flight, do not strictly follow the shortest path,
           e.g. to avoid bad weather conditions.
-          ICAO adds some constants depending on the flight distance:
-          the GCD correction factor is 50 km for GCD less than to 550 km,
-          100 km for GCD between 550 and 5500 km, and 125 km for for GCD above 5500 km.
-          ATMOSFAIR adds a systematic 50 km to the GCD.
-          For ADEME, there is no indication on whether any GCD correction applies,
-          so I will assume the ICAO GCD correction.
 
           CO<sub>2</sub> emissions per passenger take into consideration the load factor
           and are based only on passenger operations
           (i.e. fuel burn associated with belly freight is not charged to the passenger).
+          From the travel distance, and the emission coefficients, the tool computes the amount
+          of CO2eq generated by each flight. The user can select one or more data providers,
+          and a mean value will be reported if more than one provider is considered. 
 
-          Given the corrected GCD so computed,
-          I use either the mean emission coefficients or the linear functions
-          fitting the data of the on-line calculators.
-          Note that there are no error bars on the estimates and very little literature on the topic.
-          Only ATMOSFAIR returns whenever available,
-          the data from different possible flights,
-          considering different airlines.
-          It also returns the the average over all airlines.
-
+        
     # Second row of "blocks"
     - blocks:
 
@@ -426,9 +388,6 @@ home:
           ICAO, on the other hand does not include a multiplier,
           waiting for the scientific community to settle on a value.
           So 1.9 seems reasonable, but keep in mind that it comes with some uncertainty.
-          You may want to select the ATMOSFAIR forcing index,
-          instead of the 1.9 constant.
-          The multiplier reaches about 2.8 for flights longer than 5000 km.
 
       - title: Which seat category are you considering?
         content: |
@@ -441,15 +400,8 @@ home:
       - title: What about uncertainties?
         content: |
           I believe that each estimate has an uncertainty between 10 and 25%
-          (really this is a best guess, and not substantiated by any statistical analysis and it could be more probably),
-          the uncertainty being smaller for shorter flights for which there are more data.
+          (really this is a best guess, and not substantiated by any statistical analysis and it could be more probably).
           I would therefore refrain from using the numbers derived as absolute values.
-          The results given should be considered indicative, although likely in the right ball park,
-          for the assumptions that I make, and the approximation I use,
-          e.g. in fitting ICAO and ATMOSFAIR data.
-          For flights of average distance less than a few thousands kilometers,
-          the results agree reasonably well, between the various estimators,
-          which is a good sign.
           Larger differences are found when long distance flights are considered.
           In all cases, the estimates can be used for relative comparisons.
 
@@ -478,6 +430,8 @@ home:
             Direction Générale de l'Aviation Civile
           - [ICAO](https://www.icao.int/environmental-protection/carbonoffset/pages/default.aspx)
             Carbon Emissions Calculator
+          - [KLM data] (https://www.klm.com/travel/nl_en/prepare_for_travel/fly_co2_neutral/all_about_sustainable_travel/index.htm)
+          - [MyClimate] (https://www.myclimate.org)
           - L. Hackel [travel footprint calculator](https://lhackel.shinyapps.io/travel_footprint/)
             based on DEFRA emission factors
 
