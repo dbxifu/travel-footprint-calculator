@@ -28,7 +28,7 @@ models:
     # Please keep this lowercased, letters-only (or I will breathe fire)
     file: travel_emission_lerp_fit
     # Color MUST be in the hex form, without alpha
-    color: "#ff9933"
+    color: "#99ff33"
     # The configuration that will be fed to the model.
     # May be anything, really.  Go bonkers!
     config:
@@ -49,6 +49,7 @@ models:
           - [  1500.0,  278.88301355 ]
           - [  2500.0,  438.31863895 ]
           - [ 20000.0, 3335.62849772 ]
+
   - name: MyClimate with RFI=1.9
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
@@ -93,7 +94,7 @@ models:
     # Please keep this lowercased, letters-only (or I will breathe fire)
     file: travel_emission_lerp_fit
     # Color MUST be in the hex form, without alpha
-    color: "#ff9934"
+    color: "#9933ff"
     # The configuration that will be fed to the model.
     # May be anything, really.  Go bonkers!
     config:
@@ -108,11 +109,11 @@ models:
         # Flat scalar to multiply before scaling with laws
         scale_before: 1
         # The travel_emission_lerp_fit uses points instead of intervals
-        # List of (distance in km, footprint in ??)
+        # List of (distance in km, footprint in kg)
         points:
-          - [0.0, 4.5735209613707415 ]
-          - [500.0, 84.22292312970939 ]
-          - [3000.0, 223.78236761444174 ]
+          - [     0.0,    4.5735209613707 ]
+          - [   500.0,   84.2229231297094 ]
+          - [  3000.0,  223.7823676144418 ]
           - [ 25000.0, 1033.0117495994948 ]
 
 # The content is Markdown.  HTML is also allowed.
