@@ -90,6 +90,11 @@ class EmissionModel(BaseEmissionModel):
         return footprint
 
     def compute_airplane_distance_footprint(self, distance, config=None):
+        """
+        :param distance: in km
+        :param config:
+        :return:
+        """
         if config is None:
             config = self.config.plane_emission_linear_fit
         distance = distance * config.scale_before + config.offset_before
@@ -103,6 +108,11 @@ class EmissionModel(BaseEmissionModel):
         return config.rfi * footprint
 
     def apply_scaling_law(self, distance, config):
+        """
+        :param distance: in km
+        :param config:
+        :return:
+        """
         footprint = distance
         for interval in config.intervals:
             if interval.dmin <= distance < interval.dmax:
@@ -125,11 +135,10 @@ class EmissionModel(BaseEmissionModel):
         :param origin_longitude:
         :param destination_latitude:
         :param destination_longitude:
-        :return: Distance in meters between the two locations,
+        :return: Distance in kilometers between the two locations,
                  along Earth's great circles.
         """
-        gcd = great_circle(
+        return great_circle(
             (np.float(origin_latitude), np.float(origin_longitude)),
             (np.float(destination_latitude), np.float(destination_longitude))
-        ).m
-        return gcd
+        ).kilometers
