@@ -166,15 +166,29 @@ jQuery(document).ready(function($){
                 return xSubgroup(d.key);
             })
             .attr("y", function (d) {
-                return y(d.value);
+                return y(0);
             })
             .attr("width", xSubgroup.bandwidth())
             .attr("height", function (d) {
-                return height - y(d.value);
+                return 0;
             })
+            //.attr("height", function (d) {
+            //    return height - y(d.value);
+            //})
             .attr("fill", function (d) {
                 return color(d.key);
             });
+
+        svg.selectAll("rect")
+            .transition()
+            .duration(500)
+            .attr("y", function (d) {
+                return y(d.value);
+            })
+            .attr("height", function (d) {
+                return height - y(d.value);
+            })
+            .delay(function(d, i) { return(i*100); });
 
         // Title
         svg.append("g")
