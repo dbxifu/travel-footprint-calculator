@@ -46,7 +46,7 @@
 ) }}
 
 {% if field.errors -%}
-<p class="text-danger help-block">{{ field.errors[0] }}</p>
+<p class="text-danger help-block">{{ field.errors[0] | safe }}</p>
 {%- endif %}
 {% endmacro %}
 
