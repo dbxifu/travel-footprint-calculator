@@ -5,6 +5,10 @@
 
 .env
 
+# Assets compiled by|for prod
+public/css/common.css
+public/js/common.js
+
 # Packages
 *.egg
 *.egg-info
