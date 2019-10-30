@@ -42,6 +42,10 @@ class Estimation(db.Model):
     origin_addresses = db.Column(db.UnicodeText())
     destination_addresses = db.Column(db.UnicodeText())
 
+    # One slug per line (or blankchar?)
+    models_slugs = db.Column(db.UnicodeText())
+
+    # Deprecated, we detect this scenario from the amount of locations.
     compute_optimal_destination = db.Column(db.Boolean())
 
     output_yaml = db.Column(db.UnicodeText())
@@ -65,6 +69,7 @@ class EstimationView(ModelView):
         'status',
         'first_name',
         'last_name',
+        'models_slugs',
         'origin_addresses',
         'destination_addresses',
         'warnings',
@@ -75,7 +80,6 @@ class EstimationView(ModelView):
     # name and email fields
     # column_searchable_list = ('name', 'email')
 
-    # Add filters for name and email columns
     column_filters = ('first_name', 'last_name')
 
 
