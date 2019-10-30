@@ -17,12 +17,45 @@ meta:
 
 # Aka. Laws
 models:
-  - name: MyClimate
+  - name: Atmosfair (RFI=3 for altitude > 9 km)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
     # MUST be unique, two models MUST NOT have the same slug.
-    slug: my-climate
+    slug: atmosfair_rfi
+    # There MUST exist a python file named like this in `flaskr/laws`
+    # And it MUST contain a class named EmissionModel
+    # Please keep this lowercased, letters-only (or I will breathe fire)
+    file: travel_emission_lerp_fit
+    # Color MUST be in the hex form, without alpha
+    color: "#99ff53"
+    # The configuration that will be fed to the model.
+    # May be anything, really.  Go bonkers!
+    config:
+      plane_emission_linear_fit:
+        # A coefficient applied to the distance
+        connecting_flights_scale: 1.05
+        # Radiative Forcing Index
+        # Multiplier after scaling
+        rfi: 1.0
+        # Flat scalar to add before scaling with laws
+        offset_before: 0
+        # Flat scalar to multiply before scaling with laws
+        scale_before: 1
+        # The travel_emission_lerp_fit uses points instead of intervals
+        # List of (distance in km, footprint in ??)
+        points:
+          - [0.0, -32.381718992351665 ]
+          - [500.0, 150.0756709768075 ]
+          - [4000.0, 844.2034018149334 ]
+          - [25000.0, 7094.270252762378 ]
+
+  - name: MyClimate (RFI=2)
+    # Slugged version of the display name above
+    # Only lowercase alphanumeric, starting with a letter, using - as liaison
+    # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
+    # MUST be unique, two models MUST NOT have the same slug.
+    slug: my-climate_rfi
     # There MUST exist a python file named like this in `flaskr/laws`
     # And it MUST contain a class named EmissionModel
     # Please keep this lowercased, letters-only (or I will breathe fire)
@@ -50,18 +83,18 @@ models:
           - [  2500.0,  438.31863895 ]
           - [ 20000.0, 3335.62849772 ]
 
-  - name: MyClimate with RFI=1.9
+  - name: ADEME (RF=1.9)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
     # MUST be unique, two models MUST NOT have the same slug.
-    slug: my-climate-rfi
+    slug: ademe_rfi
     # There MUST exist a python file named like this in `flaskr/laws`
     # And it MUST contain a class named EmissionModel
     # Please keep this lowercased, letters-only (or I will breathe fire)
     file: travel_emission_lerp_fit
     # Color MUST be in the hex form, without alpha
-    color: "#ff9933"
+    color: "#ff9928"
     # The configuration that will be fed to the model.
     # May be anything, really.  Go bonkers!
     config:
@@ -70,7 +103,7 @@ models:
         connecting_flights_scale: 1.05
         # Radiative Forcing Index
         # Multiplier after scaling
-        rfi: 1.9
+        rfi: 1.0
         # Flat scalar to add before scaling with laws
         offset_before: 0
         # Flat scalar to multiply before scaling with laws
@@ -78,12 +111,90 @@ models:
         # The travel_emission_lerp_fit uses points instead of intervals
         # List of (distance in km, footprint in ??)
         points:
-          - [   300.0,  120.42928309 ]
-          - [  1500.0,  278.88301355 ]
-          - [  2500.0,  438.31863895 ]
-          - [ 20000.0, 3335.62849772 ]
+          - [0.0, -5.161037027229312e-14 ]
+          - [1000.0, 572.1850000000001 ]
+          - [2000, 903.7033333333329 ]
+          - [3000, 1090.2200000000014 ]
+          - [4000, 1617.2800000000007 ]
+          - [5000, 2120.8749999999995 ]
+          - [6000, 2198.4900000000007 ]
+          - [7000, 2274.2999999999993 ]
+          - [8000, 2599.2000000000007 ]
+          - [9000, 2745.404999999999 ]
+          - [10000, 3122.650000000001 ]
+          - [11000, 3739.599000000005 ]
+          - [25000.0, 8475.197000000006 ]
 
-  - name: ICAO
+
+  - name: DEFRA (with RF=1.9)
+    # Slugged version of the display name above
+    # Only lowercase alphanumeric, starting with a letter, using - as liaison
+    # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
+    # MUST be unique, two models MUST NOT have the same slug.
+    slug: defra_rfi
+    # There MUST exist a python file named like this in `flaskr/laws`
+    # And it MUST contain a class named EmissionModel
+    # Please keep this lowercased, letters-only (or I will breathe fire)
+    file: travel_emission_lerp_fit
+    # Color MUST be in the hex form, without alpha
+    color: "#ff9918"
+    # The configuration that will be fed to the model.
+    # May be anything, really.  Go bonkers!
+    config:
+      plane_emission_linear_fit:
+        # A coefficient applied to the distance
+        connecting_flights_scale: 1.05
+        # Radiative Forcing Index
+        # Multiplier after scaling
+        rfi: 1.0
+        # Flat scalar to add before scaling with laws
+        offset_before: 0
+        # Flat scalar to multiply before scaling with laws
+        scale_before: 1
+        # The travel_emission_lerp_fit uses points instead of intervals
+        # List of (distance in km, footprint in ??)
+        points:
+          - [0.0, 4.752454542242483e-15 ]
+          - [500.0, 78.04721681415921 ]
+          - [3690.0, 575.4223499999998 ]
+          - [3710, 534.7135814999998 ]
+          - [25000.0, 3603.1912500000008 ]
+
+  - name: KLM data (no RF)
+    # Slugged version of the display name above
+    # Only lowercase alphanumeric, starting with a letter, using - as liaison
+    # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
+    # MUST be unique, two models MUST NOT have the same slug.
+    slug: klm_data_no_rfi
+    # There MUST exist a python file named like this in `flaskr/laws`
+    # And it MUST contain a class named EmissionModel
+    # Please keep this lowercased, letters-only (or I will breathe fire)
+    file: travel_emission_lerp_fit
+    # Color MUST be in the hex form, without alpha
+    color: "#ff9938"
+    # The configuration that will be fed to the model.
+    # May be anything, really.  Go bonkers!
+    config:
+      plane_emission_linear_fit:
+        # A coefficient applied to the distance
+        connecting_flights_scale: 1.05
+        # Radiative Forcing Index
+        # Multiplier after scaling
+        rfi: 1.0
+        # Flat scalar to add before scaling with laws
+        offset_before: 0
+        # Flat scalar to multiply before scaling with laws
+        scale_before: 1
+        # The travel_emission_lerp_fit uses points instead of intervals
+        # List of (distance in km, footprint in ??)
+        points:
+          - [0.0, 33.789686845382285 ]
+          - [500.0, 186.31683354820512 ]
+          - [1000.0, 381.6128657327357 ]
+          - [3500, 1160.592094016739 ]
+          - [25000.0, 5457.3084465303355 ]
+
+  - name: ICAO (no RF)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
