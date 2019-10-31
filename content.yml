@@ -72,7 +72,7 @@ models:
         # Multiplier after scaling
         rfi: 1.0
         # Flat scalar to add before scaling with laws
-        offset_before: 0
+        offset_before: 95
         # Flat scalar to multiply before scaling with laws
         scale_before: 1
         # The travel_emission_lerp_fit uses points instead of intervals
