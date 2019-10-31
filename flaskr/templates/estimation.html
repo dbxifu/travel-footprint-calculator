@@ -193,7 +193,7 @@ jQuery(document).ready(function($){
     var vizid = "#cities_footprints_d3viz";
     var csvUrl = "/estimation/{{ estimation.public_id }}.csv";
     var x_key = 'city';
-    var y_key = 'co2 (g)';
+    var y_key = 'co2 (kg)';
 
     // Set the dimensions and margins of the graph
     var margin = {top: 10, right: 30, bottom: 150, left: 150},
@@ -214,7 +214,7 @@ jQuery(document).ready(function($){
     d3.csv(csvUrl, function(data) {
 
         // Extrema
-        var data_y_max = d3.max(data, function(d) { return parseFloat(d['co2 (g)']); });
+        var data_y_max = d3.max(data, function(d) { return parseFloat(d[y_key]); });
         var axis_y_max = ceil_value_to_magnitude(data_y_max);
 
         // X axis
@@ -266,7 +266,7 @@ jQuery(document).ready(function($){
     var vizid = "#cities_footprints_d3viz_lollipop";
     var csvUrl = "/estimation/{{ estimation.public_id }}.csv";
     var y_key = 'city';
-    var x_key = 'co2 (g)';
+    var x_key = 'co2 (kg)';
 
     var margin = {top: 10, right: 30, bottom: 150, left: 150},
         height = Math.max(300, 100+16*plots_config['cities_count']) - margin.top - margin.bottom;

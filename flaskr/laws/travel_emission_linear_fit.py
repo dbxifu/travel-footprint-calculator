@@ -2,6 +2,7 @@ import numpy as np
 from geopy.distance import great_circle
 
 
+# @abc
 class BaseEmissionModel():
     def __init__(self, config):  # Constructor
         self.name = config.name
@@ -29,9 +30,10 @@ class EmissionModel(BaseEmissionModel):
             prefer_train_under_distance=0,  # meters
     ):
         footprint = 0.0
+        distance = 0.0
 
         #############################################
-        # TODO: find closest airport(s) and pick one
+        # TODO: find closest airport(s) and pick one?
         # We're going to need caching here as well.
         from collections import namedtuple
         origin_airport = namedtuple('Position', [
@@ -55,33 +57,32 @@ class EmissionModel(BaseEmissionModel):
         # ... TODO
 
         # I.b Airplane travel footprint
-        footprint += self.compute_airplane_footprint(
+        great_circle_distance = self.get_distance_between(
             origin_latitude=origin_airport.latitude,
             origin_longitude=origin_airport.longitude,
             destination_latitude=destination_airport.latitude,
             destination_longitude=destination_airport.longitude,
         )
+        footprint += self.compute_airplane_footprint(
+            distance=great_circle_distance
+        )
+        distance += great_circle_distance
 
-        # II.a Double the footprint if it's a round-trip
+        # II.a Double it up since it's a round-trip
         footprint *= 2.0
+        distance *= 2.0
 
-        return footprint
+        return {
+            'distance': distance,
+            'co2eq_kg': footprint,
+        }
+        # return footprint
 
     def compute_airplane_footprint(
             self,
-            origin_latitude,
-            origin_longitude,
-            destination_latitude,
-            destination_longitude
+            distance
     ):
         config = self.config.plane_emission_linear_fit
-
-        great_circle_distance = self.get_distance_between(
-            origin_latitude, origin_longitude,
-            destination_latitude, destination_longitude
-        )
-
-        distance = great_circle_distance
 
         distance = config.connecting_flights_scale * distance
 
@@ -111,7 +112,7 @@ class EmissionModel(BaseEmissionModel):
         """
         :param distance: in km
         :param config:
-        :return:
+        :return: float
         """
         footprint = distance
         for interval in config.intervals:

@@ -262,7 +262,8 @@ def compute():  # process the queue of estimation requests
 
         destinations_by_city_key = {}
 
-        cities_sum = {}
+        cities_sum_foot = {}
+        cities_sum_dist = {}
         for model in emission_models:
             cities_dict = {}
             for _destination in _destinations:
@@ -282,11 +283,16 @@ def compute():  # process the queue of estimation requests
                         'city': city_key,
                         'address': _destination.address,
                         'footprint': 0.0,
+                        'distance': 0.0,
                     }
-                cities_dict[city_key]['footprint'] += footprint
-                if city_key not in cities_sum:
-                    cities_sum[city_key] = 0.0
-                cities_sum[city_key] += footprint
+                cities_dict[city_key]['footprint'] += footprint['co2eq_kg']
+                cities_dict[city_key]['distance'] += footprint['distance']
+                if city_key not in cities_sum_foot:
+                    cities_sum_foot[city_key] = 0.0
+                cities_sum_foot[city_key] += footprint['co2eq_kg']
+                if city_key not in cities_sum_dist:
+                    cities_sum_dist[city_key] = 0.0
+                cities_sum_dist[city_key] += footprint['distance']
 
             cities = [cities_dict[k] for k in cities_dict.keys()]
             cities = sorted(cities, key=lambda c: c['footprint'])
@@ -297,17 +303,21 @@ def compute():  # process the queue of estimation requests
 
         _results['footprints'] = footprints
 
-        total = 0.0
+        total_foot = 0.0
+        total_dist = 0.0
 
         cities_mean_dict = {}
-        for city in cities_sum.keys():
-            city_mean = 1.0 * cities_sum[city] / len(emission_models)
+        for city in cities_sum_foot.keys():
+            city_mean_foot = 1.0 * cities_sum_foot[city] / len(emission_models)
+            city_mean_dist = 1.0 * cities_sum_dist[city] / len(emission_models)
             cities_mean_dict[city] = {
                 'address': destinations_by_city_key[city].address,
                 'city': city,
-                'footprint': city_mean,
+                'footprint': city_mean_foot,
+                'distance': city_mean_dist,
             }
-            total += city_mean
+            total_foot += city_mean_foot
+            total_dist += city_mean_dist
 
         cities_mean = [cities_mean_dict[k] for k in cities_mean_dict.keys()]
         cities_mean = sorted(cities_mean, key=lambda c: c['footprint'])
@@ -317,8 +327,10 @@ def compute():  # process the queue of estimation requests
         }
         _results['cities'] = cities_mean
 
-        _results['total'] = total  # DEPRECATED
-        _results['footprint'] = total
+        _results['total'] = total_foot  # DEPRECATED
+        _results['footprint'] = total_foot
+
+        _results['distance'] = total_dist
 
         return _results
 
@@ -433,25 +445,17 @@ def consult_estimation(public_id, extension):
 
         si = StringIO()
         cw = csv.writer(si, quoting=csv.QUOTE_ALL)
-        cw.writerow([u"city", u"address", u"co2 (g)"])
+        cw.writerow([u"city", u"address", u"co2 (kg)", u"distance (km)"])
 
         results = estimation.get_output_dict()
-        if 'mean_footprint' in results:
-            for city in results['mean_footprint']['cities']:
-                cw.writerow([
-                    city['city'].encode(OUT_ENCODING),
-                    city['address'].encode(OUT_ENCODING),
-                    city['footprint']
-                ])
-        elif 'cities' in results:
-            for city in results['cities']:
-                cw.writerow([
-                    city['city'].encode(OUT_ENCODING),
-                    city['address'].encode(OUT_ENCODING),
-                    city['total']
-                ])
+        for city in results['cities']:
+            cw.writerow([
+                city['city'].encode(OUT_ENCODING),
+                city['address'].encode(OUT_ENCODING),
+                round(city['footprint'], 3),
+                round(city['distance'], 3),
+            ])
 
-        # HTTP headers?
         # return si.getvalue().strip('\r\n')
         return Response(
             response=si.getvalue().strip('\r\n'),
