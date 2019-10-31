@@ -358,7 +358,8 @@ home:
           
           DEFRA, ICAO, Atmosfair and MyClimate include uplift factors to account for the fact 
           than planes, even during direct flight, do not strictly follow the shortest path,
-          e.g. to avoid bad weather conditions.
+          e.g. to avoid bad weather conditions. For instance, MyClimate considers what is 
+          called a detour constant of 95 km.
 
           CO<sub>2</sub> emissions per passenger take into consideration the load factor
           and are based only on passenger operations
