@@ -45,11 +45,14 @@ models:
         # The travel_emission_lerp_fit uses points instead of intervals
         # List of (distance in km, footprint in ??)
         points:
-          - [0.0, -32.381718992351665 ]
-          - [500.0, 150.0756709768075 ]
+          - [0.0, 0.0 ]
+          - [300.0, 0.0 ]
+          - [300.0, 100.77107567722328 ]
+          - [4000.0, 866.2580844227083 ]
           - [4000.0, 844.2034018149334 ]
           - [25000.0, 7094.270252762378 ]
-
+ 
+ 
   - name: MyClimate (RFI=2)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
