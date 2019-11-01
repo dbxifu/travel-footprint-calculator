@@ -467,9 +467,9 @@ estimate:
   hero:
     title: Request an estimation
     description: |
-      The results will available <small>(almost)</small> immediately.
+      The results will be available <small>(almost)</small> immediately.
       <br>
-      It may take from a few seconds up to a few hours,
+      It may take from a few seconds up to a few minutes,
       depending on the amount of locations you provided.
 
 
