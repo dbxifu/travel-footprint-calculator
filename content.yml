@@ -188,11 +188,13 @@ models:
         # The travel_emission_lerp_fit uses points instead of intervals
         # List of (distance in km, footprint in ??)
         points:
-          - [0.0, 33.789686845382285 ]
-          - [500.0, 186.31683354820512 ]
-          - [1000.0, 381.6128657327357 ]
-          - [3500, 1160.592094016739 ]
-          - [25000.0, 5457.3084465303355 ]
+          - [0.0, 0.0 ]
+          - [300.0, 0.0 ]
+          - [300.0, 36.568484076385886 ]
+          - [2000.0, 186.80815934370835 ]
+          - [2000.0, 202.8769421141676 ]
+          - [20000.0, 1291.6001262464672 ]
+          - [25000.0, 1594.0232329498838 ]
 
   - name: ICAO (no RF, not recommended)
     # Slugged version of the display name above
