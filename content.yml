@@ -452,11 +452,13 @@ home:
 
           The data provided will remain confidential, as will be the results.
 
-         ### Trouble shooting
+          ### Troubleshooting
          
-          The estimation can go wrong if a city is not properly geolocated. This
-          may happen because the name of the city is wrongly spelled or the geolocator 
-          is confused. An error should be listed at the end of the result page.
+          The estimation can go wrong if a city is not properly geolocated.
+          This may happen because the name of the city is wrongly spelled,
+          or the geolocator (<acronym title="Open Street Map">OSM</acronym>)
+          is confused or unavailable.
+          An error should be listed at the end of the result page.
 
 
 estimate:
