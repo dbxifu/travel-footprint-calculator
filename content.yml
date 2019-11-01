@@ -199,7 +199,7 @@ models:
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
     # MUST be unique, two models MUST NOT have the same slug.
-    slug: icao
+    slug: icao-no-rfi
     # There MUST exist a python file named like this in `flaskr/laws`
     # And it MUST contain a class named EmissionModel
     # Please keep this lowercased, letters-only (or I will breathe fire)
@@ -438,7 +438,9 @@ home:
           - [ICAO](https://www.icao.int/environmental-protection/carbonoffset/pages/default.aspx)
             Carbon Emissions Calculator
           - [KLM data](https://www.klm.com/travel/nl_en/prepare_for_travel/fly_co2_neutral/all_about_sustainable_travel/index.htm)
-          - [MyClimate](https://www.myclimate.org)
+            KLM data
+          - [MyClimate](https://www.myclimate.org) 
+            MyClimate
           - L. Hackel [travel footprint calculator](https://lhackel.shinyapps.io/travel_footprint/)
             based on DEFRA emission factors
 
