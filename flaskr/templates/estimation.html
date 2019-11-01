@@ -284,10 +284,10 @@ jQuery(document).ready(function($){
     d3.csv(csvUrl, function (data) {
 
         // Extrema
-        var data_x_max = d3.max(data, function(d) { return parseFloat(d[x_key]); });
+        var data_x_max = d3.max(data, function (d) { return parseFloat(d[x_key]); });
         var axis_x_max = ceil_value_to_magnitude(data_x_max);
 
-        // Add X axis
+        // X axis
         var x = d3.scaleLinear()
             .domain([0, axis_x_max])
             .range([0, width]);
@@ -322,12 +322,6 @@ jQuery(document).ready(function($){
         {#svg.select(".legendQuant")#}
         {#    .call(legend);#}
 
-        svg.append("g")
-            .append('text')
-            .attr("transform", "translate("+(-180+width/2.0)+","+(height+111)+")")
-            {#.text("CO2 emissions as a function of travelling distance");#}
-            .text("CO\u2082 emissions equivalent (kg) per target city.");
-
         // Lines
         svg.selectAll("myline")
             .data(data)
@@ -357,10 +351,90 @@ jQuery(document).ready(function($){
             .attr("cy", function (d) {
                 return y(d[y_key]);
             })
-            .attr("r", "0")
+            .attr("r", "0")  // animated below
             .style("fill", "#69b3a2")
             .attr("stroke", "black");
 
+        // Value text on mouse hover
+        svg.selectAll("hoverrects")
+            .data(data)
+            .enter()
+            .append("rect")
+            .style("opacity", 0)
+            .attr("class", "hover_trigger")
+            .attr("data-target", function (d, i) {
+                return "hover_value_" + i.toString();
+            })
+            .attr("x", function (d) {
+                return 0;
+            })
+            .attr("y", function (d) {
+                return y(d[y_key])-6;
+            })
+            .attr("width", width)
+            .attr("height", 13)
+            .on("mouseenter", function (d) {
+                var target_id = d3.select(this).attr("data-target");
+                d3.select("#"+target_id).style("opacity", 1);
+                d3.select("#shadow_"+target_id).style("opacity", 1);
+            })
+            .on("mouseleave", function (d) {
+                var target_id = d3.select(this).attr("data-target");
+                d3.select("#"+target_id).style("opacity", 0);
+                d3.select("#shadow_"+target_id).style("opacity", 0);
+            });
+
+        var compute_text_anchor = function (d) {
+            if (x(d[x_key]) < width / 2.0) {
+                return 'start';
+            } else {
+                return 'end';
+            }
+        };
+        var compute_text_text = function (d) {
+            return Math.round(d[x_key]).toLocaleString() + " kg CO\u2082";
+        };
+        var compute_text_transform = function (d) {
+            var x_pos = x(d[x_key]);
+            if (x_pos < width / 2.0) {
+                return "translate("+(x(d[x_key])+7)+","+(y(d[y_key])+4)+")";
+            } else {
+                return "translate("+(x(d[x_key])-9)+","+(y(d[y_key])+4)+")";
+            }
+        };
+
+        svg.selectAll("hovertextsshadows")
+            .data(data)
+            .enter()
+            .append("text")
+            .style("opacity", 0)
+            .style("pointer-events", "none")
+            .style("stroke", "white")
+            .style("stroke-width", "0.618em")
+            .attr("id", function (d, i) {
+                return "shadow_hover_value_" + i.toString();
+            })
+            .attr("font-size", 10)
+            .attr("text-anchor", compute_text_anchor)
+            .attr("transform", compute_text_transform)
+            .text(compute_text_text);
+
+        svg.selectAll("hovertexts")
+            .data(data)
+            .enter()
+            .append("text")
+            .style("opacity", 0)
+            .style("pointer-events", "none")
+            .attr("id", function (d, i) {
+                return "hover_value_" + i.toString();
+            })
+            .attr("font-size", 10)
+            .attr("text-anchor", compute_text_anchor)
+            .attr("transform", compute_text_transform)
+            .text(compute_text_text);
+
+
+        // Animations
         var animation_duration = 300;
         var animation_delay = 100;
 
@@ -368,13 +442,20 @@ jQuery(document).ready(function($){
             .transition()
             .duration(animation_duration)
             .attr("r", "4")
-            .delay(function(d, i) { return(i*animation_delay); });
+            .delay(function (d, i) { return(i*animation_delay); });
 
         svg.selectAll("line")
             .transition()
             .duration(animation_duration*0.618)
             .attr("x1", function (d) { return x(d[x_key]); })
-            .delay(function(d, i) { return(i*animation_delay); });
+            .delay(function (d, i) { return(i*animation_delay); });
+
+        // Title
+        svg.append("g")
+            .append('text')
+            .attr("transform", "translate("+(-180+width/2.0)+","+(height+111)+")")
+            .text("CO\u2082 emissions equivalent (kg) per target city.");
+
     });
 
 });
