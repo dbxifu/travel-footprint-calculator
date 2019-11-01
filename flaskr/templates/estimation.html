@@ -58,7 +58,7 @@
 {% endif %}
 
 <div class="row">
-    <h4>Total CO<sub>2</sub> footprint (in grams-equivalent) of each city</h4>
+    <h4>Total CO<sub>2</sub> footprint (in kilograms-equivalent) of each city</h4>
     <div id="cities_footprints_d3viz" class="plot-container"></div>
     <hr>
     <div id="cities_footprints_d3viz_lollipop" class="plot-container"></div>
@@ -326,7 +326,7 @@ jQuery(document).ready(function($){
             .append('text')
             .attr("transform", "translate("+(-180+width/2.0)+","+(height+111)+")")
             {#.text("CO2 emissions as a function of travelling distance");#}
-            .text("CO\u2082 emissions equivalent per target city.");
+            .text("CO\u2082 emissions equivalent (kg) per target city.");
 
         // Lines
         svg.selectAll("myline")
