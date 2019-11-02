@@ -8,6 +8,7 @@ class BaseEmissionModel():
         self.name = config.name
         self.slug = config.slug
         self.color = config.color
+        self.selected = config.selected
         self.config = config.config
 
     def __repr__(self):  # Cast to String

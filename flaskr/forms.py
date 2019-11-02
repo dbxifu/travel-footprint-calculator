@@ -134,8 +134,7 @@ for model in models:
         BooleanField(
             label=model.name,
             # description=model.short_description,
-            default=True,
-            # default=model.default,  # todo: from config
+            default=model.selected,
             validators=[
                 validators.Optional(),
             ],
