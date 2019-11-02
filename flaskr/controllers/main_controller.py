@@ -45,10 +45,14 @@ def favicon():  # we want it served from the root, not from static/
 @cache.cached(timeout=1000)
 def home():
     models = get_emission_models()
+    models_dict = {}
+    for model in models:
+        models_dict[model.slug] = model.__dict__
     return render_template(
         'home.html',
-        models=models,
+        models=models_dict,
         colors=[model.color for model in models],
+        labels=[model.name for model in models],
     )
 
 
@@ -229,8 +233,9 @@ def compute():  # process the queue of estimation requests
 
     # GRAB AND CONFIGURE THE EMISSION MODELS ##################################
 
-    mdl_slugs = estimation.models_slugs.split("\n")
-    emission_models = [m for m in get_emission_models() if m.slug in mdl_slugs]
+    emission_models = estimation.get_models()
+    # mdl_slugs = estimation.models_slugs.split("\n")
+    # emission_models = [m for m in get_emission_models() if m.slug in mdl_slugs]
     # print(emission_models)
 
     # PREPARE RESULT DICTIONARY THAT WILL BE STORED ###########################

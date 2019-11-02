@@ -1,6 +1,6 @@
 from flask_admin.contrib.sqla import ModelView
 
-from flaskr.core import generate_unique_id
+from flaskr.core import generate_unique_id, models
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -55,11 +55,23 @@ class Estimation(db.Model):
     def has_failed(self):
         return self.status == StatusEnum.failure
 
+    _output_dict = None
+
     def get_output_dict(self):
-        return yaml_load(self.output_yaml)
+        if self._output_dict is None:
+            self._output_dict = yaml_load(self.output_yaml)
+        return self._output_dict
 
     def has_many_to_many(self):
         return 'cities' in self.get_output_dict()
+
+    _models = None
+
+    def get_models(self):
+        if self._models is None:
+            mdl_slugs = self.models_slugs.split("\n")
+            self._models = [m for m in models if m.slug in mdl_slugs]
+        return self._models
 
 
 class EstimationView(ModelView):

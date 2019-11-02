@@ -61,6 +61,10 @@
 {% endif %}
 
 <div class="row">
+    Using
+    {% for model in estimation.get_models() %}
+        {{ model.name }}{{ ',' if not loop.last }}
+    {% endfor %}
 {#    <h4>Total CO<sub>2</sub> footprint (in kilograms-equivalent) of each city</h4>#}
 {#    <div id="cities_footprints_d3viz" class="plot-container"></div>#}
     <hr>

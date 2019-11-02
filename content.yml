@@ -11,8 +11,11 @@ meta:
       email: dbarret@irap.omp.eu
       role:  Principal Investigator
     - name:  Antoine Goutenoir
-      email: agoutenoir@irap.omp.eu
+      email: antoine@goutenoir.com
       role:  Software Ninja
+    - name:  Jean-Michel Glorian
+      email: Jean-Michel.Glorian@irap.omp.eu
+      role:  Benevolent Wizard
 
 
 # Aka. Laws
