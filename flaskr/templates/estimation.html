@@ -32,11 +32,14 @@
     {% endif %}
         </span>
         –
-        {{ "%.d" | format(city.footprint | round(0) | int) }} CO<sub>2</sub><small>EQ</small>
+        {{ "%.d" | format((city.footprint/1000.0) | round() | int) }} tons CO<sub>2</sub><small>EQ</small>
+        –
+        {{ "%.d" | format(city.distance | round() | int) }} km
     </li>
 {% endfor %}
 </ul>
 {% endmacro %}
+
 
 
 {% block body %}
@@ -58,8 +61,8 @@
 {% endif %}
 
 <div class="row">
-    <h4>Total CO<sub>2</sub> footprint (in kilograms-equivalent) of each city</h4>
-    <div id="cities_footprints_d3viz" class="plot-container"></div>
+{#    <h4>Total CO<sub>2</sub> footprint (in kilograms-equivalent) of each city</h4>#}
+{#    <div id="cities_footprints_d3viz" class="plot-container"></div>#}
     <hr>
     <div id="cities_footprints_d3viz_lollipop" class="plot-container"></div>
 {#    <br>#}
@@ -188,6 +191,7 @@ var plots_config = {
 
 /** PLOTS **/
 
+{#
 jQuery(document).ready(function($){
 
     var vizid = "#cities_footprints_d3viz";
@@ -260,6 +264,7 @@ jQuery(document).ready(function($){
     });
 
 });
+#}
 
 
 jQuery(document).ready(function($){
