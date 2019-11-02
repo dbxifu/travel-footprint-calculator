@@ -471,10 +471,7 @@ def consult_estimation(public_id, extension):
 
 @main.route("/scaling_laws.csv")
 def get_scaling_laws_csv():
-    distances = [
-        500., 1000., 1500., 2500., 3000., 4500.,
-        5000., 8000., 10000., 12000.,
-    ]
+    distances = content.laws_plot.distances
     models = get_emission_models()
 
     si = StringIO()

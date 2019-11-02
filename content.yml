@@ -254,6 +254,23 @@ models:
           - [ 25000.0, 1033.0117495994948 ]
 
 
+# The grouped barchart displayed on the home page.
+laws_plot:
+  distances:
+    - 200.0
+    - 350.0
+    - 500.0
+    - 1000.0
+    - 1500.0
+    - 2500.0
+    - 3000.0
+    - 4500.0
+    - 5000.0
+    - 8000.0
+    - 10000.0
+    - 12000.0
+
+
 # The content is Markdown.  HTML is also allowed.
 # If you also want Markdown in the titles, just ask.
 home:
@@ -274,7 +291,6 @@ home:
       [@DidierBarret](https://twitter.com/DidierBarret),
       <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
       [didier.barret@gmail.com](mailto:didier.barret@gmail.com)
-
 
   sections:
     # Add as many sections as you want.
