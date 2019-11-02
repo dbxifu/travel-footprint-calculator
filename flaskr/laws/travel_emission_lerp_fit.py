@@ -8,14 +8,14 @@ class EmissionModel(BaseEmissionModel):
         """
         This interpolation algorithm will handle duplicates
         as one would expect it to do.
-        Triplicates and more will only use the outmost values in the list
-        and ignore the middle ones.
+        For triplicates and more it will only use the outmost values
+        in the list and ignore the middle ones.
 
-        And you don't have to provide them in order,
+        And you do not have to provide them in order,
         as this list is also sorted, and thankfully :
 
-        > In Python, when you sort equal values, they will retain their
-        > original order in the output.
+        > In Python, when you sort equal values,
+        > they will retain their original order in the output.
 
         :param distance: float
         :param config:
