@@ -5,6 +5,22 @@ from .travel_emission_linear_fit import EmissionModel as BaseEmissionModel
 class EmissionModel(BaseEmissionModel):
 
     def apply_scaling_law(self, distance, config):
+        """
+        This interpolation algorithm will handle duplicates
+        as one would expect it to do.
+        Triplicates and more will only use the outmost values in the list
+        and ignore the middle ones.
+
+        And you don't have to provide them in order,
+        as this list is also sorted, and thankfully :
+
+        > In Python, when you sort equal values, they will retain their
+        > original order in the output.
+
+        :param distance: float
+        :param config:
+        :return: float
+        """
 
         assert config.points
         assert len(config.points) > 0
@@ -21,7 +37,7 @@ class EmissionModel(BaseEmissionModel):
                 t = 0
                 if sample_point[0] != previous_point[0]:
                     t = (distance - previous_point[0]) * 1.0 \
-                                       / \
+                                        / \
                         (sample_point[0] - previous_point[0])
 
                 footprint = previous_point[1] + t * (sample_point[1] - previous_point[1])
