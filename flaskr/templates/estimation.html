@@ -107,6 +107,14 @@
                     Download Raw YAML
                 </a>
             </li>
+            <li class="nav-item m-4">
+                <a id="cities_footprints_d3viz_lollipop_download"
+                   href="#"
+                   title="This may not work on IE nor Edge.  Please use a decent browser like Firefox."
+                   class="btn btn-lg btn-secondary">
+                    Download Plot SVG
+                </a>
+            </li>
 {#            <li class="nav-item m-4">#}
 {#                <a href="/estimation/{{ estimation.public_id }}.xls" class="btn btn-lg btn-secondary disabled">#}
 {#                    Download XLS#}
@@ -282,10 +290,18 @@ jQuery(document).ready(function($){
     var width = Math.max(880, $(vizid).parent().width());
     width = width - margin.left - margin.right;
 
-    var svg = d3.select(vizid)
+    var svg_tag = d3.select(vizid)
       .append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("height", height + margin.top + margin.bottom);
+
+    // Add a background
+    svg_tag.append("rect")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("fill", "#ffffff");
+
+    var svg = svg_tag
       .append("g")
         .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")");
@@ -300,7 +316,9 @@ jQuery(document).ready(function($){
         var x = d3.scaleLinear()
             .domain([0, axis_x_max])
             .range([0, width]);
+            {#.nice();#}
         svg.append("g")
+            .attr("class", "axis-bottom")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(x))
             .selectAll("text")
@@ -315,6 +333,7 @@ jQuery(document).ready(function($){
             }))
             .padding(1);
         svg.append("g")
+            .attr("class", "axis-left")
             .call(d3.axisLeft(y));
 
         {#svg.append("g")#}
@@ -339,6 +358,7 @@ jQuery(document).ready(function($){
 //            .attr("x1", function (d) {
 //                return x(d[x_key]);
 //            })
+            .attr("class", "stick")
             .attr("x1", x(0))
             .attr("x2", x(0))
             .attr("y1", function (d) {
@@ -423,6 +443,7 @@ jQuery(document).ready(function($){
             .attr("id", function (d, i) {
                 return "shadow_hover_value_" + i.toString();
             })
+            .attr("class", "value-text")
             .attr("font-size", 10)
             .attr("text-anchor", compute_text_anchor)
             .attr("transform", compute_text_transform)
@@ -437,6 +458,7 @@ jQuery(document).ready(function($){
             .attr("id", function (d, i) {
                 return "hover_value_" + i.toString();
             })
+            .attr("class", "value-text")
             .attr("font-size", 10)
             .attr("text-anchor", compute_text_anchor)
             .attr("transform", compute_text_transform)
@@ -453,7 +475,7 @@ jQuery(document).ready(function($){
             .attr("r", "4")
             .delay(function (d, i) { return(i*animation_delay); });
 
-        svg.selectAll("line")
+        svg.selectAll("line.stick")
             .transition()
             .duration(animation_duration*0.618)
             .attr("x1", function (d) { return x(d[x_key]); })
@@ -464,6 +486,18 @@ jQuery(document).ready(function($){
             .append('text')
             .attr("transform", "translate("+(-180+width/2.0)+","+(height+111)+")")
             .text("CO\u2082 emissions equivalent (kg) per target city.");
+
+        // Download
+        $(vizid+"_download").click(function(e){
+            e.stopPropagation();
+            // Show the values
+            $(vizid+" svg .value-text").css("opacity", 1);
+            // This possibly won't work on IE and Edge
+            saveSvg($(vizid + " svg")[0], "travel_carbon_footprint_{{ estimation.public_id }}.svg");
+            // Hide the values
+            $(vizid+" svg .value-text").css("opacity", 0);
+            return false;
+        });
 
     });
 
