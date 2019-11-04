@@ -301,12 +301,12 @@ home:
 
       - title: What does this do?
         content: |
-          The tool helps computing your travel carbon footprint
+          <p class="text-center">The tool helps computing your travel carbon footprint
           for a **round trip** from a given location,
           for a set of visited cities.
-
+          
           Similarly, the tool allows to compute the travel footprint
-          of a conference/meeting/... (the originating city of each 
+          of a conference, meeting... (the originating city of each 
           participant has then to be provided).
           It can also return the city that would minimize the travel footprint
           assuming the same audience of the conference/meeting for a set of city hosts 
@@ -318,7 +318,7 @@ home:
           (e.g. connecting flights),
           this tool enables to compute the footprint of a larger number of travels,
           making some assumptions, e.g. to model connecting flights. In addition,
-          it provides an estimate for up to **six** different methods.
+          it provides an estimate for up to **six** different methods.</p>
 
           <!--
           For short distance travels, the CO<sub>2</sub> footprint associated with trains
@@ -343,7 +343,7 @@ home:
           with the aim of raising awareness and reducing our environmental impact,
           whenever possible. As air travel is likely to dominate the CO<sub>2</sub> budget
           of most scientists, this tool offers a way to easily compute the footprint 
-          associated with travels.
+          associated with travels. 
 
       - title: Which data are used?
         content: |
