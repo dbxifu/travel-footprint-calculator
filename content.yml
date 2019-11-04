@@ -93,7 +93,7 @@ models:
           - [  2500.0,  438.31863895 ]
           - [ 20000.0, 3335.62849772 ]
 
-  - name: ADEME (RF=1.9)
+  - name: ADEME (RFI=1.9)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -143,7 +143,7 @@ models:
           - [ 25000.0, 8475.197   ]
 
 
-  - name: DEFRA (RF=1.9)
+  - name: DEFRA (RFI=1.9)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
