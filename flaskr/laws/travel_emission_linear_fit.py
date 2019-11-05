@@ -1,23 +1,7 @@
 import numpy as np
 from geopy.distance import great_circle
 
-
-# @abc
-class BaseEmissionModel():
-    def __init__(self, config):  # Constructor
-        self.name = config.name
-        self.slug = config.slug
-        self.color = config.color
-        self.selected = config.selected
-        self.config = config.config
-
-    def __repr__(self):  # Cast to String
-        return "Emission model\n" + \
-               "==============\n" + \
-               "%s (%s)" % (self.name, self.slug) + \
-               repr(self.config)
-
-    # def compute_travel_footprint()
+from flaskr.laws import BaseEmissionModel
 
 
 class EmissionModel(BaseEmissionModel):
@@ -28,7 +12,7 @@ class EmissionModel(BaseEmissionModel):
             origin_longitude,       # degrees
             destination_latitude,   # degrees
             destination_longitude,  # degrees
-            prefer_train_under_distance=0,  # meters
+            extra_config=None,
     ):
         footprint = 0.0
         distance = 0.0
@@ -54,16 +38,18 @@ class EmissionModel(BaseEmissionModel):
         #############################################
         #############################################
 
-        # I.a Train travel footprint
-        # ... TODO
-
-        # I.b Airplane travel footprint
+        # Let's start by computing the distance between the locations
         great_circle_distance = self.get_distance_between(
             origin_latitude=origin_airport.latitude,
             origin_longitude=origin_airport.longitude,
             destination_latitude=destination_airport.latitude,
             destination_longitude=destination_airport.longitude,
         )
+
+        # I.a Train travel footprint
+        # ... TODO
+
+        # I.b Airplane travel footprint
         footprint += self.compute_airplane_footprint(
             distance=great_circle_distance
         )
@@ -77,7 +63,6 @@ class EmissionModel(BaseEmissionModel):
             'distance': distance,
             'co2eq_kg': footprint,
         }
-        # return footprint
 
     def compute_airplane_footprint(
             self,
@@ -101,6 +86,7 @@ class EmissionModel(BaseEmissionModel):
             config = self.config.plane_emission_linear_fit
         distance = distance * config.scale_before + config.offset_before
         footprint = self.apply_scaling_law(distance, config)
+        # We can totally ignore RFI in config by commenting the line below
         footprint = self.adjust_footprint_for_rfi(footprint, config)
 
         return footprint

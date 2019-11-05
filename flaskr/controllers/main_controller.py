@@ -245,7 +245,7 @@ def compute():  # process the queue of estimation requests
     # UTILITY PRIVATE FUNCTION(S) #############################################
 
     def get_city_key(_location):
-
+        # Will this hack hold?  Suspense...
         return _location.address.split(',')[0]
 
         # _city_key = _location.address
@@ -260,7 +260,7 @@ def compute():  # process the queue of estimation requests
     def compute_one_to_many(
             _origin,
             _destinations,
-            use_train_below=0.0
+            _extra_config=None
     ):
         _results = {}
         footprints = {}
@@ -277,6 +277,7 @@ def compute():  # process the queue of estimation requests
                     origin_longitude=_origin.longitude,
                     destination_latitude=_destination.latitude,
                     destination_longitude=_destination.longitude,
+                    extra_config=_extra_config,
                 )
 
                 city_key = get_city_key(_destination)
@@ -348,7 +349,7 @@ def compute():  # process the queue of estimation requests
         results = compute_one_to_many(
             _origin=origins[0],
             _destinations=destinations,
-            use_train_below=0,
+            _extra_config={},
         )
 
     # SCENARIO B : At Least One Origin, One Destination #######################
@@ -359,7 +360,7 @@ def compute():  # process the queue of estimation requests
         results = compute_one_to_many(
             _origin=destinations[0],
             _destinations=origins,
-            use_train_below=0,
+            _extra_config={},
         )
 
     # SCENARIO C : At Least One Origin, At Least One Destination ##############
@@ -380,7 +381,7 @@ def compute():  # process the queue of estimation requests
             city_results = compute_one_to_many(
                 _origin=destination,
                 _destinations=origins,
-                use_train_below=0,
+                _extra_config={},
             )
             city_results['city'] = city_key
             city_results['address'] = destination.address
