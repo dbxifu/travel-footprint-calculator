@@ -234,9 +234,9 @@ def compute():  # process the queue of estimation requests
     # GRAB AND CONFIGURE THE EMISSION MODELS ##################################
 
     emission_models = estimation.get_models()
-    # mdl_slugs = estimation.models_slugs.split("\n")
-    # emission_models = [m for m in get_emission_models() if m.slug in mdl_slugs]
     # print(emission_models)
+
+    extra_config = {}
 
     # PREPARE RESULT DICTIONARY THAT WILL BE STORED ###########################
 
@@ -349,7 +349,7 @@ def compute():  # process the queue of estimation requests
         results = compute_one_to_many(
             _origin=origins[0],
             _destinations=destinations,
-            _extra_config={},
+            _extra_config=extra_config,
         )
 
     # SCENARIO B : At Least One Origin, One Destination #######################
@@ -360,7 +360,7 @@ def compute():  # process the queue of estimation requests
         results = compute_one_to_many(
             _origin=destinations[0],
             _destinations=origins,
-            _extra_config={},
+            _extra_config=extra_config,
         )
 
     # SCENARIO C : At Least One Origin, At Least One Destination ##############
@@ -381,7 +381,7 @@ def compute():  # process the queue of estimation requests
             city_results = compute_one_to_many(
                 _origin=destination,
                 _destinations=origins,
-                _extra_config={},
+                _extra_config=extra_config,
             )
             city_results['city'] = city_key
             city_results['address'] = destination.address
