@@ -261,10 +261,13 @@ models:
         # The travel_emission_lerp_fit uses points instead of intervals
         # List of (distance in km, footprint in kg)
         points:
-          - [     0.0,    4.5735209613707 ]
-          - [   500.0,   84.2229231297094 ]
-          - [  3000.0,  223.7823676144418 ]
-          - [ 25000.0, 1033.0117495994948 ]
+          - [0.0, 0.0 ]
+          - [299.9, 0.0 ]
+          - [300.0, 67.00585705041823 ]
+          - [2499.9, 211.09825928042045 ]
+          - [2500.0, 206.528816915788 ]
+          - [14999.9, 663.8204584246745 ]
+          - [25000.0, 1029.6603566841018 ]
 
 
 # The grouped barchart displayed on the home page.
