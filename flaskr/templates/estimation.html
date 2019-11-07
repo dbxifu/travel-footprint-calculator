@@ -32,9 +32,9 @@
     {% endif %}
         </span>
         –
-        {{ "%.d" | format((city.footprint/1000.0) | round() | int) }} tons CO<sub>2</sub><small>EQ</small>
+        {{ "%.1f" | format((city.footprint/1000.0) | round(1)) }} tons CO<sub>2</sub><small>EQ</small>
         –
-        {{ "%.d" | format(city.distance | round() | int) }} km
+        {{ "%d" | format(city.distance | round() | int) }} km
     </li>
 {% endfor %}
 </ul>
