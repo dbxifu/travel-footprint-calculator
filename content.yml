@@ -319,12 +319,10 @@ home:
 
       - title: What does this do?
         content: |
-          <p class="text-center">
           The tool helps computing your travel carbon footprint
           for a <strong>round trip</strong> from a given location,
           for a set of visited cities.
-          </p>
-          
+
           Similarly, the tool allows to compute the travel footprint
           of a conference, meeting... (the originating city of each 
           participant has then to be provided).

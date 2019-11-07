@@ -14,19 +14,21 @@
         <div class="col-lg-4"></div>
     </div>
 
-    <div class="row">
+    {# PLOT SCALING LAWS #####################################################}
 
+    <div class="row">
         <div class="col-lg-12 text-center mb-5">
             <div id="scaling_laws_spinner" class="lds-ripple text-center"><div></div><div></div><div></div></div>
             <div id="scaling_laws_d3viz" class="plot-container"></div>
         </div>
-
     </div>
+
+    {# THREE COLMUNS TEXT LAYOUT #############################################}
 
     {% for section in content.home.sections -%}
     <div class="row">
         {% for block in section.blocks -%}
-        <div class="col-md-4">
+        <div class="col-md-4 text-justify">
             {% if block.title -%}
             <h3>{{ block.title }}</h3>
             {%- endif %}
