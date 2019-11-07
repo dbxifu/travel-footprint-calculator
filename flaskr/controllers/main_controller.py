@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 import geopy
 import sqlalchemy
 
@@ -236,7 +238,9 @@ def compute():  # process the queue of estimation requests
     emission_models = estimation.get_models()
     # print(emission_models)
 
-    extra_config = {}
+    extra_config = {
+        'use_train_below_distance': 300,
+    }
 
     # PREPARE RESULT DICTIONARY THAT WILL BE STORED ###########################
 
@@ -269,6 +273,7 @@ def compute():  # process the queue of estimation requests
 
         cities_sum_foot = {}
         cities_sum_dist = {}
+        cities_dict_first_model = None
         for model in emission_models:
             cities_dict = {}
             for _destination in _destinations:
@@ -280,50 +285,64 @@ def compute():  # process the queue of estimation requests
                     extra_config=_extra_config,
                 )
 
-                city_key = get_city_key(_destination)
+                _key = get_city_key(_destination)
 
-                destinations_by_city_key[city_key] = _destination
+                destinations_by_city_key[_key] = _destination
 
-                if city_key not in cities_dict:
-                    cities_dict[city_key] = {
-                        'city': city_key,
+                if _key not in cities_dict:
+                    cities_dict[_key] = {
+                        'city': _key,
                         'address': _destination.address,
                         'footprint': 0.0,
                         'distance': 0.0,
+                        'train_trips': 0,
+                        'plane_trips': 0,
                     }
-                cities_dict[city_key]['footprint'] += footprint['co2eq_kg']
-                cities_dict[city_key]['distance'] += footprint['distance']
-                if city_key not in cities_sum_foot:
-                    cities_sum_foot[city_key] = 0.0
-                cities_sum_foot[city_key] += footprint['co2eq_kg']
-                if city_key not in cities_sum_dist:
-                    cities_sum_dist[city_key] = 0.0
-                cities_sum_dist[city_key] += footprint['distance']
+                cities_dict[_key]['footprint'] += footprint['co2eq_kg']
+                cities_dict[_key]['distance'] += footprint['distance_km']
+                cities_dict[_key]['train_trips'] += footprint['train_trips']
+                cities_dict[_key]['plane_trips'] += footprint['plane_trips']
+                if _key not in cities_sum_foot:
+                    cities_sum_foot[_key] = 0.0
+                cities_sum_foot[_key] += footprint['co2eq_kg']
+                if _key not in cities_sum_dist:
+                    cities_sum_dist[_key] = 0.0
+                cities_sum_dist[_key] += footprint['distance_km']
 
-            cities = [cities_dict[k] for k in cities_dict.keys()]
-            cities = sorted(cities, key=lambda c: c['footprint'])
+            cities = sorted(cities_dict.values(), key=lambda c: c['footprint'])
 
             footprints[model.slug] = {
                 'cities': cities,
             }
 
+            if cities_dict_first_model is None:
+                cities_dict_first_model = deepcopy(cities_dict)
+
         _results['footprints'] = footprints
 
         total_foot = 0.0
         total_dist = 0.0
+        total_train_trips = 0
+        total_plane_trips = 0
 
         cities_mean_dict = {}
         for city in cities_sum_foot.keys():
             city_mean_foot = 1.0 * cities_sum_foot[city] / len(emission_models)
             city_mean_dist = 1.0 * cities_sum_dist[city] / len(emission_models)
+            city_train_trips = cities_dict_first_model[city]['train_trips']
+            city_plane_trips = cities_dict_first_model[city]['plane_trips']
             cities_mean_dict[city] = {
                 'address': destinations_by_city_key[city].address,
                 'city': city,
                 'footprint': city_mean_foot,
                 'distance': city_mean_dist,
+                'train_trips': city_train_trips,
+                'plane_trips': city_plane_trips,
             }
             total_foot += city_mean_foot
             total_dist += city_mean_dist
+            total_train_trips += city_train_trips
+            total_plane_trips += city_plane_trips
 
         cities_mean = [cities_mean_dict[k] for k in cities_mean_dict.keys()]
         cities_mean = sorted(cities_mean, key=lambda c: c['footprint'])
@@ -337,6 +356,8 @@ def compute():  # process the queue of estimation requests
         _results['footprint'] = total_foot
 
         _results['distance'] = total_dist
+        _results['train_trips'] = total_train_trips
+        _results['plane_trips'] = total_plane_trips
 
         return _results
 
@@ -387,7 +408,7 @@ def compute():  # process the queue of estimation requests
             city_results['address'] = destination.address
             result_cities.append(city_results)
 
-        result_cities = sorted(result_cities, key=lambda c: int(c['total']))
+        result_cities = sorted(result_cities, key=lambda c: int(c['footprint']))
         results = {
             'cities': result_cities,
         }
@@ -451,7 +472,11 @@ def consult_estimation(public_id, extension):
 
         si = StringIO()
         cw = csv.writer(si, quoting=csv.QUOTE_ALL)
-        cw.writerow([u"city", u"address", u"co2 (kg)", u"distance (km)"])
+        cw.writerow([
+            u"city", u"address",
+            u"co2 (kg)", u"distance (km)",
+            u"plane trips", u'train trips',
+        ])
 
         results = estimation.get_output_dict()
         for city in results['cities']:
@@ -460,6 +485,8 @@ def consult_estimation(public_id, extension):
                 city['address'].encode(OUT_ENCODING),
                 round(city['footprint'], 3),
                 round(city['distance'], 3),
+                city['plane_trips'],
+                city['train_trips'],
             ])
 
         # return si.getvalue().strip('\r\n')

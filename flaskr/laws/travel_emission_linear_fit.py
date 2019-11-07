@@ -45,6 +45,14 @@ class EmissionModel(BaseEmissionModel):
             destination_latitude=destination_airport.latitude,
             destination_longitude=destination_airport.longitude,
         )
+        distance += great_circle_distance
+
+        use_train = False
+        use_plane = False
+        if distance < extra_config['use_train_below_distance']:
+            use_train = True
+        else:
+            use_plane = True
 
         # I.a Train travel footprint
         # ... TODO
@@ -53,15 +61,16 @@ class EmissionModel(BaseEmissionModel):
         footprint += self.compute_airplane_footprint(
             distance=great_circle_distance
         )
-        distance += great_circle_distance
 
         # II.a Double it up since it's a round-trip
         footprint *= 2.0
         distance *= 2.0
 
         return {
-            'distance': distance,
+            'distance_km': distance,
             'co2eq_kg': footprint,
+            'train_trips': 2 if use_train else 0,
+            'plane_trips': 2 if use_plane else 0,
         }
 
     def compute_airplane_footprint(
