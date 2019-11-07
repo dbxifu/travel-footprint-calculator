@@ -320,7 +320,7 @@ home:
       - title: What does this do?
         content: |
           The tool helps computing your travel carbon footprint
-          for a <strong>round trip</strong> from a given location,
+          for a **round trip** from a given location,
           for a set of visited cities.
 
           Similarly, the tool allows to compute the travel footprint
