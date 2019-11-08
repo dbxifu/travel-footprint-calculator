@@ -83,7 +83,7 @@ def create_app(object_name):
     # Markdown jinja2 filter
     @app.template_filter('markdown')
     def markdown_filter(text):
-        return markdown(text)
+        return markdown(text, extensions=['extra'])
 
     # Authentication Gate for the Admin
     @app.before_first_request
