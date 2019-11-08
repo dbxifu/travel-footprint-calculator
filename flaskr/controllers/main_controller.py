@@ -28,10 +28,6 @@ OUT_ENCODING = 'utf-8'
 
 
 # -----------------------------------------------------------------------------
-# refactor this outta here, like in core?
-
-
-# -----------------------------------------------------------------------------
 
 
 @main.route('/favicon.ico')
@@ -44,6 +40,8 @@ def favicon():  # we want it served from the root, not from static/
 
 
 @main.route('/')
+@main.route('/home')
+@main.route('/home.html')
 @cache.cached(timeout=1000)
 def home():
     models = get_emission_models()
@@ -59,6 +57,7 @@ def home():
 
 
 @main.route("/estimate", methods=["GET", "POST"])
+@main.route("/estimate.html", methods=["GET", "POST"])
 def estimate():
     models = get_emission_models()
     form = EstimateForm()
