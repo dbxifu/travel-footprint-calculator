@@ -107,20 +107,24 @@
 {#            </div>#}
 
             <div class="form-group">
-
-            <h6>Emission Models to consider</h6>
-            <div class="form-check">
-                {% for model in models %}
-                <div>
-                {{ render_checkbox(form['use_model_'~model.slug]) }}
+                <h6>Emission Models to consider</h6>
+                <div class="form-check">
+                    {% for model in models %}
+                    <div>
+                    {{ render_checkbox(form['use_model_'~model.slug]) }}
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
-            <small class="form-text text-muted">
-                We will use a mean of the selected models.
-                &nbsp;
-                Please select at least one.
-            </small>
+                <small class="form-text text-muted">
+                    We will use a mean of the selected models.
+                    &nbsp;
+                    Please select at least one.
+                    <br>
+                    The meaning of <acronym title="Radiative Forcing Index">RFI</acronym>
+                    is detailed
+                    <a href="{{ url_for('.home') }}#rfi">here</a>
+                    .
+                </small>
             </div>
 
             <div class="form-group">
