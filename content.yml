@@ -317,27 +317,10 @@ home:
     # Three blocks per section ; if you want another amount, it can be done, please ask.
     - blocks:
 
-      - title: What does this do?
+      - title: What does the tool do?
         content: |
-          The tool helps computing your travel carbon footprint
-          for a **round trip** from a given location,
-          for a set of visited cities.
-
-          Similarly, the tool allows to compute the travel footprint
-          of a conference, meeting... (the originating city of each 
-          participant has then to be provided).
-          It can also return the city that would minimize the travel footprint
-          assuming the same audience of the conference/meeting for a set of city hosts 
-          (which can be derived from the list of cities of the participants 
-          to the conference/meeting).
-
-          While online CO<sub>2</sub> calculators enable to compute the footprint
-          of a limited number of trips with detailed trip information
-          (e.g. connecting flights),
-          this tool enables to compute the footprint of a larger number of travels,
-          making some assumptions, e.g. to model connecting flights. In addition,
-          it provides an estimate for up to **six** different methods.</p>
-
+          The tool computes the travel carbon footprint associated with round trip flights. It does so for a set of trips from a given city of origin to a set of destinations. Similarly, the tool allows to compute the carbon travel footprint of a larger set of trips, corresponding to a conference, a meeting. For this, the city of departure for each participant to the conference has to be provided. If multiple host cities are provided, the tool ranks the cities according to the associated carbon footprint. While online calculators enable to compute the footprint of a limited number of trips, this tool enables to compute the footprint of a larger number of trips in an automated way. Furthermore, it provides an estimate based on data from six different methods, whose estimates can differ significantly. If more than one method is selected by the user, the tool returns the mean of the estimates of each method.  
+          
           <!--
           For short distance travels, the CO<sub>2</sub> footprint associated with trains
           is calculated and added to the air travel footprint.
