@@ -433,13 +433,17 @@ home:
         content: |
           The minimum distance for flying is considered arbitrarily to be 300 km. Below that, it is assumed that train is used. The tool then computes the travel footprint associated with train. The French emission factors provided by ADEME are 3.37 and 5.11 grams of carbon dioxide equivalent per km per passenger for high speed train and normal train respectively. This low value is due to the fact that electricity is provided by nuclear plants. It is larger by some factor across Europe. The tool assumes the mean of the emission factors of national and international rails, as provided by DEFRA (i.e. 23 grams per passenger km). This makes the carbon dioxide emission of trains, typically one tenth (1/10) of the one of aircrafts.
           
-      - title: Input and output data and trouble shooting
+      - title: Input and output data
         content: |
-          The inputs are provided in US English for the city and country names, without diacritics. On each line, the city and country names must be separated by a comma.  The estimation can go wrong if a city is not properly geolocated. This may happen because the name of the city is wrongly spelled, or the geolocator (OSM) is confused or unavailable. An error should be listed at the end of the result page. Don’t be surprised, if the name recovered by the geolocator is not exactly the one you had expected. The result pages provides a summary plot which can be downloaded, as well as a csv and raw yaml file. The csv file lists the name of the city as in the form, the address to which it was geolocated, the carbon dioxide emission (in kg), the distance travelled, the number of trips possible by train (i.e. when the distance is less than the minimum flying distance, e.g. 300 km) and the number of trips by plane. The plot and the csv file rank the city against the carbon dioxide emissions. Cities found identical in the input form are grouped, and their number in the group is given by the number of trips, and the distance given is the cumulative distance over the group.
-          
+          The inputs are provided in US English for the city and country names, without diacritics. On each line, the city and country names must be separated by a comma. Pasting a csv file in the form is possible. Two types of inputs can be considered depending on whether the user wants an “individual” estimate or an estimate for a conference, meeting and so on. In the former case, the “origin” city is unique and the “destination” cities multiple. In the later case, the “origin” cities are multiple (i.e. the cities from which the participants to the conference depart from), and the “destination” city may a single host city or multiple host cities if the user wants to compare their associated footprint. Cities found identical in the input form are always grouped, and their number in the group is given by the number of trips in the output, and the distance given is the cumulative distance over the group. The result pages provides a summary plot which can be downloaded, as well as a csv and raw yaml file. The csv file lists the name of the city as in the form, the address to which it was geolocated, the carbon dioxide emission (in kg), the distance travelled, the number of trips possible by train (i.e. when the distance is less than the minimum flying distance, e.g. 300 km) and the number of trips by plane. The plot and the csv file rank the city against the carbon dioxide emissions. 
+
+      - title: Trouble shooting
+        content: |
+          The estimation can go wrong if a city is not properly geolocated. This may happen because the name of the city is wrongly spelled or the geolocator (OSM) is confused. An error should be listed at the end of the result page. Don’t be surprised, if the name recovered by the geolocator is not exactly the one you had expected (e.g. a city is located at the address of an embassy). If nothing happens during a request, it is most likely caused by the geolocator being unavailable. In this case, try again a few minutes later.
+
       - title: Caveats
         content: |
-          The numbers provided by the tool do not come with uncertainties. Therefore they must be considered as indicative of the true values. Selecting more than one method is recommended. In all cases however, the numbers can be used for relative comparisons, e.g. when comparing two cities for hosting a conference. 
+          The numbers provided by the tool do not come with uncertainties. Therefore they must be considered as indicative of the true values. Selecting more than one method is recommended, because they may make the numbers closer to their true values. In all cases however, the numbers can be used for relative comparisons, e.g. when comparing two cities for hosting a conference. 
           
       - title: Confidentiality
         content: |
@@ -451,11 +455,11 @@ home:
           
       - title: Reference
         content: |
-          Results from the tool may reference to Barret (2019, in preparatiion). 
+          Results from the tool may reference to Barret (2019, in preparation). 
  
       - title: Concluding note
         content: |
-          As a personal note, I would like to stress that, as a scientist, I find it worrying or even shocking that there are no standards for computing the flight emissions, while we know that flight travels, releasing carbon dioxide at high altitudes, contribute to global warming. To take an example, the International Civil Aviation Organization (ICAO) is a United Nations specialized agency, established by States in 1944 to manage the administration and governance of the Convention on International Civil Aviation. ICAO has global responsibility for the establishment of standards, recommended practices, and guidance on various aspects of international civil aviation, including environmental protection. How can ICAO ignore radiative forcing in the results provided by its widely used on-line calculator? (which by the way is the calculator used by the travel agency of my institute, being a public institution). The IPCC in its 1999 report have defined the radiative forcing index to be between 2 and 4. Why ICAO is using 1? This is just an example, which clearly show the urgent need to agree on a common methodology accepted by all parties in computing flight emission. May this tool be used for that purpose. 
+          As a personal note, I would like to stress that, as a scientist, I find it worrying or even shocking that there are no standards for computing the flight emissions, while we know that flight travels, releasing carbon dioxide at high altitudes, contribute to global warming. To take an example, the International Civil Aviation Organization (ICAO) is a United Nations specialized agency, established by States in 1944 to manage the administration and governance of the Convention on International Civil Aviation. ICAO has global responsibility for the establishment of standards, recommended practices, and guidance on various aspects of international civil aviation, including environmental protection. How can ICAO ignore radiative forcing in the results provided by its widely used on-line calculator? (which by the way is the calculator used by the travel agency of my institute, being a public institution). The IPCC in its 1999 report have defined the radiative forcing index to be between 2 and 4. Why ICAO is using 1? This is just an example, which clearly show the urgent need to agree on a common methodology accepted by all parties in computing flight emission. I wish this tool be modestly used to raise awareness on this issue. 
           
       - title: Additional resources
         content: |
@@ -464,8 +468,6 @@ home:
             (French Environment & Energy Management Agency)
           - [DEFRA](https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019)
             emission conversion factors 2019
-          - [DGAC](https://eco-calculateur.dta.aviation-civile.gouv.fr)
-            Direction Générale de l'Aviation Civile
           - [ICAO](https://www.icao.int/environmental-protection/carbonoffset/pages/default.aspx)
             Carbon Emissions Calculator
           - [KLM data](https://www.klm.com/travel/nl_en/prepare_for_travel/fly_co2_neutral/all_about_sustainable_travel/index.htm)
