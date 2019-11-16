@@ -50,7 +50,7 @@
         {% for block in column.blocks -%}
             <article>
             {% if block.title -%}
-            <h3>{{ block.title }}</h3>
+            <h3{% if block.slug %} id="{{ block.slug }}"{% endif %}>{{ block.title }}</h3>
             {%- endif %}
             {{ block.content | markdown | safe }}
             </article>

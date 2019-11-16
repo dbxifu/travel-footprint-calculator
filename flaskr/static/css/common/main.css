@@ -95,6 +95,17 @@ span.required-asterisk {
 }
 
 
+/** TWEAKS ******************************************************************/
+
+h3[id]::before {
+  content: '';
+  display: block;
+  height:      75px;
+  margin-top: -75px;
+  visibility: hidden;
+}
+
+
 /** SPINNER ******************************************************************/
 
 .lds-ripple {

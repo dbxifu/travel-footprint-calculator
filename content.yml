@@ -391,8 +391,9 @@ home:
           for a large range of flights.
           The KLM data have also been fitted with linear functions.
           
-      - content: |
-          ### What about radiative forcing? {#rfi}
+      - title: What about radiative forcing?
+        slug: rfi
+        content: |
           Radiative forcing accounts for the fact that aviation contributes
           to climate change more than just with the emission of carbon dioxide
           from burning fuels, by releasing gases and particles directly
