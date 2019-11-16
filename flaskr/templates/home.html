@@ -23,8 +23,9 @@
         </div>
     </div>
 
-    {# THREE COLMUNS TEXT LAYOUT #############################################}
+    {# THREE COLUMNS TEXT LAYOUT #############################################}
 
+    {% if content.home.sections -%}
     {% for section in content.home.sections -%}
     <div class="row">
         {% for block in section.blocks -%}
@@ -37,6 +38,27 @@
         {%- endfor %}
     </div>
     {%- endfor %}
+    {%- endif %}
+
+
+    {# COLUMNS TEXT LAYOUT #############################################}
+
+    {% if content.home.columns -%}
+    <div class="row">
+    {% for column in content.home.columns -%}
+        <div class="col-md-{{ (12/(content.home.columns | length)) | int }} text-justify">
+        {% for block in column.blocks -%}
+            <article>
+            {% if block.title -%}
+            <h3>{{ block.title }}</h3>
+            {%- endif %}
+            {{ block.content | markdown | safe }}
+            </article>
+        {%- endfor %}
+        </div>
+    {%- endfor %}
+    </div>
+    {%- endif %}
 
 {% endblock %}
 

@@ -312,30 +312,111 @@ home:
       <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
       [didier.barret@gmail.com](mailto:didier.barret@gmail.com)
 
-  sections:
-    # Add as many sections as you want.
-    # Three blocks per section ; if you want another amount, it can be done, please ask.
+  # Three blocks per section.
+#  sections:
+
+  # You can also use columns.
+  columns:
     - blocks:
 
       - title: What does the tool do?
         content: |
-          The tool computes the carbon footprint associated with round trip flights. It does so for a set of trips from a given city of origin to a set of destinations. Similarly, the tool allows to compute the carbon footprint of a larger set of trips, corresponding to a conference, a meeting and so on. For this, the city of departure for each participant to the conference has to be provided. If multiple host cities are provided, the tool ranks the cities according to the associated carbon footprint. While online calculators enable to compute the footprint of a limited number of trips, this tool enables to compute the footprint of a larger number of trips in an automated way. Furthermore, it provides an estimate based on data from six different methods, whose estimates can differ significantly. If more than one method is selected by the user, the tool returns the mean of the estimates of all selected method.
+          The tool computes the carbon footprint associated with round trip flights.
+          It does so for a set of trips from a given city of origin to a set of destinations.
+          Similarly, the tool allows to compute the carbon footprint of a larger set of trips,
+          corresponding to a conference, a meeting and so on.
+
+          For this, the city of departure for each participant to the conference has to be provided.
+          If multiple host cities are provided,
+          the tool ranks the cities according to the associated carbon footprint.
+          While online calculators enable to compute the footprint of a limited number of trips,
+          this tool enables to compute the footprint of a larger number of trips in an automated way.
+
+          Furthermore, it provides an estimate based on data from six different methods,
+          whose estimates can differ significantly. If more than one method is selected by the user,
+          the tool returns the mean of the estimates of all selected method.
 
       - title: How does the tool work?
         content: |
-          A round trip is defined by a city pair. The two cities are geolocated and from their longitude and latitude, the great circle distance is computed. This is the shortest path a plane can follow. Some methods thus consider uplift correction factors in computing the carbon dioxide emission of a flight. In addition, two cities may not be connected by a direct flight. This is accounted for by increasing by 5% the great circle distance. Each method provides the carbon dioxide emission in kg as a function of the flight distance in km. Thus from the increased great circle distance, the carbon dioxide emission of a flight associated with a trip between a city pair is computed and multiplied by two to account for a round trip. 
+          A round trip is defined by a city pair.
+          The two cities are geolocated and from their longitude and latitude,
+          the great circle distance is computed.
+          This is the shortest path a plane can follow.
+          Some methods thus consider uplift correction factors
+          in computing the carbon dioxide emission of a flight.
+          In addition, two cities may not be connected by a direct flight.
+          This is accounted for by increasing by 5% the great circle distance.
+          Each method provides the carbon dioxide emission in kg
+          as a function of the flight distance in km.
+          Thus from the increased great circle distance,
+          the carbon dioxide emission of a flight associated with a trip
+          between a city pair is computed and multiplied by two
+          to account for a round trip.
 
       - title: Which methods are used? 
         content: |
-          The tool incorporates six different methods, among the most widely used, and for which the methodology used is documented. Providing more than one method enables to get a mean value, while illustrating the significant differences in their estimates. In alphabetic order, the data considered are from ADEME: the French Environment & Energy Management Agency, atmosfair: a German carbon offsetting company, DEFRA: the UK Department for Environment, Food & Rural Affairs, ICAO: International Civil Aviation Organization and finally from the KLM carbon compensation service. This list is obviously not exhaustive but represents a variety of estimates from lower to higher values. 
+          The tool incorporates six different methods,
+          among the most widely used, and for which the methodology used is documented.
+          Providing more than one method enables to get a mean value,
+          while illustrating the significant differences in their estimates.
+          In alphabetic order, the data considered are from
+          ADEME:
+          the French Environment & Energy Management Agency,
+          atmosfair:
+          a German carbon offsetting company,
+          DEFRA:
+          the UK Department for Environment, Food & Rural Affairs,
+          ICAO:
+          International Civil Aviation Organization
+          and finally from the KLM carbon compensation service.
+
+          This list is obviously not exhaustive
+          but represents a variety of estimates from lower to higher values.
 
       - title: How are the different methods built? 
         content: |
-          What is needed for each method is a function giving the carbon dioxide emission as a function of the flight distance. ADEME and DEFRA provide mean emission factors, as a function of flight distance. Myclimate provides an analytical formula. For ICAO and atmosfair, the on-line calculators have been run for a wide range of flights of varying distances (~100 flights spanning from 300 km to 12000 km) and the estimates have been fitted with linear functions, covering adjacent distance intervals. For its carbon compensation service, KLM provides on its web site a table of emissions for a large range of flights. The KLM data have been also been fitted with linear functions. 
+          What is needed for each method is a function
+          giving the carbon dioxide emission
+          as a function of the flight distance.
+          ADEME and DEFRA provide mean emission factors,
+          as a function of flight distance.
+          Myclimate provides an analytical formula.
+          For ICAO and atmosfair, the on-line calculators have been run
+          for a wide range of flights of varying distances
+          (~100 flights spanning from 300 km to 12000 km)
+          and the estimates have been fitted with linear functions,
+          covering adjacent distance intervals.
+          For its carbon compensation service,
+          KLM provides on its web site a table of emissions
+          for a large range of flights.
+          The KLM data have also been fitted with linear functions.
           
-      - title: What about radiative forcing? {#rfi}
-        content: |
-          Radiative forcing accounts for the fact that aviation contributes to climate change more than just with the emission of carbon dioxide from burning fuels, by releasing gases and particles directly into the upper troposphere and lower stratosphere where they have an impact on atmospheric composition. These gases and particles include carbon dioxide (CO2), ozone (O3), and methane (CH4); trigger formation of condensation trails (contrails); and may increase cirrus cloudiness; all of which contribute to climate change. A Radiative Forcing Index (RFI) of 1.9–2 is used by DEFRA, myclimate and recommended by ADEME (see discussion in Jungbluth, N. & Meili, C. Int J Life Cycle Assess (2019) 24: 404. https://doi.org/10.1007/s11367-018-1556-3). ATMOSFAIR considers a multiplier of 3, for all emissions above 9 km, accounting for the profile of the flight. ICAO, on the other hand does not include a multiplier, arguing that the scientific community has not settle on a value! KLM data does not seem to account for radiative forcing either, as the estimates they provide are close, although a little higher, than the ones of ICAO. Therefore, the methods based on ICAO and KLM data are not recommended, but given as methods providing the lowest emissions. 
+      - content: |
+          ### What about radiative forcing? {#rfi}
+          Radiative forcing accounts for the fact that aviation contributes
+          to climate change more than just with the emission of carbon dioxide
+          from burning fuels, by releasing gases and particles directly
+          into the upper troposphere and lower stratosphere
+          where they have an impact on atmospheric composition.
+          These gases and particles include carbon dioxide (CO2), ozone (O3),
+          and methane (CH4);
+          trigger formation of condensation trails (contrails);
+          and may increase cirrus cloudiness;
+          all of which contribute to climate change.
+          A Radiative Forcing Index (RFI) of 1.9–2 is used by DEFRA,
+          myclimate and recommended by ADEME
+          (see discussion in Jungbluth, N. & Meili,
+          C. Int J Life Cycle Assess (2019) 24: 404.
+          https://doi.org/10.1007/s11367-018-1556-3).
+          ATMOSFAIR considers a multiplier of 3, for all emissions above 9 km,
+          accounting for the profile of the flight.
+          ICAO, on the other hand does not include a multiplier,
+          arguing that the scientific community has not settle on a value!
+          KLM data does not seem to account for radiative forcing either,
+          as the estimates they provide are close, although a little higher,
+          than the ones of ICAO.
+          Therefore, the methods based on ICAO and KLM data are not recommended,
+          but given as methods providing the lowest emissions.
 
       - title: Original motivation
         content: |
@@ -343,7 +424,6 @@ home:
 
     - blocks:
 
-          
       - title: Seating category
         content: |
           The tool assumes economy seats in computing the carbon dioxide emission. For indication, DEFRA provides mean emission factors for different seat classes considering international flights. Related to the area occupied by the seat in the plane, for Premium economy, the emission would be 1.6 times larger than flying an economy seat. It would be 2.9 and 4 times higher from flying Business class and First class respectively. 
