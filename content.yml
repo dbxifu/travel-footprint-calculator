@@ -321,76 +321,73 @@ home:
 
       - title: What does the tool do?
         content: |
-          The tool computes the carbon footprint associated with round trip flights.
-          It does so for a set of trips from a given city of origin to a set of destinations.
-          Similarly, the tool allows to compute the carbon footprint of a larger set of trips,
-          corresponding to a conference, a meeting and so on.
+          The tool computes the carbon footprint associated with round 
+          trip flights. It does so for a set of trips from a given city of origin 
+          to a set of destinations. Similarly, the tool allows to compute 
+          the carbon footprint of a larger set of trips, corresponding to a 
+          conference, a meeting and so on. For this, the city of departure 
+          for each participant to the conference has first to be provided. 
+          If multiple destination cities are provided, the tool ranks those 
+          cities according to the associated carbon footprint. 
 
-          For this, the city of departure for each participant to the conference has to be provided.
-          If multiple host cities are provided,
-          the tool ranks the cities according to the associated carbon footprint.
-          While online calculators enable to compute the footprint of a limited number of trips,
-          this tool enables to compute the footprint of a larger number of trips in an automated way.
+          While online calculators enable to compute the footprint of a 
+          limited number of trips, this tool enables to compute the 
+          footprint of a larger number of trips in an automated way. 
 
-          Furthermore, it provides an estimate based on data from six different methods,
-          whose estimates can differ significantly. If more than one method is selected by the user,
-          the tool returns the mean of the estimates of all selected method.
+          Furthermore, it provides an estimate based on data from six 
+          different methods, whose estimates can differ significantly. If 
+          more than one method is selected by the user, the tool returns 
+          the mean of the estimates of all selected method.  
 
       - title: How does the tool work?
         content: |
-          A round trip is defined by a city pair.
-          The two cities are geolocated and from their longitude and latitude,
-          the great circle distance is computed.
-          This is the shortest path a plane can follow.
-          Some methods thus consider uplift correction factors
-          in computing the carbon dioxide emission of a flight.
-          In addition, two cities may not be connected by a direct flight.
-          This is accounted for by increasing by 5% the great circle distance.
-          Each method provides the carbon dioxide emission in kg
-          as a function of the flight distance in km.
-          Thus from the increased great circle distance,
-          the carbon dioxide emission of a flight associated with a trip
-          between a city pair is computed and multiplied by two
-          to account for a round trip.
+          A round trip is defined by a city pair. The two cities are 
+          geolocated and from their longitude and latitude, the great 
+          circle distance is computed. This is the shortest path a plane 
+          can follow. Some methods thus consider uplift correction 
+          factors in computing the carbon dioxide emission of a flight. In 
+          addition, two cities may not be connected by a direct flight. 
+          This is accounted for by increasing by 5% the great circle 
+          distance. Each method provides the carbon dioxide emission 
+          in kg as a function of the flight distance in km. Thus from the 
+          increased great circle distance, the carbon dioxide emission of 
+          a flight associated with a trip between a city pair is computed 
+          and multiplied by two to account for a round trip. 
+
 
       - title: Which methods are used? 
         content: |
-          The tool incorporates six different methods,
-          among the most widely used, and for which the methodology used is documented.
-          Providing more than one method enables to get a mean value,
-          while illustrating the significant differences in their estimates.
-          In alphabetic order, the data considered are from
-          ADEME:
-          the French Environment & Energy Management Agency,
-          atmosfair:
-          a German carbon offsetting company,
-          DEFRA:
-          the UK Department for Environment, Food & Rural Affairs,
-          ICAO:
-          International Civil Aviation Organization
-          and finally from the KLM carbon compensation service.
+          The tool incorporates six different methods, among the most 
+          widely used, and for which the methodology used is 
+          documented. Providing more than one method enables to get 
+          a mean value, while illustrating the significant differences in 
+          their estimates. In alphabetic order, the data considered are 
+          from ADEME: the French Environment & Energy Management 
+          Agency, atmosfair: a German carbon offsetting company, 
+          DEFRA: the UK Department for Environment, Food & Rural 
+          Affairs, ICAO: International Civil Aviation Organization, from the 
+          KLM carbon compensation service data and finally from 
+          myclimate. 
+          
+          This list is obviously not exhaustive but represents 
+          a variety of estimates from lower to higher values. 
 
-          This list is obviously not exhaustive
-          but represents a variety of estimates from lower to higher values.
 
       - title: How are the different methods built? 
         content: |
-          What is needed for each method is a function
-          giving the carbon dioxide emission
-          as a function of the flight distance.
-          ADEME and DEFRA provide mean emission factors,
-          as a function of flight distance.
-          Myclimate provides an analytical formula.
-          For ICAO and atmosfair, the on-line calculators have been run
-          for a wide range of flights of varying distances
-          (~100 flights spanning from 300 km to 12000 km)
-          and the estimates have been fitted with linear functions,
-          covering adjacent distance intervals.
-          For its carbon compensation service,
-          KLM provides on its web site a table of emissions
-          for a large range of flights.
-          The KLM data have also been fitted with linear functions.
-          
+          What is needed for each method is a function giving the 
+          carbon dioxide emission as a function of the flight distance. 
+          ADEME and DEFRA provide mean emission factors, as a 
+          function of flight distance. Myclimate provides an analytical 
+          formula. For ICAO and atmosfair, the on-line calculators have 
+          been run for a wide range of flights of varying distances (~100 
+          flights spanning from 300 km to 12000 km) and the estimates 
+          have been fitted with linear functions, covering adjacent 
+          distance intervals. For its carbon compensation service, KLM 
+          provides on its web site a table of emissions for a large range 
+          of flights. The KLM data have been also been fitted with linear 
+          functions. 
+
       - title: What about radiative forcing?
         slug: rfi
         content: |
@@ -421,29 +418,103 @@ home:
 
       - title: Original motivation
         content: |
-          Global warming is a threat for life on our planet. Emissions of carbon dioxide by aircrafts keeps increasing, as the world economy keeps growing (it is about 3% of the anthropogenic emissions nowadays). Carrying scientific research requires traveling across the world, and thus air travel is likely to dominate the carbon footprint of most scientists. This tool was first developed to enable each scientist to easily access its travel footprint. It was then used to compute the travel footprint associated with the development of a large international project, such as the Athena X-ray Integral Field Unit. The numbers were then used to propose concrete actions to reduce the footprint of the project, by reducing the number of large meeting, implementing different ways of interacting and working collectively in a world-wide consortium. Finally, by comparing different, widely used methods, providing so different estimates, the tool is expected to raise awareness within the scientific community (and hopefully the authorities) about the lack of regulations or framework on the critical matter of flight emissions.
+          Global warming is a threat for life on our planet. Emissions of 
+          carbon dioxide by aircrafts keeps increasing, as the world 
+          economy keeps growing (it is about 3% of the anthropogenic 
+          emissions nowadays). Carrying scientific research requires 
+          traveling across the world, and thus air travel is likely to 
+          dominate the carbon footprint of most scientists. This tool was 
+          first developed to enable each scientist to easily access its 
+          travel footprint. It was then used to compute the travel footprint 
+          associated with the development of a large international 
+          project, such as the Athena X-ray Integral Field Unit. The 
+          numbers were then used to propose concrete actions to 
+          reduce the footprint of the project, by reducing the number of 
+          large meeting, implementing different ways of interacting and 
+          working collectively in a world-wide consortium. Finally, by 
+          comparing different, widely used methods, providing so 
+          different estimates, the tool is expected to raise awareness 
+          within the scientific community (and hopefully the authorities) 
+          about the lack of regulations or framework on the critical 
+          matter of flight emissions.
 
     - blocks:
 
       - title: Seating category
         content: |
-          The tool assumes economy seats in computing the carbon dioxide emission. For indication, DEFRA provides mean emission factors for different seat classes considering international flights. Related to the area occupied by the seat in the plane, for Premium economy, the emission would be 1.6 times larger than flying an economy seat. It would be 2.9 and 4 times higher from flying Business class and First class respectively. 
+          The tool assumes economy seats in computing the carbon 
+          dioxide emission. For indication, DEFRA provides mean 
+          emission factors for different seat classes considering 
+          international flights. Related to the area occupied by the seat in 
+          the plane, for Premium economy, the emission would be 1.6 
+          times larger than flying an economy seat. It would be 2.9 and 4 
+          times higher from flying Business class and First class 
+          respectively. 
           
       - title: Accounting for train emission
         content: |
-          The minimum distance for flying is considered arbitrarily to be 300 km. Below that, it is assumed that train is used. The tool then computes the travel footprint associated with train. The French emission factors provided by ADEME are 3.37 and 5.11 grams of carbon dioxide equivalent per km per passenger for high speed train and normal train respectively. This low value is due to the fact that electricity is provided by nuclear plants. It is larger by some factor across Europe. The tool assumes the mean of the emission factors of national and international rails, as provided by DEFRA (i.e. 23 grams per passenger km). This makes the carbon dioxide emission of trains, typically one tenth (1/10) of the one of aircrafts.
+          The minimum distance for flying is considered arbitrarily to be 
+          300 km. Below that, it is assumed that train is used. The tool 
+          then computes the travel footprint associated with train. The 
+          French emission factors provided by ADEME are 3.37 and 5.11 
+          grams of carbon dioxide equivalent per km per passenger for 
+          high speed train and normal train respectively. This low value is 
+          due to the fact that electricity is provided by nuclear plants. It 
+          is larger by some factors across Europe. The tool thus assumes the 
+          mean of the emission factors of national and international rails, 
+          as provided by DEFRA (i.e. 23 grams per passenger km). This 
+          makes the carbon dioxide emission of trains, typically one 
+          tenth (1/10) of the one of aircrafts.
           
       - title: Input and output data
         content: |
-          The inputs are provided in US English for the city and country names, without diacritics. On each line, the city and country names must be separated by a comma. Pasting a csv file in the form is possible. Two types of inputs can be considered depending on whether the user wants an “individual” estimate or an estimate for a conference, meeting and so on. In the former case, the “origin” city is unique and the “destination” cities multiple. In the later case, the “origin” cities are multiple (i.e. the cities from which the participants to the conference depart from), and the “destination” city may a single host city or multiple host cities if the user wants to compare their associated footprint. Cities found identical in the input form are always grouped, and their number in the group is given by the number of trips in the output, and the distance given is the cumulative distance over the group. The result pages provides a summary plot which can be downloaded, as well as a csv and raw yaml file. The csv file lists the name of the city as in the form, the address to which it was geolocated, the carbon dioxide emission (in kg), the distance travelled, the number of trips possible by train (i.e. when the distance is less than the minimum flying distance, e.g. 300 km) and the number of trips by plane. The plot and the csv file rank the city against the carbon dioxide emissions. 
+          The inputs are provided in US English for the city and country 
+          names, without diacritics. On each line, the city and country 
+          names must be separated by a comma. Pasting a csv file in the 
+          form is possible. Two types of inputs can be considered 
+          depending on whether the user wants an “individual” estimate 
+          or an estimate for a conference, meeting and so on. In the 
+          former case, the “origin” city is unique and the “destination” 
+          cities multiple. In the later case, the “origin” cities are multiple 
+          (i.e. the cities from which the participants to the conference 
+          depart from), and the “destination” city may a single host city 
+          or multiple host cities if the user wants to compare their 
+          associated footprint. Cities found identical in the input form are 
+          always grouped, and their number in the group is given by the 
+          number of trips in the output, and the distance given is the 
+          cumulative distance over the group. 
+ 
+          The result pages provides a summary plot which can be 
+          downloaded, as well as a csv and raw yaml file. The csv file 
+          lists the name of the city as in the form, the address to which it 
+          was geolocated, the carbon dioxide emission (in kg), the 
+          distance travelled, the number of trips possible by train (i.e. 
+          when the distance is less than the minimum flying distance, 
+          e.g. 300 km) and the number of trips by plane. The plot and the 
+          csv file rank the cities against the carbon dioxide emissions. 
+
 
       - title: Trouble shooting
         content: |
-          The estimation can go wrong if a city is not properly geolocated. This may happen because the name of the city is wrongly spelled or the geolocator (OSM) is confused. An error should be listed at the end of the result page. Don’t be surprised, if the name recovered by the geolocator is not exactly the one you had expected (e.g. a city is located at the address of an embassy). If nothing happens during a request, it is most likely caused by the geolocator being unavailable. In this case, try again a few minutes later.
+          The estimation can go wrong if a city is not properly 
+          geolocated. This may happen because the name of the city is 
+          wrongly spelled or the geolocator (OSM) is confused. An error 
+          should be listed at the end of the result page. Don’t be 
+          surprised, if the name recovered by the geolocator is not 
+          exactly the one you had expected (e.g. a city is located at the 
+          address of an embassy). If nothing happens during a request, it 
+          is most likely caused by the geolocator being unavailable. In 
+          this case, try again a few minutes later.
 
       - title: Caveats
         content: |
-          The numbers provided by the tool do not come with uncertainties. Therefore they must be considered as indicative of the true values. Selecting more than one method is recommended, because they may make the numbers closer to their true values. In all cases however, the numbers can be used for relative comparisons, e.g. when comparing two cities for hosting a conference. 
+          The numbers provided by the tool do not come with 
+          uncertainties. Therefore they must be considered as indicative 
+          of the true values. Selecting more than one method is 
+          recommended, because they may make the numbers closer to 
+          their true values. In all cases however, the numbers can be 
+          used for relative comparisons, e.g. when comparing two cities 
+          for hosting a conference. 
           
       - title: Confidentiality
         content: |
@@ -451,15 +522,37 @@ home:
           
       - title: Disclaimer
         content: |
-          This tool is provided on a best effort basis as a service to members of the science community. The numbers provided are informative and have obviously no legal value. 
-          
+          This tool is provided on a best effort basis as a service to 
+          members of the science community. The numbers provided 
+          are informative and have obviously no legal value. 
+
       - title: Reference
         content: |
           Results from the tool may reference to Barret (2019, in preparation). 
  
       - title: Concluding note
         content: |
-          As a personal note, I would like to stress that, as a scientist, I find it worrying or even shocking that there are no standards for computing the flight emissions, while we know that flight travels, releasing carbon dioxide at high altitudes, contribute to global warming. To take an example, the International Civil Aviation Organization (ICAO) is a United Nations specialized agency, established by States in 1944 to manage the administration and governance of the Convention on International Civil Aviation. ICAO has global responsibility for the establishment of standards, recommended practices, and guidance on various aspects of international civil aviation, including environmental protection. How can ICAO ignore radiative forcing in the results provided by its widely used on-line calculator? (which by the way is the calculator used by the travel agency of my institute, being a public institution). The IPCC in its 1999 report have defined the radiative forcing index to be between 2 and 4. Why ICAO is using 1? This is just an example, which clearly show the urgent need to agree on a common methodology accepted by all parties in computing flight emission. I wish this tool be modestly used to raise awareness on this issue. 
+          As a personal note, I would like to stress that, as a scientist, I 
+          find it worrying or even shocking that there are no standards 
+          for computing the flight emissions, while we know that flight 
+          travels, releasing carbon dioxide at high altitudes, contribute to 
+          global warming. To take an example, the International Civil 
+          Aviation Organization (ICAO) is a United Nations specialized 
+          agency, established by States in 1944 to manage the 
+          administration and governance of the Convention on 
+          International Civil Aviation. ICAO has global responsibility for 
+          the establishment of standards, recommended practices, and 
+          guidance on various aspects of international civil aviation, 
+          including environmental protection. How can ICAO ignore 
+          radiative forcing in the results provided by its widely used on-
+          line calculator? (which by the way is the calculator used by the 
+          travel agency of my institute, being a public institution). The 
+          IPCC in its 1999 report have defined the radiative forcing index 
+          to be between 2 and 4. Why ICAO is using 1? This is just an 
+          example, which clearly show the urgent need to agree on a 
+          common methodology accepted by all parties in computing 
+          flight emission. May be this tool will help to raise 
+          awareness on this issue. 
           
       - title: Additional resources
         content: |
