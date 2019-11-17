@@ -449,19 +449,33 @@ home:
           The inputs are provided in US English for the city and country 
           names, without diacritics. On each line, the city and country 
           names must be separated by a comma. Pasting a csv file in the 
-          form is possible. Two types of inputs can be considered 
+          form is possible, provided that a comma separates
+          the city and country names. 
+
+          A round trip is defined by a city pair. If the user enters cityA as 
+          the origin city, and twice cityB as destinations, the tool returns 
+          the cumulative emission and distance from two round trips 
+          involving cityA and cityB, and indicates that 2 round trips were involved.
+          The same happens if the user enters twice cityA as the city of origin 
+          and cityB as the sole destination. 
+
+          Three types of inputs can be considered 
           depending on whether the user wants an “individual” estimate 
           or an estimate for a conference, meeting and so on. In the 
           former case, the “origin” city is unique and the “destination” 
-          cities multiple. In the later case, the “origin” cities are multiple 
+          cities may be multiple. The tool returns the carbon dioxide 
+          equivalent emission for each city of destination. 
+          In the later case, the “origin” cities are multiple 
           (i.e. the cities from which the participants to the conference 
-          depart from), and the “destination” city may a single host city 
+          depart from), and the “destination” city may be a single host city 
           or multiple host cities if the user wants to compare their 
-          associated footprint. Cities found identical in the input form are 
-          always grouped, and their number in the group is given by the 
-          number of trips in the output, and the distance given is the 
-          cumulative distance over the group. 
- 
+          associated footprint. If there is one destination, the tool returns 
+          the carbon dioxide equivalent for each city of origin. If multiple 
+          destinations are provided the tool returns the carbon dioxide 
+          equivalent emission summed over all cities of 
+          origin and for each city of destination. The cumulative distance to 
+          each city of destination is also provided. 
+
           The result pages provides a summary plot which can be 
           downloaded, as well as a csv and raw yaml file. The csv file 
           lists the name of the city as in the form, the address to which it 
@@ -470,7 +484,6 @@ home:
           when the distance is less than the minimum flying distance, 
           e.g. 300 km) and the number of trips by plane. The plot and the 
           csv file rank the cities against the carbon dioxide emissions. 
-
 
       - title: Trouble shooting
         content: |
