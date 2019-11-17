@@ -416,30 +416,6 @@ home:
           Therefore, the methods based on ICAO and KLM data are not recommended,
           but given as methods providing the lowest emissions.
 
-      - title: Original motivation
-        content: |
-          Global warming is a threat for life on our planet. Emissions of 
-          carbon dioxide by aircrafts keeps increasing, as the world 
-          economy keeps growing (it is about 3% of the anthropogenic 
-          emissions nowadays). Carrying scientific research requires 
-          traveling across the world, and thus air travel is likely to 
-          dominate the carbon footprint of most scientists. This tool was 
-          first developed to enable each scientist to easily access its 
-          travel footprint. It was then used to compute the travel footprint 
-          associated with the development of a large international 
-          project, such as the Athena X-ray Integral Field Unit. The 
-          numbers were then used to propose concrete actions to 
-          reduce the footprint of the project, by reducing the number of 
-          large meeting, implementing different ways of interacting and 
-          working collectively in a world-wide consortium. Finally, by 
-          comparing different, widely used methods, providing so 
-          different estimates, the tool is expected to raise awareness 
-          within the scientific community (and hopefully the authorities) 
-          about the lack of regulations or framework on the critical 
-          matter of flight emissions.
-
-    - blocks:
-
       - title: Seating category
         content: |
           The tool assumes economy seats in computing the carbon 
@@ -465,6 +441,8 @@ home:
           as provided by DEFRA (i.e. 23 grams per passenger km). This 
           makes the carbon dioxide emission of trains, typically one 
           tenth (1/10) of the one of aircrafts.
+
+    - blocks:
           
       - title: Input and output data
         content: |
@@ -530,6 +508,33 @@ home:
         content: |
           Results from the tool may reference to Barret (2019, in preparation). 
  
+      - title: Original motivation
+        content: |
+          Global warming is a threat for life on our planet. Emissions of 
+          carbon dioxide by aircrafts keeps increasing, as the world 
+          economy keeps growing (it is about 3% of the anthropogenic 
+          emissions nowadays). Carrying scientific research requires 
+          traveling across the world, and thus air travel is likely to 
+          dominate the carbon footprint of most scientists and is 
+          likely to be large for developing international projects. This tool was 
+          first developed to compute the travel footprint 
+          associated with the development of the X-ray Integral 
+          Field Unit to fly on board the Athena space observatory 
+          in the early 2030s. The rather large number derived, 
+          typically one hundred ton of carbon dioxide per bi-annual consortium meeting,
+          imposed concrete actions to reduce the footprint 
+          of the project, by re-considering the number of 
+          large meetings, implementing different ways of interacting and 
+          working collectively in a world-wide consortium. The tool was 
+          further improved to easily compute the travel footprint associated 
+          with individual traveling or with the organization of events, involving
+          a large number of travels.  Finally, by comparing different, 
+          widely used methods, providing so different estimates, I would 
+          expect to raise awareness within the scientific community 
+          (and hopefully the authorities and medias) 
+          about the lack of regulations or framework on the critical 
+          matter of estimating aircraft emissions.
+
       - title: Concluding note
         content: |
           As a personal note, I would like to stress that, as a scientist, I 
