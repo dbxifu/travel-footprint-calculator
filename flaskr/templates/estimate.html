@@ -70,11 +70,11 @@
             <div class="form-group row">
                 <div class="col-md-6">
                 {{ render_field(form.first_name) }}
-                <small class="form-text text-muted">Fill these to say hello.</small>
+                <small class="form-text text-muted">{{ content.estimate.help.first_name | safe }}</small>
                 </div>
                 <div class="col-md-6">
                 {{ render_field(form.last_name) }}
-                <small class="form-text text-muted">We will never share your data with anyone.</small>
+                <small class="form-text text-muted">{{ content.estimate.help.last_name | safe }}</small>
                 </div>
             </div>
             <div class="form-group">
@@ -83,19 +83,13 @@
             <div class="form-group">
                 {{ render_field(form.origin_addresses) }}
                 <small class="form-text text-muted">
-                    Use <code>en_US</code> city and country names, without diacritics.
-                    &nbsp;
-                    The comma matters.
-                    <br>
-                    These usually are the addresses of your participants.
+                    {{ content.estimate.help.origin_addresses | safe }}
                 </small>
             </div>
             <div class="form-group">
                 {{ render_field(form.destination_addresses) }}
                 <small class="form-text text-muted">
-                    Provide <strong>multiple destinations</strong> to compare them and <strong>compute optimum</strong>.
-                    <br>
-                    These usually are the possible locations for an event.
+                    {{ content.estimate.help.destination_addresses | safe }}
                 </small>
             </div>
 {#            <div class="form-check form-group">#}

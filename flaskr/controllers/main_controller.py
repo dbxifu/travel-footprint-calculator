@@ -9,7 +9,7 @@ from os.path import join
 
 from flaskr.extensions import cache, basic_auth
 from flaskr.forms import LoginForm, EstimateForm
-from flaskr.models import db, User, Estimation, StatusEnum
+from flaskr.models import db, User, Estimation, StatusEnum, ScenarioEnum
 from flaskr.geocoder import CachedGeocoder
 
 from flaskr.core import generate_unique_id, get_emission_models
@@ -366,6 +366,7 @@ def compute():  # process the queue of estimation requests
     # for each of the Emission Models, and present a mean of all Models.
     #
     if 1 == len(origins):
+        estimation.scenario = ScenarioEnum.one_to_many
         results = compute_one_to_many(
             _origin=origins[0],
             _destinations=destinations,
@@ -377,6 +378,7 @@ def compute():  # process the queue of estimation requests
     # Same as A for now.
     #
     elif 1 == len(destinations):
+        estimation.scenario = ScenarioEnum.many_to_one
         results = compute_one_to_many(
             _origin=destinations[0],
             _destinations=origins,
@@ -388,6 +390,7 @@ def compute():  # process the queue of estimation requests
     # Run Scenario A for each Destination, and expose optimum Destination.
     #
     else:
+        estimation.scenario = ScenarioEnum.many_to_many
         unique_city_keys = []
         result_cities = []
         for destination in destinations:

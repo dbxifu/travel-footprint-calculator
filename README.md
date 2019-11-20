@@ -1,6 +1,10 @@
 
 # Travel Carbon Footprint Calculator
 
+- https://travel-footprint-calculator.apps.goutenoir.com  (private demo)
+- http://travel-footprint-calculator.irap.omp.eu  (official, for later)
+
+
 ## Overview
 
 - Content is in `content.yml`.

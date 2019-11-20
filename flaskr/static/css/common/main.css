@@ -73,7 +73,7 @@ span.required-asterisk {
 /** LISTS *********************************************************************/
 
 .numbered-list {
-    list-style: upper-roman;
+    list-style: decimal-leading-zero;
 }
 
 

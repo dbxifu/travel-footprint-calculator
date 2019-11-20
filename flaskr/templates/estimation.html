@@ -79,21 +79,31 @@
 
 {% if not estimation.has_failed() %}
 {#{% set estimation_output = estimation.get_output_dict() %}#}
-{% if estimation.has_many_to_many() %}
-    <div class="col-md-6">
-    <p>
-        For each destination city, the sum of the travels from all the origins.
-    </p>
+<div class="col-md-6">
+{% if estimation.is_one_to_one() %}
+    {{ content.estimation.lolliplot.one_to_one | markdown | safe }}
+{#    <p>#}
+{#        For each destination city, the sum of the travels from all the origins.#}
+{#    </p>#}
     {{ render_cities(estimation_output.cities) }}
-    </div>
-{% else %}
-    <div class="col-md-6">
-    <p>
-        Carbon footprint for each city.
-    </p>
+{% elif estimation.is_many_to_one() %}
+    {{ content.estimation.lolliplot.many_to_one | markdown | safe }}
+{#    <p>#}
+{#        For each destination city, the sum of the travels from all the origins.#}
+{#    </p>#}
     {{ render_cities(estimation_output.cities) }}
-    </div>
+{% elif estimation.is_one_to_many() %}
+    {{ content.estimation.lolliplot.one_to_many | markdown | safe }}
+
+    {{ render_cities(estimation_output.cities) }}
+{% elif estimation.is_many_to_many() %}
+    {{ content.estimation.lolliplot.many_to_many | markdown | safe }}
+{#    <p>#}
+{#        Carbon footprint for each city.#}
+{#    </p>#}
+    {{ render_cities(estimation_output.cities) }}
 {% endif %}
+</div>
 
     <div class="col-md-6">
         <ul class="nav">
@@ -153,8 +163,13 @@
 {#        </pre>#}
 {#    </div>#}
 {#</div>#}
-{% endif %}
+
+{% endif %}{# estimation.has_failed() #}
 {% endblock %}
+
+{#############################################################################}
+{#############################################################################}
+
 {% block js %}
 <script src="/static/js/vendor/d3.v4.js"></script>
 <script src="/static/js/vendor/d3-legend.js"></script>

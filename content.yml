@@ -599,6 +599,22 @@ estimate:
       It may take from a few seconds up to a few minutes,
       depending on the amount of locations you provided.
 
+  help:
+    first_name: Fill these to say hello.
+    last_name: We will never share your data with anyone.
+    origin_addresses: |
+      Use <code>en_US</code> city and country names, without diacritics.
+      &nbsp;
+      The comma matters.
+      <br>
+      This is either a home city and a country
+      or the cities and countries of the participants to the conference, meeting…
+    destination_addresses: |
+      This is either the cities and countries to travel to
+      or the host city and country of the conference, meeting…
+      <br>
+      Please provide multiple cities and countries to compute the location
+      of the minimum emission.
 
   # Labels accept HTML, but not markdown
   # Descriptions accept neither, since we use the HTML title attribute
@@ -677,6 +693,23 @@ estimation:
         Sorry about that.  Please find the error message below.
         <br>
         Thank you for using our service.
+  lolliplot:
+    one_to_one: |
+      The carbon dioxide equivalent emission is provided for each city of destination.
+      Identical trips (i.e. identical destinations) are summed
+      and the cumulative distance is provided.
+    one_to_many: |
+      The carbon dioxide equivalent emission is provided for each city of destination.
+      Identical trips (i.e. identical destinations) are summed
+      and the cumulative distance is provided.
+    many_to_one: |
+      The carbon dioxide equivalent emission is provided for each city of origin.
+      Identical trips (i.e. identical origins) are summed and the cumulative distance is provided.
+    many_to_many: |
+      The carbon dioxide equivalent emission is summed
+      over all cities of origin and provided for each city of destination.
+      The cumulative distance to each city of destination is provided.
+      Duplicates in the destinations are removed.
 
 footer:
   credits: |

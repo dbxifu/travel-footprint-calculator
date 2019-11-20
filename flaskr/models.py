@@ -24,6 +24,13 @@ class StatusEnum(enum.Enum):
     failure = 'failure'
 
 
+class ScenarioEnum(enum.Enum):
+    one_to_one = 'one_to_one'
+    many_to_one = 'many_to_one'
+    one_to_many = 'one_to_many'
+    many_to_many = 'many_to_many'
+
+
 class Estimation(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     public_id = db.Column(
@@ -42,12 +49,14 @@ class Estimation(db.Model):
     origin_addresses = db.Column(db.UnicodeText())
     destination_addresses = db.Column(db.UnicodeText())
 
-    # One slug per line (or blankchar?)
+    # One slug per line (or blank char?)
     models_slugs = db.Column(db.UnicodeText())
 
     # Deprecated, we detect this scenario from the amount of locations.
     compute_optimal_destination = db.Column(db.Boolean())
 
+    # Outputs
+    scenario = db.Column(db.Enum(ScenarioEnum), default=ScenarioEnum.many_to_many)
     output_yaml = db.Column(db.UnicodeText())
     warnings = db.Column(db.UnicodeText())
     errors = db.Column(db.UnicodeText())
@@ -60,10 +69,20 @@ class Estimation(db.Model):
     def get_output_dict(self):
         if self._output_dict is None:
             self._output_dict = yaml_load(self.output_yaml)
-        return self._output_dict
+            return self._output_dict
+        pass
 
-    def has_many_to_many(self):
-        return 'cities' in self.get_output_dict()
+    def is_one_to_one(self):
+        return self.scenario == ScenarioEnum.one_to_one
+
+    def is_one_to_many(self):
+        return self.scenario == ScenarioEnum.one_to_many
+
+    def is_many_to_one(self):
+        return self.scenario == ScenarioEnum.many_to_one
+
+    def is_many_to_many(self):
+        return self.scenario == ScenarioEnum.many_to_many
 
     _models = None
 
@@ -82,6 +101,7 @@ class EstimationView(ModelView):
         'first_name',
         'last_name',
         'models_slugs',
+        'scenario',
         'origin_addresses',
         'destination_addresses',
         'warnings',
