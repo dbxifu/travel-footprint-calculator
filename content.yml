@@ -374,8 +374,8 @@ home:
           KLM carbon compensation service data and finally from 
           myclimate. 
           
-          This list is obviously not exhaustive but represents 
-          a variety of estimates from lower to higher values. 
+          _This list is obviously not exhaustive but represents
+          a variety of estimates from lower to higher values._
 
 
       - title: How are the different methods built? 
@@ -410,9 +410,8 @@ home:
           all of which contribute to climate change.
           A Radiative Forcing Index (RFI) of 1.9–2 is used by DEFRA,
           myclimate and recommended by ADEME
-          (see discussion in Jungbluth, N. & Meili,
-          C. Int J Life Cycle Assess (2019) 24: 404.
-          https://doi.org/10.1007/s11367-018-1556-3).
+          (see discussion in [Jungbluth, N. & Meili,
+          C. Int J Life Cycle Assess (2019) 24: 404](https://doi.org/10.1007/s11367-018-1556-3).).
           ATMOSFAIR considers a multiplier of 3, for all emissions above 9 km,
           accounting for the profile of the flight.
           ICAO, on the other hand does not include a multiplier,
@@ -422,6 +421,8 @@ home:
           than the ones of ICAO.
           Therefore, the methods based on ICAO and KLM data are not recommended,
           but given as methods providing the lowest emissions.
+
+          [![Models used](static/img/recap_scaling_laws.jpg)](static/img/recap_scaling_laws.jpg)
 
       - title: Seating category
         content: |

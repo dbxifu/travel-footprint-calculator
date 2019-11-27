@@ -77,8 +77,8 @@ span.required-asterisk {
 }
 
 
-
 /** PLOTS ********************************************************************/
+
 .plot-container {
     /*background: #ff3399;*/
     border: 2px dotted #888;
@@ -103,6 +103,10 @@ h3[id]::before {
   height:      75px;
   margin-top: -75px;
   visibility: hidden;
+}
+
+article img {
+    width: 100%;
 }
 
 
