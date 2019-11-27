@@ -3,6 +3,7 @@ from wtforms import \
     StringField, \
     PasswordField, \
     TextAreaField, \
+    SelectField, \
     BooleanField
 from wtforms import validators
 
@@ -55,6 +56,19 @@ class EstimateForm(FlaskForm):
             validators.Optional(),
             validators.Length(max=1024),
         ],
+    )
+    use_train_below_km = SelectField(
+        label=form_content['use_train_below_km']['label'],
+        description=form_content['use_train_below_km']['description'],
+        default=300,
+        choices=[
+            (0, 'Do not use train'),
+            (300, '300 km'),
+            (500, '500 km'),
+            (700, '700 km'),
+            (1000, '1000 km'),
+        ],
+        coerce=int,
     )
     comment = TextAreaField(
         label=form_content['comment']['label'],
