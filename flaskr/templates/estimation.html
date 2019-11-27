@@ -82,25 +82,15 @@
 <div class="col-md-6">
 {% if estimation.is_one_to_one() %}
     {{ content.estimation.lolliplot.one_to_one | markdown | safe }}
-{#    <p>#}
-{#        For each destination city, the sum of the travels from all the origins.#}
-{#    </p>#}
     {{ render_cities(estimation_output.cities) }}
 {% elif estimation.is_many_to_one() %}
     {{ content.estimation.lolliplot.many_to_one | markdown | safe }}
-{#    <p>#}
-{#        For each destination city, the sum of the travels from all the origins.#}
-{#    </p>#}
     {{ render_cities(estimation_output.cities) }}
 {% elif estimation.is_one_to_many() %}
     {{ content.estimation.lolliplot.one_to_many | markdown | safe }}
-
     {{ render_cities(estimation_output.cities) }}
 {% elif estimation.is_many_to_many() %}
     {{ content.estimation.lolliplot.many_to_many | markdown | safe }}
-{#    <p>#}
-{#        Carbon footprint for each city.#}
-{#    </p>#}
     {{ render_cities(estimation_output.cities) }}
 {% endif %}
 </div>
@@ -179,9 +169,7 @@
 <script type="text/javascript">
 
 /** POLYFILLS **/
-Math.log10 = Math.log10 || function(x) {
-  return Math.log(x) * Math.LOG10E;
-};
+Math.log10 = Math.log10 || function(x) { return Math.log(x) * Math.LOG10E; };
 
 /**
  * Useful for axes' domains on plots.
