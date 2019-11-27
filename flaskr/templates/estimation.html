@@ -65,6 +65,10 @@
     {% for model in estimation.get_models() %}
         {{ model.name }}{{ ',' if not loop.last }}
     {% endfor %}
+    {% if estimation.use_train_below_km > 0 %}
+        and train travel assumed for distances below {{ estimation.use_train_below_km }} km
+    {% endif %}
+    .
 {#    <h4>Total CO<sub>2</sub> footprint (in kilograms-equivalent) of each city</h4>#}
 {#    <div id="cities_footprints_d3viz" class="plot-container"></div>#}
     <hr>
