@@ -50,13 +50,13 @@ models:
         # The travel_emission_lerp_fit uses points instead of intervals
         # List of (distance in km, footprint in kg)
         points:
-          - [0.0, 0.0 ]
-          - [299.9, 0.0 ]
-          - [300.0, 100.77107567722328 ]
-          - [3999.9, 866.2373955846341 ]
-          - [4000.0, 844.2034018149334 ]
-          - [19999.9, 5606.129335551792 ]
-          - [25000.0, 7094.270252762378 ]
+          - [     0.0,    0.0            ]
+          - [   299.9,    0.0            ]
+          - [   300.0,  100.771075677223 ]
+          - [  3999.9,  866.237395584634 ]
+          - [  4000.0,  844.203401814933 ]
+          - [ 19999.9, 5606.129335551792 ]
+          - [ 25000.0, 7094.270252762378 ]
 
  
   - name: MyClimate (RFI=2)
@@ -81,6 +81,7 @@ models:
         connecting_flights_scale: 1.05
         # Radiative Forcing Index
         # Multiplier after scaling
+        # DEPRECATED
         rfi: 1.0
         # Flat scalar to add before scaling with laws
         offset_before: 95
@@ -121,6 +122,7 @@ models:
         connecting_flights_scale: 1.05
         # Radiative Forcing Index
         # Multiplier after scaling
+        # DEPRECATED
         rfi: 1.0
         # Flat scalar to add before scaling with laws
         offset_before: 0
@@ -180,6 +182,7 @@ models:
         connecting_flights_scale: 1.05
         # Radiative Forcing Index
         # Multiplier after scaling
+        # DEPRECATED
         rfi: 1.0
         # Flat scalar to add before scaling with laws
         offset_before: 0
@@ -220,6 +223,7 @@ models:
         connecting_flights_scale: 1.05
         # Radiative Forcing Index
         # Multiplier after scaling
+        # DEPRECATED
         rfi: 1.0
         # Flat scalar to add before scaling with laws
         offset_before: 0
@@ -258,6 +262,7 @@ models:
         connecting_flights_scale: 1.05
         # Radiative Forcing Index
         # Multiplier after scaling
+        # DEPRECATED
         rfi: 1.0
         # Flat scalar to add before scaling with laws
         offset_before: 0
@@ -321,8 +326,8 @@ home:
 
       - title: What does the tool do?
         content: |
-          The tool computes the carbon footprint associated with round 
-          trip flights. It does so for a set of trips from a given city of origin 
+          The tool computes the carbon footprint associated with round
+          trip flights. It does so for a set of trips from a given city of origin
           to a set of destinations. Similarly, the tool allows to compute 
           the carbon footprint of a larger set of trips, corresponding to a 
           conference, a meeting and so on. For this, the city of departure 
@@ -396,8 +401,10 @@ home:
           from burning fuels, by releasing gases and particles directly
           into the upper troposphere and lower stratosphere
           where they have an impact on atmospheric composition.
-          These gases and particles include carbon dioxide (CO2), ozone (O3),
-          and methane (CH4);
+          These gases and particles include
+          carbon dioxide (CO<sub>2</sub>),
+          ozone (O<sub>3</sub>),
+          and methane (CH<sub>4</sub>);
           trigger formation of condensation trails (contrails);
           and may increase cirrus cloudiness;
           all of which contribute to climate change.
@@ -636,6 +643,9 @@ estimate:
     comment:
       label: Leave a comment
       description: Any input is appreciated.  Everyone's a critic.
+    use_train_below_km:
+      label: Use train below
+      description: We will use train emission models instead of plane fo trips below this distance.
     origin_addresses:
       label: Origin Cities
       description: |
