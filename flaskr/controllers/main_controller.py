@@ -74,6 +74,7 @@ def estimate():
         estimation.status = StatusEnum.pending
         estimation.origin_addresses = form.origin_addresses.data
         estimation.destination_addresses = form.destination_addresses.data
+        estimation.use_train_below_km = form.use_train_below_km.data
         # estimation.compute_optimal_destination = form.compute_optimal_destination.data
         models_slugs = []
         for model in models:
@@ -96,6 +97,7 @@ def estimate():
 
 
 @main.route("/invalidate")
+@main.route("/invalidate.html")
 def invalidate():
     stuck_estimations = Estimation.query \
         .filter_by(status=StatusEnum.working) \
@@ -238,7 +240,8 @@ def compute():  # process the queue of estimation requests
     # print(emission_models)
 
     extra_config = {
-        'use_train_below_distance': 300,
+        'use_train_below_distance': estimation.use_train_below_km,
+        # 'use_train_below_distance': 300,
     }
 
     # PREPARE RESULT DICTIONARY THAT WILL BE STORED ###########################

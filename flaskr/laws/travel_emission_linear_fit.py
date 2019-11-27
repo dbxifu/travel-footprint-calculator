@@ -18,7 +18,7 @@ class EmissionModel(BaseEmissionModel):
         distance = 0.0
 
         #############################################
-        # TODO: find closest airport(s) and pick one?
+        # TODO (?): find closest airport(s) and pick one
         # We're going to need caching here as well.
         from collections import namedtuple
         origin_airport = namedtuple('Position', [
@@ -55,12 +55,15 @@ class EmissionModel(BaseEmissionModel):
             use_plane = True
 
         # I.a Train travel footprint
-        # ... TODO
-
+        if use_train:
+            footprint += self.compute_train_footprint(
+                distance=great_circle_distance
+            )
         # I.b Airplane travel footprint
-        footprint += self.compute_airplane_footprint(
-            distance=great_circle_distance
-        )
+        elif use_plane:
+            footprint += self.compute_airplane_footprint(
+                distance=great_circle_distance
+            )
 
         # II.a Double it up since it's a round-trip
         footprint *= 2.0
@@ -69,9 +72,12 @@ class EmissionModel(BaseEmissionModel):
         return {
             'distance_km': distance,
             'co2eq_kg': footprint,
-            'train_trips': 2 if use_train else 0,
-            'plane_trips': 2 if use_plane else 0,
+            'train_trips': 1 if use_train else 0,  # amount of round trips
+            'plane_trips': 1 if use_plane else 0,  # amount of round trips
         }
+
+    def compute_train_footprint(self, distance):
+        return distance * 0.020
 
     def compute_airplane_footprint(
             self,
@@ -101,7 +107,6 @@ class EmissionModel(BaseEmissionModel):
         return footprint
 
     def adjust_footprint_for_rfi(self, footprint, config):
-        # Todo: grab data from config merged with form input?
         return config.rfi * footprint
 
     def apply_scaling_law(self, distance, config):
