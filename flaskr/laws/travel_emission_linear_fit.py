@@ -77,7 +77,7 @@ class EmissionModel(BaseEmissionModel):
         }
 
     def compute_train_footprint(self, distance):
-        return distance * 0.020
+        return distance * 0.023
 
     def compute_airplane_footprint(
             self,
