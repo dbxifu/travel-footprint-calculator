@@ -49,6 +49,9 @@ class Estimation(db.Model):
     origin_addresses = db.Column(db.UnicodeText())
     destination_addresses = db.Column(db.UnicodeText())
 
+    # For (single, not round) trips below this distance, use the train
+    use_train_below_km = db.Column(db.Integer())
+
     # One slug per line (or blank char?)
     models_slugs = db.Column(db.UnicodeText())
 
