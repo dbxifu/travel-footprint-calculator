@@ -32,7 +32,11 @@
     {% endif %}
         </span>
         –
+    {% if city.footprint > 1000 %}
         {{ "%.1f" | format((city.footprint/1000.0) | round(1)) }} tons CO<sub>2</sub><small>EQ</small>
+    {% else %}
+        {{ "%.1f" | format((city.footprint) | round(1)) }} kg CO<sub>2</sub><small>EQ</small>
+    {% endif %}
         –
         {{ "%d" | format(city.distance | round() | int) }} km
     </li>
