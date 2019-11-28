@@ -22,6 +22,14 @@ enum34==1.1.6
 geopy==1.20.0
 python-dotenv==0.10.3
 
+# Spreadsheet reading
+# Note that 0.24 is the most recent version still supporting python 2.7
+pandas==0.24.2
+# Excel support for wisdom-impaired Microsoft users
+xlrd==1.2.0
+# ODS reading support is only available natively in 0.25
+# pandas_ods_reader
+
 # Testing
 pytest==3.0.5
 pytest-cov==2.4.0

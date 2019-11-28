@@ -39,3 +39,6 @@ Then, visit http://localhost:5000
 > We're trying to remove the need for the `export` statements, but…
 
 
+## Build CSS and JS for prod
+
+    flask assets build
