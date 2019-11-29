@@ -437,12 +437,13 @@ home:
           
       - title: Accounting for train emission
         content: |
-          The minimum distance for flying is considered arbitrarily to be 
-          300 km. Below that, it is assumed that train is used. The tool 
+          The minimum distance for flying is an input to be provided by
+          the user (it is set to 300 km by default). Below the minimum 
+          distance for flying, it is assumed that train is used. The tool 
           then computes the travel footprint associated with train. The 
           French emission factors provided by ADEME are 3.37 and 5.11 
           grams of carbon dioxide equivalent per km per passenger for 
-          high speed train and normal train respectively. This low value is 
+          high speed trains and normal trains respectively. This low value is 
           due to the fact that electricity is provided by nuclear plants. It 
           is larger by some factors across Europe. The tool thus assumes the 
           mean of the emission factors of national and international rails, 
