@@ -27,8 +27,9 @@ python-dotenv==0.10.3
 pandas==0.24.2
 # Excel support for wisdom-impaired Microsoft users
 xlrd==1.2.0
-# ODS reading support is only available natively in 0.25
-# pandas_ods_reader
+# ODS reading support is only available natively in pandas 0.25
+# This package only works with python 3.7
+# pandas_ods_reader==0.0.7
 
 # Testing
 pytest==3.0.5
