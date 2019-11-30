@@ -15,6 +15,8 @@ from flaskr.geocoder import CachedGeocoder
 from flaskr.core import generate_unique_id, get_emission_models
 from flaskr.content import content
 
+from wtforms import validators
+
 from yaml import safe_dump as yaml_dump
 
 import csv
@@ -118,9 +120,13 @@ def gather_addresses(from_list, from_file):
                 if address is not None:
                     addresses.append(address)
                 else:
-                    pass  # what should we do here? raise?
+                    raise validators.ValidationError(
+                        "We could not find Address data in the spreadsheet."
+                    )
         else:
-            pass # what should we do here? raise?
+            raise validators.ValidationError(
+                "We could not find any data in the spreadsheet."
+            )
 
     else:
         addresses = from_list.replace("\r", '').split("\n")
@@ -134,6 +140,9 @@ def estimate():
     models = get_emission_models()
     form = EstimateForm()
 
+    def show_form():
+        return render_template("estimate.html", form=form, models=models)
+
     if form.validate_on_submit():
 
         id = generate_unique_id()
@@ -144,15 +153,27 @@ def estimate():
         estimation.last_name = form.last_name.data
         estimation.institution = form.institution.data
         estimation.status = StatusEnum.pending
-        estimation.origin_addresses = gather_addresses(
-            form.origin_addresses.data,
-            form.origin_addresses_file.data
-        )
-        estimation.destination_addresses = gather_addresses(
-            form.destination_addresses.data,
-            form.destination_addresses_file.data
-        )
+
+        try:
+            estimation.origin_addresses = gather_addresses(
+                form.origin_addresses.data,
+                form.origin_addresses_file.data
+            )
+        except validators.ValidationError as e:
+            form.origin_addresses_file.errors.append(e.message)
+            return show_form()
+
+        try:
+            estimation.destination_addresses = gather_addresses(
+                form.destination_addresses.data,
+                form.destination_addresses_file.data
+            )
+        except validators.ValidationError as e:
+            form.destination_addresses_file.errors.append(e.message)
+            return show_form()
+
         estimation.use_train_below_km = form.use_train_below_km.data
+
         models_slugs = []
         for model in models:
             if getattr(form, 'use_model_%s' % model.slug).data:
@@ -170,7 +191,7 @@ def estimate():
         ))
         # return render_template("estimate-debrief.html", form=form)
 
-    return render_template("estimate.html", form=form, models=models)
+    return show_form()
 
 
 @main.route("/invalidate")
