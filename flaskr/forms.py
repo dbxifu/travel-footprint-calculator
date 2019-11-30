@@ -1,11 +1,14 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed
 from wtforms import \
     StringField, \
     PasswordField, \
     TextAreaField, \
     SelectField, \
-    BooleanField
+    BooleanField, \
+    FileField
 from wtforms import validators
+from werkzeug.datastructures import FileStorage
 
 from .models import User
 from .content import content_dict as content
@@ -98,6 +101,32 @@ class EstimateForm(FlaskForm):
             "placeholder": form_content['destination_addresses']['placeholder']
         },
     )
+    origin_addresses_file = FileField(
+        label=form_content['origin_addresses_file']['label'],
+        description=form_content['origin_addresses_file']['description'],
+        validators=[
+            # We disabled validators because they bug with multiple FileFields
+            # validators.Optional(),
+            # FileAllowed(
+            #     ['csv', 'xls', 'xlsx'],
+            #     form_content['origin_addresses_file']['error']
+            # )
+        ],
+    )
+    destination_addresses_file = FileField(
+        label=form_content['destination_addresses_file']['label'],
+        description=form_content['destination_addresses_file']['description'],
+        validators=[
+            # We disabled validators because they bug with multiple FileFields
+            # validators.Optional(),
+            # FileAllowed(
+            #     ['csv', 'xls', 'xlsx'],
+            #     form_content['destination_addresses_file']['error']
+            # )
+        ],
+    )
+
+    upload_set = ['csv', 'xls', 'xlsx']
 
     # compute_optimal_destination = BooleanField(
     #     label=form_content['compute_optimal_destination']['label'],
@@ -132,10 +161,28 @@ class EstimateForm(FlaskForm):
 
         if not uses_at_least_one_model:
             last_model = getattr(self, 'use_model_%s' % models[-1].slug)
-            last_model.errors.append("Please select at least one model."
-                                      "&nbsp;&nbsp;"  # It's been a while
-                                      "<em>What are you doing?</em>")
+            last_model.errors.append(
+                "Please select at least one plane model, "
+                "<em>even for train-only estimations.</em>"
+            )
             return False
+
+        # Check uploaded files' extensions, if any
+        # We have to do this "by hand" because of a bug in flask wtf
+        if isinstance(self.origin_addresses_file.data, FileStorage):
+            fn = self.origin_addresses_file.data.filename.lower()
+            if fn and not any(fn.endswith('.' + x) for x in self.upload_set):
+                self.origin_addresses_file.errors.append(
+                    form_content['origin_addresses_file']['error']
+                )
+                return False
+        if isinstance(self.destination_addresses_file.data, FileStorage):
+            fn = self.destination_addresses_file.data.filename.lower()
+            if fn and not any(fn.endswith('.' + x) for x in self.upload_set):
+                self.destination_addresses_file.errors.append(
+                    form_content['destination_addresses_file']['error']
+                )
+                return False
 
         return True
 

@@ -619,17 +619,27 @@ estimate:
     last_name: We will never share your data with anyone.
     origin_addresses: |
       Use <code>en_US</code> city and country names, without diacritics.
-      &nbsp;
+      <br>
       The comma matters.
       <br>
       This is either a home city and a country
       or the cities and countries of the participants to the conference, meeting…
+    origin_addresses_file: |
+      If you provide a file, we'll use it instead of the list on the left.
+      <br>
+      The spreadsheet's first sheet must have an <code>Address</code> column,
+      or a <code>City</code> and <code>Country</code> columns.
     destination_addresses: |
       This is either the cities and countries to travel to
       or the host city and country of the conference, meeting…
       <br>
       Please provide multiple cities and countries to compute the location
       of the minimum emission.
+    destination_addresses_file: |
+      If you provide a file, we'll use it instead of the list on the left.
+      <br>
+      The spreadsheet's first sheet must have an <code>Address</code> column,
+      or a <code>City</code> and <code>Country</code> columns.
 
   # Labels accept HTML, but not markdown
   # Descriptions accept neither, since we use the HTML title attribute
@@ -659,7 +669,7 @@ estimate:
       description: |
         One address per line, in the form `City, Country`.
         Make sure your addresses are correctly spelled.
-      # We MUST use the dumb CRLF pair for windows users
+      # We MUST use the dumb CRLF pair for dumb windows users
       placeholder: "Paris, France\r\nBerlin, Germany"
 #      placeholder: |
 #        Paris, France
@@ -671,12 +681,24 @@ estimate:
         Make sure your addresses are correctly spelled.
       placeholder: |
         Washington, United States of America
-    compute_optimal_destination:
-      label: |
-        Compute the destination city that will minimize emissions <br>
-        (useful when setting up a meeting/conference)
+    origin_addresses_file:
+      label: Origin Cities
       description: |
-        We will only look through Cities specified in the Destination Cities.
+        Accepted files: CSV, XLS, XLSX.
+        We will use the Address column, or the City and Country columns.
+      error: Please use spreadsheet files only (CSV, XLS, XLSX)
+    destination_addresses_file:
+      label: Destination Cities
+      description: |
+        Accepted files: CSV, XLS, XLSX.
+        We will use the Address column, or the City and Country columns.
+      error: Please use spreadsheet files only (CSV, XLS, XLSX)
+#    compute_optimal_destination:
+#      label: |
+#        Compute the destination city that will minimize emissions <br>
+#        (useful when setting up a meeting/conference)
+#      description: |
+#        We will only look through Cities specified in the Destination Cities.
     use_atmosfair_rfi:
       label: |
         Use the <acronym title="Radiative Forcing Index">RFI</acronym>

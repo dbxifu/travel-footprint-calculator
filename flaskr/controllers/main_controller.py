@@ -21,6 +21,9 @@ import csv
 # from io import StringIO
 from cStringIO import StringIO
 
+import pandas
+from pandas.compat import StringIO as PandasStringIO
+
 main = Blueprint('main', __name__)
 
 
@@ -56,6 +59,75 @@ def home():
     )
 
 
+def gather_addresses(from_list, from_file):
+    addresses = []
+    if from_file:
+        file_mimetype = from_file.mimetype
+        file_contents = from_file.read()
+
+        rows_dicts = None
+
+        if 'text/csv' == file_mimetype:
+
+            rows_dicts = pandas \
+                .read_csv(PandasStringIO(file_contents)) \
+                .rename(str.lower, axis='columns') \
+                .to_dict(orient="row")
+
+        # Here are just *some* of the mimetypes that Microsoft's
+        # garbage spreadsheet files may have.
+        # application/vnd.ms-excel (official)
+        # application/msexcel
+        # application/x-msexcel
+        # application/x-ms-excel
+        # application/x-excel
+        # application/x-dos_ms_excel
+        # application/xls
+        # application/x-xls
+        # application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+        # ... Let's check extension instead.
+
+        elif from_file.filename.endswith('xls') \
+                or from_file.filename.endswith('xlsx'):
+
+            rows_dicts = pandas \
+                .read_excel(PandasStringIO(file_contents)) \
+                .rename(str.lower, axis='columns') \
+                .to_dict(orient="row")
+
+        # Python 3.7 only
+        # elif from_file.filename.endswith('ods'):
+        #
+        #     rows_dicts = read_ods(PandasStringIO(file_contents), 1) \
+        #         .rename(str.lower, axis='columns') \
+        #         .to_dict(orient="row")
+
+        if rows_dicts is not None:
+            for row_dict in rows_dicts:
+                if 'address' in row_dict:
+                    addresses.append(row_dict['address'])
+                    continue
+                address = None
+                if 'city' in row_dict:
+                    address = row_dict['city']
+                if 'country' in row_dict:
+                    if address is None:
+                        address = row_dict['country']
+                    else:
+                        address += "," + row_dict['country']
+                if address is not None:
+                    addresses.append(address)
+                else:
+                    pass  # what should we do here? raise?
+        else:
+            pass # what should we do here? raise?
+
+    else:
+        addresses = from_list.replace("\r", '').split("\n")
+
+    return "\n".join(addresses)
+
+
 @main.route("/estimate", methods=["GET", "POST"])
 @main.route("/estimate.html", methods=["GET", "POST"])
 def estimate():
@@ -72,10 +144,15 @@ def estimate():
         estimation.last_name = form.last_name.data
         estimation.institution = form.institution.data
         estimation.status = StatusEnum.pending
-        estimation.origin_addresses = form.origin_addresses.data
-        estimation.destination_addresses = form.destination_addresses.data
+        estimation.origin_addresses = gather_addresses(
+            form.origin_addresses.data,
+            form.origin_addresses_file.data
+        )
+        estimation.destination_addresses = gather_addresses(
+            form.destination_addresses.data,
+            form.destination_addresses_file.data
+        )
         estimation.use_train_below_km = form.use_train_below_km.data
-        # estimation.compute_optimal_destination = form.compute_optimal_destination.data
         models_slugs = []
         for model in models:
             if getattr(form, 'use_model_%s' % model.slug).data:
