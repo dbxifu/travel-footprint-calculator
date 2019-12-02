@@ -19,6 +19,7 @@ common_js = Bundle(
     'js/vendor/jquery-3.2.1.slim.min.js',
     'js/vendor/popper.min.js',
     'js/vendor/bootstrap.min.js',
+    'js/vendor/simg.js',
     Bundle(
         'js/main.js',
         filters='jsmin'

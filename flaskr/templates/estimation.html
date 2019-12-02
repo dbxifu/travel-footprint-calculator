@@ -123,6 +123,14 @@
                     Download Plot SVG
                 </a>
             </li>
+            <li class="nav-item m-4">
+                <a id="cities_footprints_d3viz_lollipop_download_png"
+                   href="#"
+                   title="This may not work on IE nor Edge.  Please use a decent browser like Firefox."
+                   class="btn btn-lg btn-secondary">
+                    Download Plot PNG
+                </a>
+            </li>
 {#            <li class="nav-item m-4">#}
 {#                <a href="/estimation/{{ estimation.public_id }}.xls" class="btn btn-lg btn-secondary disabled">#}
 {#                    Download XLS#}
@@ -512,13 +520,26 @@ jQuery(document).ready(function($){
             .attr("transform", "translate("+(-180+width/2.0)+","+(height+111)+")")
             .text("CO\u2082 emissions equivalent (kg) per target city.");
 
-        // Download
+        // Download SVG
         $(vizid+"_download").click(function(e){
             e.stopPropagation();
             // Show the values
             $(vizid+" svg .value-text").css("opacity", 1);
             // This possibly won't work on IE and Edge
             saveSvg($(vizid + " svg")[0], "travel_carbon_footprint_{{ estimation.public_id }}.svg");
+            // Hide the values
+            $(vizid+" svg .value-text").css("opacity", 0);
+            return false;
+        });
+
+        // Download PNG
+        $(vizid+"_download_png").click(function(e){
+            e.stopPropagation();
+            // Show the values
+            $(vizid+" svg .value-text").css("opacity", 1);
+            // May not work everywhere, but…
+            var simg = new Simg($(vizid + " svg")[0]);
+            simg.download();
             // Hide the values
             $(vizid+" svg .value-text").css("opacity", 0);
             return false;
