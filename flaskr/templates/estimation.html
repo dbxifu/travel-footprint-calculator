@@ -162,7 +162,24 @@
 {#    </div>#}
 {#</div>#}
 
-{% endif %}{# estimation.has_failed() #}
+
+<div class="row">
+    <h3>
+        Equivalencies Calculator
+    </h3>
+    <iframe
+        src="//www.epa.gov/sites/production/files/widgets/ghg_widget/widget.html"
+        id="ghg_equivalencies"
+        width="300"
+        height="535"
+        scrolling="no"
+        frameborder="0"
+        marginwidth="0"
+        marginheight="0">
+    </iframe>
+</div>
+
+{% endif %}{# not estimation.has_failed() #}
 {% endblock %}
 
 {#############################################################################}
