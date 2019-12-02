@@ -65,7 +65,7 @@ class EstimateForm(FlaskForm):
         description=form_content['use_train_below_km']['description'],
         default=300,
         choices=[
-            (0, 'Do not use train'),
+            (0, 'Do not consider train'),
             (300, '300 km'),
             (500, '500 km'),
             (700, '700 km'),
