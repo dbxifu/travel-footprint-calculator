@@ -603,19 +603,6 @@ home:
           - L. Hackel [travel footprint calculator](https://lhackel.shinyapps.io/travel_footprint/)
             based on DEFRA emission factors
 
-#      - title: Equivalencies Calculator
-#        content: |
-#          <iframe
-#          src="//www.epa.gov/sites/production/files/widgets/ghg_widget/widget.html"
-#          id="ghg_equivalencies"
-#          width="300"
-#          height="535"
-#          scrolling="no"
-#          frameborder="0"
-#          marginwidth="0"
-#          marginheight="0">
-#          </iframe>
-
 
 
 estimate:
@@ -763,6 +750,9 @@ estimation:
       over all cities of origin and provided for each city of destination.
       The cumulative distance to each city of destination is provided.
       Duplicates in the destinations are removed.
+  footer: |
+    ### See also
+    - [EPA's Equivalencies Calculator](https://www.epa.gov/sites/production/files/widgets/ghg-calc/calculator.html#emissions)
 
 footer:
   credits: |
