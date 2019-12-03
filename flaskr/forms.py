@@ -15,7 +15,7 @@ from .content import content_dict as content
 from .core import models
 
 form_content = content['estimate']['form']
-
+train_values = form_content['use_train_below_km']['values']
 
 # ESTIMATION FORM #############################################################
 
@@ -63,14 +63,8 @@ class EstimateForm(FlaskForm):
     use_train_below_km = SelectField(
         label=form_content['use_train_below_km']['label'],
         description=form_content['use_train_below_km']['description'],
-        default=300,
-        choices=[
-            (0, 'Do not consider train'),
-            (300, '300 km'),
-            (500, '500 km'),
-            (700, '700 km'),
-            (1000, '1000 km'),
-        ],
+        default=500,
+        choices=[(v['value'], v['label']) for v in train_values],
         coerce=int,
     )
     comment = TextAreaField(
