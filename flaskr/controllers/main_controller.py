@@ -131,8 +131,18 @@ def gather_addresses(from_list, from_file):
     else:
         addresses = from_list.replace("\r", '').split("\n")
 
-    # Remove empty lines (if any)
-    addresses = [a for a in addresses if a]
+    clean_addresses = []
+    for address in addresses:
+        if not address:
+            continue
+        elif type(address).__name__ == 'str':
+            clean_addresses.append(unicode(address, 'utf-8'))
+        else:
+            clean_addresses.append(address)
+    addresses = clean_addresses
+
+    # Remove empty lines (if any) and white characters
+    addresses = [a.strip() for a in addresses if a]
 
     return "\n".join(addresses)
 
