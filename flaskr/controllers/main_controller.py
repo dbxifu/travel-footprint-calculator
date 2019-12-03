@@ -267,14 +267,14 @@ def compute():  # process the queue of estimation requests
         try:
             origin = geocoder.geocode(origin_address.encode('utf-8'))
         except geopy.exc.GeopyError as e:
-            response += u"Failed to geocode origin `%s`.\n%s" % (
+            response += u"Failed to geocode origin `%s`.\n%s\n" % (
                 origin_address, e,
             )
             _handle_warning(estimation, response)
             continue
 
         if origin is None:
-            response += u"Failed to geocode origin `%s`." % (
+            response += u"Failed to geocode origin `%s`.\n" % (
                 origin_address,
             )
             _handle_warning(estimation, response)
@@ -299,14 +299,14 @@ def compute():  # process the queue of estimation requests
         try:
             destination = geocoder.geocode(destination_address.encode('utf-8'))
         except geopy.exc.GeopyError as e:
-            response += u"Failed to geocode destination `%s`.\n%s" % (
+            response += u"Failed to geocode destination `%s`.\n%s\n" % (
                 destination_address, e,
             )
             _handle_warning(estimation, response)
             continue
 
         if destination is None:
-            response += u"Failed to geocode destination `%s`." % (
+            response += u"Failed to geocode destination `%s`.\n" % (
                 destination_address,
             )
             _handle_warning(estimation, response)
@@ -324,11 +324,11 @@ def compute():  # process the queue of estimation requests
     # GTFO IF NO ORIGINS OR NO DESTINATIONS ###################################
 
     if 0 == len(origins):
-        response += u"Failed to geocode all the origin(s)."
+        response += u"Failed to geocode all the origin(s).\n"
         _handle_failure(estimation, response)
         return _respond(response)
     if 0 == len(destinations):
-        response += u"Failed to geocode all the destination(s)."
+        response += u"Failed to geocode all the destination(s).\n"
         _handle_failure(estimation, response)
         return _respond(response)
 
