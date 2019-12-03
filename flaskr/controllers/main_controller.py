@@ -555,10 +555,16 @@ def consult_estimation(public_id, extension):
                 estimation=estimation
             )
         else:
+            estimation_output = estimation.get_output_dict()
+            estimation_sum = 0
+            for city in estimation_output['cities']:
+                estimation_sum += city['footprint']
+
             return render_template(
                 "estimation.html",
                 estimation=estimation,
-                estimation_output=estimation.get_output_dict(),
+                estimation_output=estimation_output,
+                estimation_sum=estimation_sum,
             )
 
     elif extension in ['yaml', 'yml']:

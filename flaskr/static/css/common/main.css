@@ -105,6 +105,11 @@ h3[id]::before {
   visibility: hidden;
 }
 
+h4.salient {
+    border-left: 3px solid #3980af;
+    padding-left: 0.3em;
+}
+
 article img {
     width: 100%;
 }

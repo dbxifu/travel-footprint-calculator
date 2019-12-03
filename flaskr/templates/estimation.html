@@ -18,6 +18,16 @@
 
 
 
+{% macro render_footprint(footprint) %}
+{% if footprint > 1000 %}
+    {{ "%.1f" | format((footprint/1000.0) | round(1)) }} tons CO<sub>2</sub><small>EQ</small>
+{% else %}
+    {{ "%.1f" | format((footprint) | round(1)) }} kg CO<sub>2</sub><small>EQ</small>
+{% endif %}
+{% endmacro %}
+
+
+
 {% macro render_cities(cities) %}
 <ul class="numbered-list">
 {% for city in cities %}
@@ -32,11 +42,7 @@
     {% endif %}
         </span>
         –
-    {% if city.footprint > 1000 %}
-        {{ "%.1f" | format((city.footprint/1000.0) | round(1)) }} tons CO<sub>2</sub><small>EQ</small>
-    {% else %}
-        {{ "%.1f" | format((city.footprint) | round(1)) }} kg CO<sub>2</sub><small>EQ</small>
-    {% endif %}
+        {{ render_footprint(city.footprint) }}
         –
         {{ "%d" | format(city.distance | round() | int) }} km
     </li>
@@ -86,22 +92,35 @@
 <div class="row">
 
 {% if not estimation.has_failed() %}
-{#{% set estimation_output = estimation.get_output_dict() %}#}
-<div class="col-md-6">
-{% if estimation.is_one_to_one() %}
-    {{ content.estimation.lolliplot.one_to_one | markdown | safe }}
-    {{ render_cities(estimation_output.cities) }}
-{% elif estimation.is_many_to_one() %}
-    {{ content.estimation.lolliplot.many_to_one | markdown | safe }}
-    {{ render_cities(estimation_output.cities) }}
-{% elif estimation.is_one_to_many() %}
-    {{ content.estimation.lolliplot.one_to_many | markdown | safe }}
-    {{ render_cities(estimation_output.cities) }}
-{% elif estimation.is_many_to_many() %}
-    {{ content.estimation.lolliplot.many_to_many | markdown | safe }}
-    {{ render_cities(estimation_output.cities) }}
-{% endif %}
-</div>
+
+    <div class="col-md-6">
+    {#
+    The estimation sum is only meaningful when
+    there's a single origin or a single destination.
+    #}
+    {% if not estimation.is_many_to_many() %}
+        <h4 class="salient">
+            Total:
+            <em>
+                {{ render_footprint(estimation_sum) }}
+            </em>
+        </h4>
+    {% endif %}
+
+    {% if estimation.is_one_to_one() %}
+        {{ content.estimation.lolliplot.one_to_one | markdown | safe }}
+        {{ render_cities(estimation_output.cities) }}
+    {% elif estimation.is_many_to_one() %}
+        {{ content.estimation.lolliplot.many_to_one | markdown | safe }}
+        {{ render_cities(estimation_output.cities) }}
+    {% elif estimation.is_one_to_many() %}
+        {{ content.estimation.lolliplot.one_to_many | markdown | safe }}
+        {{ render_cities(estimation_output.cities) }}
+    {% elif estimation.is_many_to_many() %}
+        {{ content.estimation.lolliplot.many_to_many | markdown | safe }}
+        {{ render_cities(estimation_output.cities) }}
+    {% endif %}
+    </div>
 
     <div class="col-md-6">
         <ul class="nav">
@@ -309,7 +328,7 @@ jQuery(document).ready(function($){
     var y_key = 'city';
     var x_key = 'co2 (kg)';
 
-    var margin = {top: 10, right: 30, bottom: 150, left: 150},
+    var margin = {top: 40, right: 40, bottom: 150, left: 150},
         height = Math.max(300, 100+16*plots_config['cities_count']) - margin.top - margin.bottom;
     var width = Math.max(880, $(vizid).parent().width());
     width = width - margin.left - margin.right;
