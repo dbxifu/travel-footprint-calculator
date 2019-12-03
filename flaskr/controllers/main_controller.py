@@ -131,6 +131,9 @@ def gather_addresses(from_list, from_file):
     else:
         addresses = from_list.replace("\r", '').split("\n")
 
+    # Remove empty lines (if any)
+    addresses = [a for a in addresses if a]
+
     return "\n".join(addresses)
 
 
