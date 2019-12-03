@@ -5,7 +5,8 @@
 # Metadata about this website
 meta:
   title: Travel Carbon Footprint Calculator
-  description: A travel carbon footprint calculator for researchers.
+  description: |
+    A travel carbon footprint calculator for researchers and event organizers.
   authors:
     - name:  Didier Barret
       email: dbarret@irap.omp.eu
@@ -458,16 +459,16 @@ home:
         content: |
           The inputs are provided in US English for the city and country 
           names, without diacritics. On each line, the city and country 
-          names must be separated by a comma. Pasting a csv file in the 
+          names must be separated by a comma. Pasting a CSV file in the
           form is possible, provided that a comma separates
           the city and country names. 
 
-          A round trip is defined by a city pair. If the user enters cityA as 
-          the origin city, and twice cityB as destinations, the tool returns 
+          A round trip is defined by a city pair. If the user enters _cityA_ as
+          the origin city, and twice _cityB_ as destinations, the tool returns
           the cumulative emission and distance from two round trips 
-          involving cityA and cityB, and indicates that 2 round trips were involved.
-          The same happens if the user enters twice cityA as the city of origin 
-          and cityB as the sole destination. 
+          involving _cityA_ and _cityB_, and indicates that 2 round trips were involved.
+          The same happens if the user enters twice _cityA_ as the city of origin
+          and _cityB_ as the sole destination.
 
           Three types of inputs can be considered 
           depending on whether the user wants an “individual” estimate 
@@ -629,6 +630,10 @@ estimate:
       <br>
       The spreadsheet's first sheet must have an <code>Address</code> column,
       or a <code>City</code> and <code>Country</code> columns.
+      <br>
+      <a href="static/public/sample/sample_addresses.csv" target="_blank">Example CSV</a>
+      ⋅
+      <a href="static/public/sample/sample_addresses.xlsx" target="_blank">Example XLS</a>
     destination_addresses: |
       This is either the cities and countries to travel to
       or the host city and country of the conference, meeting…
@@ -640,6 +645,9 @@ estimate:
       <br>
       The spreadsheet's first sheet must have an <code>Address</code> column,
       or a <code>City</code> and <code>Country</code> columns.
+    use_train_below_km: |
+      For <small>(single)</small> trips below this distance,
+      we'll ignore the plane models and use <code>23 g.km<sup>-1</sup></code>.
 
   # Labels accept HTML, but not markdown
   # Descriptions accept neither, since we use the HTML title attribute
@@ -664,6 +672,11 @@ estimate:
     use_train_below_km:
       label: Use train below
       description: We will use train emission models instead of plane fo trips below this distance.
+#      values:
+#        - label: Do not consider train
+#          value: 0
+#        - label: 100 km (~ 1h)
+#          value: 100
     origin_addresses:
       label: Origin Cities
       description: |
@@ -686,13 +699,13 @@ estimate:
       description: |
         Accepted files: CSV, XLS, XLSX.
         We will use the Address column, or the City and Country columns.
-      error: Please use spreadsheet files only (CSV, XLS, XLSX)
+      error: Please only use spreadsheet files. (CSV, XLS, XLSX)
     destination_addresses_file:
       label: Destination Cities
       description: |
         Accepted files: CSV, XLS, XLSX.
         We will use the Address column, or the City and Country columns.
-      error: Please use spreadsheet files only (CSV, XLS, XLSX)
+      error: Please only use spreadsheet files. (CSV, XLS, XLSX)
 #    compute_optimal_destination:
 #      label: |
 #        Compute the destination city that will minimize emissions <br>
