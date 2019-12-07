@@ -441,7 +441,8 @@ home:
           the plane, for Premium economy, the emission would be 1.6 
           times larger than flying an economy seat. It would be 2.9 and 4 
           times higher from flying Business class and First class 
-          respectively. 
+          respectively. Note that the above numbers should also depend 
+          in principle on the occupancy rate of the seats in each category.
           
       - title: Accounting for train emission
         content: |
@@ -457,10 +458,12 @@ home:
           is larger by some factors across Europe. The tool thus assumes the 
           mean of the emission factors of national and international rails, 
           as provided by DEFRA (i.e. 23 grams per passenger km). This 
-          makes the carbon dioxide emission of trains, typically one 
-          tenth (1/10) of the one of aircrafts. Note that the average speed of trains 
-          is assumed to be 100 km/hour, meaning that it takes 5 hours to travel 
-          by trains between two cities with a great circle distance of 500 km.
+          makes the carbon dioxide equivalent emission of trains, typically 5-10% 
+          of the one of aircrafts. It is worth relating a distance 
+          traveled by train to a duration. In Europe, the average speed 
+          of trains is about 100 km/hour, meaning that it takes about 5 
+          hours to travel by trains between two cities with a 
+          great circle distance of 500 km.
 
     - blocks:
           
