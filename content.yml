@@ -101,7 +101,7 @@ models:
           - [19999.9, 3335.611941663665 ]
           - [25000.0, 4163.431314509144 ]
 
-  - name: ADEME (RFI=1.9)
+  - name: ADEME (RFI=2.0)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -132,33 +132,34 @@ models:
         # The travel_emission_lerp_fit uses points instead of intervals
         # List of (distance in km, footprint in kg)
         points:
+
           - [0.0, 0.0 ]
           - [299.9, 0.0 ]
-          - [300.0, 195.74749999999995 ]
-          - [999.9, 301.13494249999997 ]
-          - [1000.0, 301.15000000000003 ]
-          - [1999.9, 475.61588499999993 ]
-          - [2000, 475.63333333333316 ]
-          - [2999.9, 573.7901833333333 ]
-          - [3000, 573.8000000000008 ]
-          - [3999.9, 851.1722600000007 ]
-          - [4000, 851.2000000000004 ]
-          - [4999.9, 1116.223495 ]
-          - [5000, 1116.2499999999998 ]
-          - [5999.9, 1157.0959149999994 ]
-          - [6000, 1157.1000000000004 ]
-          - [6999.9, 1196.99601 ]
-          - [7000, 1196.9999999999998 ]
-          - [7999.9, 1367.9828999999993 ]
-          - [8000, 1368.0000000000005 ]
-          - [8999.9, 1444.9423050000007 ]
-          - [9000, 1444.9499999999994 ]
-          - [9999.9, 1643.4801449999993 ]
-          - [10000, 1643.5000000000007 ]
-          - [10999.9, 1975.016844999998 ]
-          - [11000, 1968.2100000000028 ]
-          - [19999.9, 3570.462197000003 ]
-          - [25000.0, 4460.630000000003 ]
+          - [300.0, 279.25625 ]
+          - [999.9, 429.60351875000003 ]
+          - [1000.0, 429.6249999999999 ]
+          - [1999.9, 887.2042375 ]
+          - [2000, 887.2499999999999 ]
+          - [2999.9, 1051.1086125 ]
+          - [3000, 1051.1249999999993 ]
+          - [3999.9, 1046.0005125000005 ]
+          - [4000, 1046.0 ]
+          - [4999.9, 1330.8048499999998 ]
+          - [5000, 1330.833333333333 ]
+          - [5999.9, 1386.994383333333 ]
+          - [6000, 1387.0000000000005 ]
+          - [6999.9, 1475.241175 ]
+          - [7000, 1475.2499999999998 ]
+          - [7999.9, 1727.9747249999996 ]
+          - [8000, 1728.0000000000014 ]
+          - [8999.9, 2006.9721000000009 ]
+          - [9000, 2007.0000000000005 ]
+          - [9999.9, 2177.4829500000005 ]
+          - [10000, 2177.499999999999 ]
+          - [10999.9, 2414.476299999998 ]
+          - [11000, 2414.4999999999995 ]
+          - [19999.9, 4459.977272222222 ]
+          - [25000.0, 5596.388888888889 ]
 
 
   - name: DEFRA (RFI=1.9)
@@ -295,6 +296,9 @@ laws_plot:
     - 8000.0
     - 10000.0
     - 12000.0
+    - 15000.0
+    - 20000.0
+    - 25000.0
 
 
 # The content is Markdown.  HTML is also allowed.
@@ -328,7 +332,8 @@ home:
       - title: What does the tool do?
         content: |
           The tool computes the carbon footprint associated with round
-          trip flights. It does so for a set of trips from a given city of origin
+          trip flights, considering only the emission associated with the flight. 
+          It does so for a set of trips from a given city of origin
           to a set of destinations. Similarly, the tool allows to compute 
           the carbon footprint of a larger set of trips, corresponding to a 
           conference, a meeting and so on. For this, the city of departure 
@@ -439,7 +444,8 @@ home:
           
       - title: Accounting for train emission
         content: |
-          The minimum distance for flying is an input to be selected by
+          The minimum distance for flying (one leg of the round trip) 
+          is an input to be selected by
           the user (it is set to 300 km by default). Below the minimum 
           distance for flying, it is assumed that train is used. The tool 
           then computes the travel footprint associated with train. The 
@@ -451,7 +457,9 @@ home:
           mean of the emission factors of national and international rails, 
           as provided by DEFRA (i.e. 23 grams per passenger km). This 
           makes the carbon dioxide emission of trains, typically one 
-          tenth (1/10) of the one of aircrafts.
+          tenth (1/10) of the one of aircrafts. Note that the average speed of trains 
+          is assumed to be 100 km/hour, meaning that it takes 5 hours to travel 
+          by trains between two cities with a great circle distance of 500 km.
 
     - blocks:
           
@@ -507,7 +515,9 @@ home:
           should be listed at the end of the result page. Don’t be 
           surprised, if the name recovered by the geolocator is not 
           exactly the one you had expected (e.g. a city is located at the 
-          address of an embassy). If nothing happens during a request, it 
+          address of an embassy). An error may also occur if the input file 
+          submitted does not comply with the requested format. 
+          If nothing happens during a request, it 
           is most likely caused by the geolocator being unavailable. In 
           this case, try again a few minutes later.
 
@@ -582,7 +592,8 @@ home:
           line calculator? (which by the way is the calculator used by the 
           travel agency of my institute, being a public institution). The 
           IPCC in its 1999 report have defined the radiative forcing index 
-          to be between 2 and 4. Why ICAO is using 1? This is just an 
+          to be between 2 and 4. Why ICAO is using 1? I beleive I know the
+          answer but this is just an 
           example, which clearly show the urgent need to agree on a 
           common methodology accepted by all parties in computing 
           flight emission. May this tool help to raise 
@@ -591,7 +602,7 @@ home:
       - title: Additional resources
         content: |
           - Offset your flight with [atmosfair](https://www.atmosfair.de/en/offset/flight)
-          - [ADEME](https://www.ecologique-solidaire.gouv.fr/sites/default/files/Info%20GES_Guide%20m%C3%A9thodo.pdf)
+          - [ADEME](http://www.bilans-ges.ademe.fr/en/accueil)
             (French Environment & Energy Management Agency)
           - [DEFRA](https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019)
             emission conversion factors 2019
@@ -671,19 +682,19 @@ estimate:
       description: Any input is appreciated.  Everyone's a critic.
     use_train_below_km:
       label: Use train below
-      description: We will use train emission models instead of plane fo trips below this distance.
+      description: We will use the train carbon dioxide equivalent emission factor below this distance (one leg of the round trip).
       values:
         - label: Do not consider train
           value: 0
-        - label: 100 km (~ 1h)
+        - label: 100 km (~ 1h by train)
           value: 100
-        - label: 300 km (~ 2h)
+        - label: 300 km (~ 3h by train)
           value: 300
-        - label: 500 km (~ 4h)
+        - label: 500 km (~ 5h by train)
           value: 500
-        - label: 700 km (~ 5h)
+        - label: 700 km (~ 7h by train)
           value: 700
-        - label: 1000 km (~ 8h)
+        - label: 1000 km (~ 10h by train)
           value: 1000
 
     origin_addresses:
