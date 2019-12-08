@@ -204,6 +204,65 @@ models:
           - [19999.9, 2878.9047733493503 ]
           - [25000.0, 3596.0006143105275 ]
 
+  - name: French Ministry for the Ecological and Inclusive Transition  (no RF, not recommended)
+    # Slugged version of the display name above
+    # Only lowercase alphanumeric, starting with a letter, using - as liaison
+    # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
+    # MUST be unique, two models MUST NOT have the same slug.
+    slug: fr-ministry-ecology-no-rfi
+    # There MUST exist a python file named like this in `flaskr/laws`
+    # And it MUST contain a class named EmissionModel
+    # Please keep this lowercased, letters-only (or I will breathe fire)
+    file: travel_emission_lerp_fit
+    # Color MUST be in the hex form, without alpha
+    color: "#3399ff"
+    # Whether this model is selected by default in the list.
+    selected: true
+    # The configuration that will be fed to the model.
+    # May be anything, really.  Go bonkers!
+    config:
+      plane_emission_linear_fit:
+        # A coefficient applied to the distance
+        connecting_flights_scale: 1.05
+        # Radiative Forcing Index
+        # Multiplier after scaling
+        # DEPRECATED
+        rfi: 1.0
+        # Flat scalar to add before scaling with laws
+        offset_before: 0
+        # Flat scalar to multiply before scaling with laws
+        scale_before: 1
+        # The travel_emission_lerp_fit uses points instead of intervals
+        # List of (distance in km, footprint in kg)
+        points:
+          - [0.0, 0.0 ]
+          - [299.9, 0.0 ]
+          - [300.0, 103.02499999999998 ]
+          - [999.9, 158.492075 ]
+          - [1000.0, 158.50000000000003 ]
+          - [1999.9, 250.32414999999997 ]
+          - [2000, 250.33333333333326 ]
+          - [2999.9, 301.9948333333333 ]
+          - [3000, 302.0000000000004 ]
+          - [3999.9, 447.9854000000004 ]
+          - [4000, 448.0000000000002 ]
+          - [4999.9, 587.48605 ]
+          - [5000, 587.4999999999999 ]
+          - [5999.9, 608.9978499999997 ]
+          - [6000, 609.0000000000002 ]
+          - [6999.9, 629.9979000000001 ]
+          - [7000, 629.9999999999999 ]
+          - [7999.9, 719.9909999999996 ]
+          - [8000, 720.0000000000002 ]
+          - [8999.9, 760.4959500000004 ]
+          - [9000, 760.4999999999997 ]
+          - [9999.9, 864.9895499999997 ]
+          - [10000, 865.0000000000005 ]
+          - [10999.9, 1039.482549999999 ]
+          - [11000, 1035.9000000000015 ]
+          - [19999.9, 1879.1906300000016 ]
+          - [25000.0, 2347.7000000000016 ]
+
   - name: KLM data (no RF, not recommended)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
