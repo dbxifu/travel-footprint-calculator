@@ -392,8 +392,8 @@ home:
       - title: What does the tool do?
         content: |
           The tool computes the carbon footprint associated with round
-          trip flights, considering only the emission associated with the flight
-          (i.e. do not include life cycle emissions).
+          trip flights, according to the methodology of several publicly
+          available calculators.
           It does so for a set of trips from a given city of origin
           to a set of destinations. Similarly, the tool allows to compute 
           the carbon footprint of a larger set of trips, corresponding to a 
@@ -460,7 +460,7 @@ home:
           provides on its web site a table of emissions for a large range 
           of flights. The KLM data have been also been fitted with linear 
           functions. Differences up to a few tens of percent may be found between
-          the estimates and the linearly interpolated values. 
+          the data and the linearly interpolated values. 
 
       - title: What about radiative forcing?
         slug: rfi
@@ -571,7 +571,7 @@ home:
           origin and for each city of destination. The cumulative round trip 
           distance to each city of destination is also provided. 
 
-          The result pages provides a summary plot which can be 
+          The result page provides a summary plot which can be 
           downloaded, as well as a csv and raw yaml file, which can be used for
           further processing. The csv file  lists the name of the 
           city as in the form, the address to which it 
@@ -590,7 +590,8 @@ home:
           surprised, if the name recovered by the geolocator is not 
           exactly the one you had expected (e.g. a city is located at the 
           address of an embassy). An error may also occur if the input file 
-          submitted does not comply with the requested format. 
+          submitted does not comply with the requested format, 
+          including font encoding. 
           If nothing happens during a request, it 
           is most likely caused by the geolocator being unavailable. In 
           this case, try again a few minutes later.
