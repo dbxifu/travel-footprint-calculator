@@ -431,7 +431,14 @@ home:
         content: |
           The tool incorporates six different methods, among the most 
           widely used, and for which the methodology used is 
-          documented (see additional resources later). 
+          documented (see additional resources later). This tool is by no means
+          a critical review of the different methods. It takes the methods as
+          they are described and presented. The methods may differ in their 
+          assumptions (e.g. with or without radiative forcing included) 
+          or in the perimeter considered (e.g. adding to the flight emissions,
+          the one associated with the production phase and transport of the kerosene). 
+          The tool attempts to implement 
+          each method to the highest possible level of accuracy. 
           Providing more than one method enables to get 
           a mean value, while illustrating the significant differences in 
           their estimates. In alphabetic order, the data considered are 
