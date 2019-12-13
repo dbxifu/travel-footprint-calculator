@@ -217,7 +217,7 @@ models:
     # Color MUST be in the hex form, without alpha
     color: "#333333"
     # Whether this model is selected by default in the list.
-    selected: true
+    selected: false
     # The configuration that will be fed to the model.
     # May be anything, really.  Go bonkers!
     config:
