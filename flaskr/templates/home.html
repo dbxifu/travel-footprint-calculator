@@ -150,7 +150,7 @@ jQuery(document).ready(function($){
 
         // Add Y axis
         var y = d3.scaleLinear()
-            .domain([0, 4000])
+            .domain([0, 8000])
             .range([height, 0]);
         svg.append("g")
             .call(d3.axisLeft(y));
@@ -217,8 +217,8 @@ jQuery(document).ready(function($){
         // Title
         svg.append("g")
             .append('text')
-            .attr("transform", "translate(" + (-180 + width / 2.0) + "," + (height + 50) + ")")
-            .text("CO\u2082 emissions (kg) as a function of travelling distance (km).");
+            .attr("transform", "translate(" + (-290 + width / 2.0) + "," + (height + 50) + ")")
+            .text("CO\u2082 equivalent emissions (kg) as a function of distance (km) flown in one continuous leg.");
 
         // Legend
         svg.append("g")

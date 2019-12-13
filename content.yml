@@ -215,7 +215,7 @@ models:
     # Please keep this lowercased, letters-only (or I will breathe fire)
     file: travel_emission_lerp_fit
     # Color MUST be in the hex form, without alpha
-    color: "#3399ff"
+    color: "#333333"
     # Whether this model is selected by default in the list.
     selected: true
     # The configuration that will be fed to the model.
