@@ -204,7 +204,7 @@ models:
           - [19999.9, 2878.9047733493503 ]
           - [25000.0, 3596.0006143105275 ]
 
-  - name: French Ministry for the Ecological and Inclusive Transition  (no RF, not recommended)
+  - name: French Ministry of Ecology (no RF, not recommended)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -406,7 +406,7 @@ home:
           limited number of trips, this tool enables to compute the 
           footprint of a larger number of trips in an automated way. 
 
-          Furthermore, it provides an estimate based on data from six 
+          Furthermore, it provides an estimate based on data from seven 
           different methods, whose estimates can differ significantly. If 
           more than one method is selected by the user, the tool returns 
           the mean of the estimates of all selected methods.  
@@ -429,7 +429,7 @@ home:
 
       - title: Which methods are used? 
         content: |
-          The tool incorporates six different methods, among the most 
+          The tool incorporates seven different methods, among the most 
           widely used, and for which the methodology used is 
           documented (see additional resources later). This tool is by no means
           a critical review of the different methods. It takes the methods as
@@ -445,7 +445,8 @@ home:
           from ADEME: the French Environment & Energy Management 
           Agency, atmosfair: a German carbon offsetting company, 
           DEFRA: the UK Department for Environment, Food & Rural 
-          Affairs, ICAO: International Civil Aviation Organization, from the 
+          Affairs, the French Ministry for the Ecological and Inclusive Transition, 
+          ICAO: International Civil Aviation Organization, from the 
           KLM carbon compensation service data and finally from 
           myclimate, a Carbon offseting company, used in particular by Lufthansa. 
           
