@@ -1,6 +1,6 @@
 # Orchestrate docker containers to host an instance of the project.
-# You *can* use this for development.  Don't.
-# You *can* use this for production.  Don't.
+# You *could* use this for development.  Don't.
+# You *could* use this for production.  Don't.
 
 version: '2.0'
 services:
