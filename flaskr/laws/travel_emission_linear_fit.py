@@ -77,7 +77,9 @@ class EmissionModel(BaseEmissionModel):
         }
 
     def compute_train_footprint(self, distance):
-        return distance * 0.023
+        gcd_to_road_correction = 1.30  # See issue #32
+        train_emission = 0.023  # kg/km
+        return gcd_to_road_correction * distance * train_emission
 
     def compute_airplane_footprint(
             self,

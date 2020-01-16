@@ -23,6 +23,7 @@ from flaskr.extensions import (
 )
 
 from flaskr.content import content
+from flaskr.core import increment_hit_counter, get_hit_counter
 
 from markdown import markdown
 
@@ -78,6 +79,7 @@ def create_app(object_name):
         return dict(
             content=content,
             version=version,
+            visits=get_hit_counter(),
         )
 
     # Markdown jinja2 filter
@@ -88,9 +90,6 @@ def create_app(object_name):
     # Authentication Gate for the Admin
     @app.before_first_request
     def restrict_admin_url():
-
-        # print('VF', app.view_functions)
-
         endpoint = 'admin.index'
         url = url_for(endpoint)
         admin_index = app.view_functions.pop(endpoint)
