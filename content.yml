@@ -417,7 +417,8 @@ home:
           geolocated and from their longitude and latitude, the great 
           circle distance is computed. This is the shortest path a plane 
           can follow. Some methods thus consider uplift correction 
-          factors in computing the carbon dioxide emission of a flight. In 
+          factors to account for deviations from the shortest paths, e.g., 
+          when a plane avoids bad weather conditions. In 
           addition, two cities may not be connected by a direct flight. 
           This is accounted for by increasing by 5% the great circle 
           distance. Each method provides the carbon dioxide emission 
@@ -496,7 +497,8 @@ home:
           KLM data does not seem to account for radiative forcing either,
           as the estimates they provide are close, although a little higher,
           than the ones of ICAO.
-          Therefore, the methods based on ICAO and KLM data are not recommended,
+          Therefore, the methods based on ICAO, the French Ministry for the 
+          Ecological and Inclusive Transition and KLM data are not recommended,
           but given as methods providing the lowest emissions.
 
           [![Models used](static/img/recap_scaling_laws.jpg)](static/img/recap_scaling_laws.jpg)
@@ -504,44 +506,21 @@ home:
       - title: Seating category
         content: |
           The tool assumes economy seats in computing the carbon 
-          dioxide emission. For indication, DEFRA provides mean 
-          emission factors for different seat classes considering 
-          international flights. Related to the area occupied by the seat in 
-          the plane, for Premium economy, the emission would be 1.6 
-          times larger than flying an economy seat. It would be 2.9 and 4 
-          times higher from flying Business class and First class 
-          respectively. Note that the above numbers should also depend 
-          in principle on the occupancy rate of the seats in each category.
+          dioxide emission. On average it can be considered that the 
+          footprint can be multiplied by ∼ 1.5, ∼ 2.0 and ∼ 2.5 
+          for flying in Premium Economy, Business and First class. 
           
       - title: Accounting for train emission
         content: |
           The minimum distance for flying (one leg of the round trip) 
-          is an input to be selected by
-          the user (it is set to 300 km by default). Below the minimum 
-          distance for flying, it is assumed that train is used. The tool 
-          then computes the travel footprint associated with train (as 
-          for flight emissions, the computation does not include 
-          life cycle emissions). The French emission factors provided by 
-          ADEME are 3.37 and 5.11 grams of carbon dioxide equivalent per km per passenger for
-          high speed trains and normal trains respectively. This low value is 
-          due to the fact that electricity is provided by nuclear plants. It 
-          is larger by some factors across Europe. The tool thus assumes the 
+          is an input to be selected by the user (it is set to 500 km by default). 
+          Below the minimum distance for flying, it is assumed that train is used.
+          Deviations from the shortest path is accounted by a 
+          1.35 multiplication factor. The tool thus assumes the 
           mean of the emission factors of national and international rails, 
-          as provided by DEFRA (i.e. 23 grams per passenger km). This 
-          makes the carbon dioxide equivalent emission of aircrafts 
-          10 to 20 times more than the one of trains. Some may select train 
-          traveling instead of flying based on the duration of the trip.
-          It is thus worth relating the minimum distance for flying to 
-          a travel time duration by train. In Europe, from a shallow survey of trip 
-          durations between major cities, it appears that the average speed 
-          of trains is about 100 km/hour. This means that on average it takes about 5 
-          hours to travel by train between two cities with a 
-          great circle distance of 500 km (including connexions, 
-          deviations from the shortest paths…). 100 km/hour may be on the 
-          low side by a couple of 10 km/hour in 
-          countries where high speed trains are frequently used, 
-          and on the high side by the same amount in countries where high speed 
-          trains are less available or not available at all. 
+          as provided by DEFRA (i.e. 23 grams per passenger km). 
+          To relate the duration of a train journey to a travel distance, 
+          an average speed of 100 km/h is assumed. 
 
     - blocks:
           
@@ -586,14 +565,14 @@ home:
           was geolocated, the carbon dioxide emission (in kg), the 
           distance travelled, the number of trips possible by train (i.e. 
           when the distance is less than the minimum flying distance, 
-          e.g. 300 km) and the number of trips by plane. The plot and the 
+          e.g. 500 km) and the number of trips by plane. The plot and the 
           csv file rank the cities against the carbon dioxide emissions. 
 
       - title: Trouble shooting
         content: |
           The estimation can go wrong if a city is not properly 
           geolocated. This may happen because the name of the city is 
-          wrongly spelled or the geolocator (OSM) is confused. An error 
+          wrongly spelled or the geolocator (OpenStreeMap) is confused. An error 
           should be listed at the end of the result page. Don’t be 
           surprised, if the name recovered by the geolocator is not 
           exactly the one you had expected (e.g. a city is located at the 
@@ -607,10 +586,8 @@ home:
       - title: Caveats
         content: |
           The numbers provided by the tool do not come with 
-          uncertainties. Therefore they must be considered as indicative 
-          of the true values. Selecting more than one method is 
-          recommended, because they may make the numbers closer to 
-          their true values. In all cases however, the numbers can be 
+          uncertainties, and shall be considered indicative of the true emission. 
+          However, the numbers can be 
           used for relative comparisons, e.g. when comparing two cities 
           for hosting a conference. 
           
@@ -626,17 +603,17 @@ home:
 
       - title: Reference
         content: |
-          Results from the tool may reference to Barret (2019, The travel 
-          footprint associated with the development of the Athena 
-          X-ray Integral Field Unit, in preparation). 
+          Results from the tool may reference to Barret (2019, 
+          The Athena X-ray Integral Field Unit travel footprint 
+          calculator and its application to X-IFU related travels, in preparation). 
  
       - title: Original motivation
         content: |
           Global warming is a threat for life on our planet. Emissions of 
           carbon dioxide by aircrafts keeps increasing, as the world 
           economy keeps growing (it is about 3% of the anthropogenic 
-          emissions nowadays). Carrying scientific research requires 
-          traveling across the world, and thus air travel is likely to 
+          emissions nowadays). Carrying scientific research is generally associated 
+          with traveling across the world, and thus air travel is likely to 
           dominate the carbon footprint of most scientists and is 
           likely to be large for developing international projects. This tool was 
           first developed to compute the travel footprint 
@@ -675,9 +652,8 @@ home:
           line calculator? (which by the way is the calculator used by the 
           travel agency of my institute, being a public institution). The 
           IPCC in its 1999 report have defined the radiative forcing index 
-          to be between 2 and 4. Why ICAO is using 1? I beleive I know the
-          answer but this is just an 
-          example, which clearly show the urgent need to agree on a 
+          to be between 2 and 4. Why ICAO is using 1? This shows the urgent 
+          need to agree on a 
           common methodology accepted by all parties in computing 
           flight emission. May this tool help to raise 
           awareness on this issue. 
