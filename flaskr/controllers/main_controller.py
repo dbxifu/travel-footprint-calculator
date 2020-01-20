@@ -12,7 +12,8 @@ from flaskr.forms import LoginForm, EstimateForm
 from flaskr.models import db, User, Estimation, StatusEnum, ScenarioEnum
 from flaskr.geocoder import CachedGeocoder
 
-from flaskr.core import generate_unique_id, get_emission_models
+from flaskr.core import generate_unique_id, \
+    get_emission_models, increment_hit_counter
 from flaskr.content import content
 
 from wtforms import validators
@@ -32,6 +33,7 @@ main = Blueprint('main', __name__)
 OUT_ENCODING = 'utf-8'
 
 
+# -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
 
@@ -53,6 +55,7 @@ def home():
     models_dict = {}
     for model in models:
         models_dict[model.slug] = model.__dict__
+    increment_hit_counter()
     return render_template(
         'home.html',
         models=models_dict,
