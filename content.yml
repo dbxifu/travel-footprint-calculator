@@ -572,7 +572,7 @@ home:
         content: |
           The estimation can go wrong if a city is not properly 
           geolocated. This may happen because the name of the city is 
-          wrongly spelled or the geolocator (OpenStreeMap) is confused. An error 
+          wrongly spelled or the geolocator (OpenStreetMap) is confused. An error
           should be listed at the end of the result page. Don’t be 
           surprised, if the name recovered by the geolocator is not 
           exactly the one you had expected (e.g. a city is located at the 
