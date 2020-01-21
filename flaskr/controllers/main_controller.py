@@ -269,6 +269,7 @@ def compute():  # process the queue of estimation requests
         estimation.public_id
     )
 
+    failed_addresses = []
     geocoder = CachedGeocoder()
 
     # GEOCODE ORIGINS #########################################################
@@ -279,6 +280,8 @@ def compute():  # process the queue of estimation requests
     for i in range(len(origins_addresses)):
 
         origin_address = origins_addresses[i].strip()
+        if origin_address in failed_addresses:
+            continue
 
         try:
             origin = geocoder.geocode(origin_address.encode('utf-8'))
@@ -287,6 +290,7 @@ def compute():  # process the queue of estimation requests
                 origin_address, e,
             )
             _handle_warning(estimation, response)
+            failed_addresses.append(origin_address)
             continue
 
         if origin is None:
@@ -294,6 +298,7 @@ def compute():  # process the queue of estimation requests
                 origin_address,
             )
             _handle_warning(estimation, response)
+            failed_addresses.append(origin_address)
             continue
 
         origins.append(origin)
@@ -311,6 +316,8 @@ def compute():  # process the queue of estimation requests
     for i in range(len(destinations_addresses)):
 
         destination_address = destinations_addresses[i].strip()
+        if destination_address in failed_addresses:
+            continue
 
         try:
             destination = geocoder.geocode(destination_address.encode('utf-8'))
@@ -319,6 +326,7 @@ def compute():  # process the queue of estimation requests
                 destination_address, e,
             )
             _handle_warning(estimation, response)
+            failed_addresses.append(destination_address)
             continue
 
         if destination is None:
@@ -326,6 +334,7 @@ def compute():  # process the queue of estimation requests
                 destination_address,
             )
             _handle_warning(estimation, response)
+            failed_addresses.append(destination_address)
             continue
 
         # print(repr(destination.raw))
