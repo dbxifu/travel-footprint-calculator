@@ -228,6 +228,8 @@ def invalidate():
 @main.route("/compute")
 def compute():  # process the queue of estimation requests
 
+    maximum_addresses_to_compute = 30000
+
     def _respond(_msg):
         return "<pre>%s</pre>" % _msg
 
@@ -276,9 +278,15 @@ def compute():  # process the queue of estimation requests
         # GEOCODE ORIGINS #########################################################
 
         origins_addresses = estimation.origin_addresses.strip().split("\n")
+        origins_addresses_count = len(origins_addresses)
         origins = []
 
-        for i in range(len(origins_addresses)):
+        if origins_addresses_count > maximum_addresses_to_compute:
+            errmsg = "Too many origins. (%d > %d)  Please contact us for support of that many origins." % (origins_addresses_count, maximum_addresses_to_compute)
+            _handle_failure(estimation, errmsg)
+            return _respond(errmsg)
+
+        for i in range(origins_addresses_count):
 
             origin_address = origins_addresses[i].strip()
             if origin_address in failed_addresses:
@@ -312,9 +320,15 @@ def compute():  # process the queue of estimation requests
         # GEOCODE DESTINATIONS ####################################################
 
         destinations_addresses = estimation.destination_addresses.strip().split("\n")
+        destinations_addresses_count = len(destinations_addresses)
         destinations = []
 
-        for i in range(len(destinations_addresses)):
+        if destinations_addresses_count > maximum_addresses_to_compute:
+            errmsg = "Too many destinations. (%d > %d)  Please contact us for support of that many destinations." % (destinations_addresses_count, maximum_addresses_to_compute)
+            _handle_failure(estimation, errmsg)
+            return _respond(errmsg)
+
+        for i in range(destinations_addresses_count):
 
             destination_address = destinations_addresses[i].strip()
             if destination_address in failed_addresses:
@@ -555,7 +569,7 @@ def compute():  # process the queue of estimation requests
         return _respond(response)
 
     except Exception as e:
-        errmsg = "Computation failed : %s" % e
+        errmsg = "Computation failed : %s" % (e,)
         if estimation:
             _handle_failure(estimation, errmsg)
         return _respond(errmsg)
