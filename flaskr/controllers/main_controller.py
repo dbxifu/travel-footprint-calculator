@@ -49,7 +49,7 @@ def favicon():  # we want it served from the root, not from static/
 @main.route('/')
 @main.route('/home')
 @main.route('/home.html')
-@cache.cached(timeout=1000)
+# @cache.cached(timeout=1000)
 def home():
     models = get_emission_models()
     models_dict = {}
