@@ -7,7 +7,7 @@ from uuid import uuid4
 from .content import content
 
 
-hit_count_path = "../VISITS"
+hit_count_path = "VISITS"
 
 
 def generate_unique_id():
