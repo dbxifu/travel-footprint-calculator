@@ -282,7 +282,7 @@ def compute():  # process the queue of estimation requests
         origins = []
 
         if origins_addresses_count > maximum_addresses_to_compute:
-            errmsg = "Too many origins. (%d > %d)  Please contact us for support of that many origins." % (origins_addresses_count, maximum_addresses_to_compute)
+            errmsg = u"Too many origins. (%d > %d)  Please contact us for support of that many origins." % (origins_addresses_count, maximum_addresses_to_compute)
             _handle_failure(estimation, errmsg)
             return _respond(errmsg)
 
@@ -324,7 +324,7 @@ def compute():  # process the queue of estimation requests
         destinations = []
 
         if destinations_addresses_count > maximum_addresses_to_compute:
-            errmsg = "Too many destinations. (%d > %d)  Please contact us for support of that many destinations." % (destinations_addresses_count, maximum_addresses_to_compute)
+            errmsg = u"Too many destinations. (%d > %d)  Please contact us for support of that many destinations." % (destinations_addresses_count, maximum_addresses_to_compute)
             _handle_failure(estimation, errmsg)
             return _respond(errmsg)
 
@@ -569,7 +569,7 @@ def compute():  # process the queue of estimation requests
         return _respond(response)
 
     except Exception as e:
-        errmsg = "Computation failed : %s" % (e,)
+        errmsg = u"Computation failed : %s" % (e,)
         if estimation:
             _handle_failure(estimation, errmsg)
         return _respond(errmsg)
