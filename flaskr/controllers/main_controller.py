@@ -603,8 +603,9 @@ def consult_estimation(public_id, extension):
         else:
             estimation_output = estimation.get_output_dict()
             estimation_sum = 0
-            for city in estimation_output['cities']:
-                estimation_sum += city['footprint']
+            if estimation_output:
+                for city in estimation_output['cities']:
+                    estimation_sum += city['footprint']
 
             return render_template(
                 "estimation.html",

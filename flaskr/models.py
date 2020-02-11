@@ -71,9 +71,11 @@ class Estimation(db.Model):
 
     def get_output_dict(self):
         if self._output_dict is None:
-            self._output_dict = yaml_load(self.output_yaml)
+            if self._output_yaml is None:
+                self._output_dict = None
+            else:
+                self._output_dict = yaml_load(self.output_yaml)
             return self._output_dict
-        pass
 
     def is_one_to_one(self):
         return self.scenario == ScenarioEnum.one_to_one
