@@ -70,6 +70,7 @@
 </div>
 {% endif %}
 
+{% if not estimation.has_failed() %}
 <div class="row">
     Using
     {% for model in estimation.get_models() %}
@@ -88,6 +89,7 @@
 </div>
 
 <hr>
+{% endif %}
 
 <div class="row">
 
@@ -201,6 +203,8 @@
 {#############################################################################}
 
 {% block js %}
+{% if not estimation.has_failed() %}
+
 <script src="/static/js/vendor/d3.v4.js"></script>
 <script src="/static/js/vendor/d3-legend.js"></script>
 {#<script src="https://d3js.org/d3.v4.js"></script>#}
@@ -560,5 +564,7 @@ jQuery(document).ready(function($){
 });
 
 </script>
+
+{% endif %}
 {% endblock %}
 
