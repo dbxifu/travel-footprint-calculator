@@ -71,7 +71,7 @@ class Estimation(db.Model):
 
     def get_output_dict(self):
         if self._output_dict is None:
-            if self._output_yaml is None:
+            if self.output_yaml is None:
                 self._output_dict = None
             else:
                 self._output_dict = yaml_load(self.output_yaml)
