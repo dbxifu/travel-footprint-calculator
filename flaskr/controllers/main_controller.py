@@ -571,7 +571,7 @@ def compute():  # process the queue of estimation requests
 
     except Exception as e:
         errmsg = u"Computation failed : %s" % (e,)
-        errmsg = u"%s\n\n%s" % (errmsg, traceback.format_exc())
+        # errmsg = u"%s\n\n%s" % (errmsg, traceback.format_exc())
         if estimation:
             _handle_failure(estimation, errmsg)
         return _respond(errmsg)
