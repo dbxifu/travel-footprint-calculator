@@ -21,3 +21,6 @@ class CachedGeocoder:
                 addressdetails=True,  # only works with Nominatim /!.
             )
         return self.cache[address]
+
+    def close(self):
+        self.cache.close()
