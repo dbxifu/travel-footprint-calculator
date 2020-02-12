@@ -19,6 +19,14 @@ meta:
       role:  Benevolent Wizard
 
 
+# Global configuration for all models
+shared_config:
+  # In kg/km.
+  train_emission: 0.023
+  # Multiplier to approximate conversion of Great Circle Distances to Road
+  gcd_to_road_scale: 1.3
+
+
 # Aka. Laws
 models:
   - name: Atmosfair (RFI=3 for altitude > 9 km)
@@ -46,7 +54,7 @@ models:
         rfi: 1.0
         # Flat scalar to add before scaling with laws
         offset_before: 0
-        # Flat scalar to multiply before scaling with laws
+        # Scalar to multiply before scaling with laws
         scale_before: 1
         # The travel_emission_lerp_fit uses points instead of intervals
         # List of (distance in km, footprint in kg)

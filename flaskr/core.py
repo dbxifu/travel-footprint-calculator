@@ -25,7 +25,7 @@ def get_emission_models():
         model_file = model_conf.file
         the_module = importlib.import_module("flaskr.laws.%s" % model_file)
 
-        model = the_module.EmissionModel(model_conf)
+        model = the_module.EmissionModel(model_conf, content.shared_config)
         # model.configure(extra_model_conf)
 
         emission_models.append(model)
@@ -47,14 +47,13 @@ def get_hit_counter():
 
 def increment_hit_counter():
     if isfile(hit_count_path):
-        hit_count = int(open(hit_count_path).read())
+        hit_count = get_hit_counter()
         hit_count += 1
     else:
         hit_count = 1
 
-    hit_counter_file = open(hit_count_path, 'w')
-    hit_counter_file.write(str(hit_count))
-    hit_counter_file.close()
+    with open(hit_count_path, 'w') as hcf:
+        hcf.write(str(hit_count))
 
     return hit_count
 
