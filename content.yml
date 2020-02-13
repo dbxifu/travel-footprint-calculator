@@ -29,7 +29,7 @@ shared_config:
 
 # Aka. Laws
 models:
-  - name: Atmosfair (RFI=3 for altitude > 9 km)
+  - name: Atmosfair (mul. factor=3 for altitude > 9 km)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -67,7 +67,7 @@ models:
           - [ 19999.9, 5606.129335551792 ]
           - [ 25000.0, 7094.270252762378 ]
 
-  - name: ADEME (RFI=2.0)
+  - name: ADEME (mul. factor=2, from Carbon database)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -129,7 +129,7 @@ models:
 
 
  
-  - name: MyClimate (RFI=2)
+  - name: MYCLIMATE (mul. factor=2)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -171,7 +171,7 @@ models:
           - [25000.0, 4163.431314509144 ]
 
 
-  - name: DEFRA (RFI=1.9)
+  - name: DEFRA (mul. factor=RFI=1.9)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -212,7 +212,7 @@ models:
           - [19999.9, 2878.9047733493503 ]
           - [25000.0, 3596.0006143105275 ]
 
-  - name: French Ministry of Ecology (no RF, not recommended)
+  - name: French Ministry of Ecology (no mul. factor, not recommended)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -271,7 +271,7 @@ models:
           - [19999.9, 1879.1906300000016 ]
           - [25000.0, 2347.7000000000016 ]
 
-  - name: KLM data (no RF, not recommended)
+  - name: KLM data best fit (no mul. factor, not recommended)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -310,7 +310,7 @@ models:
           - [14999.9, 962.2587735768744 ]
           - [25000.0, 1522.7313138757793 ]
 
-  - name: ICAO (no RF, not recommended)
+  - name: ICAO data best fit (no mul. factor, not recommended)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
