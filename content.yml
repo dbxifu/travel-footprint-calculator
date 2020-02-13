@@ -479,32 +479,27 @@ home:
           functions. Differences up to a few tens of percent may be found between
           the data and the linearly interpolated values. 
 
-      - title: What about radiative forcing?
+      - title: Accounting for non CO2 effects?
         slug: rfi
         content: |
-          Radiative forcing accounts for the fact that aviation contributes
-          to climate change more than just with the emission of carbon dioxide
-          from burning fuels, by releasing gases and particles directly
-          into the upper troposphere and lower stratosphere
-          where they have an impact on atmospheric composition.
-          These gases and particles include
-          carbon dioxide (CO<sub>2</sub>),
-          ozone (O<sub>3</sub>),
-          and methane (CH<sub>4</sub>);
-          trigger formation of condensation trails (contrails);
-          and may increase cirrus cloudiness;
-          all of which contribute to climate change.
-          A Radiative Forcing Index (RFI) of 1.9–2 is used by DEFRA,
-          myclimate and recommended by ADEME
+          Aviation contributes to climate change more than just with the emission 
+          of Carbon dioxide from burning fuels, by releasing gases and particles 
+          directly into the upper troposphere and lower stratosphere where 
+          they have an impact on atmospheric composition.
+          To quantify to total climate impact of burning fuels, the direct 
+          CO2 emission of aircrafts is then multiplied by a factor, which 
+          in the literature refers either to a Radiative Forcing Index (RFI) 
+          or a Global Warming Potential (GWP) integrated over some time period 
+          (a 100-year time horizon was adopted for the Kyoto Protocol to the 
+          United Nations Framework Convention on Climate Change).
+          For instance, a Radiative Forcing Index (RFI) of 1.9–2 is used by DEFRA,
+          and a multiplier of 2 is considered by myclimate and ADEME
           (see discussion in [Jungbluth, N. & Meili,
           C. Int J Life Cycle Assess (2019) 24: 404](https://doi.org/10.1007/s11367-018-1556-3).).
           ATMOSFAIR considers a multiplier of 3, for all emissions above 9 km,
           accounting for the profile of the flight.
-          ICAO, on the other hand does not include a multiplier,
-          arguing that the scientific community has not settle on a value!
-          KLM data does not seem to account for radiative forcing either,
-          as the estimates they provide are close, although a little higher,
-          than the ones of ICAO.
+          ICAO, KLM and the French Ministry for the 
+          Ecological and Inclusive Transition do not include a multiplier.
           Therefore, the methods based on ICAO, the French Ministry for the 
           Ecological and Inclusive Transition and KLM data are not recommended,
           but given as methods providing the lowest emissions.
@@ -646,24 +641,7 @@ home:
         content: |
           As a personal note, I would like to stress that, as a scientist, I 
           find it very worrying that there are no standards 
-          for computing the flight emissions, while we know that flight 
-          travels, releasing carbon dioxide at high altitudes, contribute to 
-          global warming. To take an example, the International Civil 
-          Aviation Organization (ICAO) is a United Nations specialized 
-          agency, established by States in 1944 to manage the 
-          administration and governance of the Convention on 
-          International Civil Aviation. ICAO has global responsibility for 
-          the establishment of standards, recommended practices, and 
-          guidance on various aspects of international civil aviation, 
-          including environmental protection. How can ICAO ignore 
-          radiative forcing in the results provided by its widely used on-
-          line calculator? (which by the way is the calculator used by the 
-          travel agency of my institute, being a public institution). The 
-          IPCC in its 1999 report have defined the radiative forcing index 
-          to be between 2 and 4. Why ICAO is using 1? This shows the urgent 
-          need to agree on a 
-          common methodology accepted by all parties in computing 
-          flight emission. May this tool help to raise 
+          for computing the flight emissions. May this tool help to raise 
           awareness on this issue. 
           
       - title: Additional resources
@@ -757,19 +735,19 @@ estimate:
       description: Any input is appreciated.  Everyone's a critic.
     use_train_below_km:
       label: Use train below
-      description: We will use the train carbon dioxide equivalent emission factor below this distance (one leg of the round trip).
+      description: We will use the train carbon dioxide equivalent emission factor below this great circle distance (one leg of the round trip).
       values:
         - label: Do not consider train
           value: 0
         - label: 100 km (~ 1h by train)
           value: 100
-        - label: 300 km (~ 3h by train)
+        - label: 300 km (~ 5h by train)
           value: 300
-        - label: 500 km (~ 5h by train)
+        - label: 500 km (~ 8h by train)
           value: 500
-        - label: 700 km (~ 7h by train)
+        - label: 700 km (~ 10h by train)
           value: 700
-        - label: 1000 km (~ 10h by train)
+        - label: 1000 km (~ 13h by train)
           value: 1000
 
     origin_addresses:
