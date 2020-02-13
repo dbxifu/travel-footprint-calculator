@@ -18,10 +18,26 @@
 
 Tested only on Python `2.7`.  _Sprint._ 
 
+### Create a virtual environment
+
+You don't _have to_.  But it's useful for development.
+
     virtualenv venv
+
+Then, source it to enable it.
+
     source venv/bin/activate
+
+### Install the python dependencies
+
     pip install -r requirements.txt
+
+### Create an empty database
+
     python manage.py createdb
+
+### Configure the secrets
+
     cp .env.dist .env
     nano .env
 
@@ -42,3 +58,4 @@ Then, visit http://localhost:5000
 ## Build CSS and JS for prod
 
     flask assets build
+
