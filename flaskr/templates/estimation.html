@@ -54,7 +54,7 @@
 
 {% block body %}
 <h2>
-    {{ estimation.public_id }} ({{ estimation.status.name }})
+    {{ estimation.get_display_name() }} ({{ estimation.status.name }})
 </h2>
 
 {% if estimation.errors %}
@@ -83,7 +83,9 @@
 {#    <h4>Total CO<sub>2</sub> footprint (in kilograms-equivalent) of each city</h4>#}
 {#    <div id="cities_footprints_d3viz" class="plot-container"></div>#}
     <hr>
-    <div id="cities_footprints_d3viz_lollipop" class="plot-container"></div>
+    <div id="cities_footprints_d3viz_lollipop" class="plot-container">
+        <div id="cities_footprints_spinner" class="lds-ripple text-center"><div></div><div></div><div></div></div>
+    </div>
 {#    <br>#}
 {#    <p>A Legend here</p>#}
 </div>
@@ -558,6 +560,8 @@ jQuery(document).ready(function($){
             $(vizid+" svg .value-text").css("opacity", 0);
             return false;
         });
+
+        $('#cities_footprints_spinner').hide();
 
     });
 

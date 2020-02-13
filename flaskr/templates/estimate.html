@@ -169,6 +169,13 @@
                 {{ render_field(form.comment) }}
             </div>
 
+            <hr>
+
+            <div class="form-group">
+                {{ render_field(form.run_name) }}
+                <small class="form-text text-muted">{{ content.estimate.help.run_name | safe }}</small>
+            </div>
+
             <button type="submit" class="btn btn-primary">
                 Submit a Request
             </button>

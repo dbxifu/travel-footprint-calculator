@@ -737,6 +737,10 @@ estimate:
     email:
       label: Email Address
       description: Make sure you provide a valid address or you won't receive the results!
+    run_name:
+      label: Run Name
+      description: Usually the name of the event.  Results will look better if you fill this.
+      placeholder: "Global Peace Summit 2020 – Estimation N°07"
     first_name:
       label: First Name
       description: Also known as given name, eg. `Didier`.

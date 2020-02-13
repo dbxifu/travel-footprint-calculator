@@ -30,12 +30,23 @@ class EstimateForm(FlaskForm):
     #     ],
     # )
 
+    run_name = StringField(
+        label=form_content['run_name']['label'],
+        description=form_content['run_name']['description'],
+        validators=[
+            validators.Optional(),
+            validators.Length(max=128),
+        ],
+        render_kw={
+            "placeholder": form_content['run_name']['placeholder']
+        },
+    )
     first_name = StringField(
         label=form_content['first_name']['label'],
         description=form_content['first_name']['description'],
         validators=[
             validators.Optional(),
-            validators.Length(max=1024),
+            validators.Length(max=128),
         ],
         render_kw={
             "placeholder": form_content['first_name']['placeholder']
@@ -46,7 +57,7 @@ class EstimateForm(FlaskForm):
         description=form_content['last_name']['description'],
         validators=[
             validators.Optional(),
-            validators.Length(max=1024),
+            validators.Length(max=128),
         ],
         render_kw={
             "placeholder": form_content['last_name']['placeholder']
@@ -57,7 +68,7 @@ class EstimateForm(FlaskForm):
         description=form_content['institution']['description'],
         validators=[
             validators.Optional(),
-            validators.Length(max=1024),
+            validators.Length(max=128),
         ],
     )
     use_train_below_km = SelectField(
@@ -72,7 +83,7 @@ class EstimateForm(FlaskForm):
         description=form_content['comment']['description'],
         validators=[
             validators.Optional(),
-            validators.Length(max=2048),
+            validators.Length(max=4096),
         ],
     )
     origin_addresses = TextAreaField(

@@ -43,6 +43,7 @@ class Estimation(db.Model):
     last_name = db.Column(db.Unicode(1024))   # Goutenoir
     institution = db.Column(db.Unicode(1024))   # IRAP
     status = db.Column(db.Enum(StatusEnum), default=StatusEnum.pending)
+    run_name = db.Column(db.Unicode(1024))   # JPGU 2020
 
     # City, Country
     # One address per line
@@ -66,6 +67,11 @@ class Estimation(db.Model):
 
     def has_failed(self):
         return self.status == StatusEnum.failure
+
+    def get_display_name(self):
+        if self.run_name:
+            return self.run_name
+        return self.public_id
 
     _output_dict = None
 
@@ -102,6 +108,7 @@ class EstimationView(ModelView):
     # Show only name and email columns in list view
     column_list = (
         'public_id',
+        'run_name',
         'status',
         'first_name',
         'last_name',

@@ -8,6 +8,8 @@ from flask import Blueprint, render_template, flash, request, redirect, \
     url_for, abort, send_from_directory, Response
 from os.path import join
 
+from os import unlink
+
 from flaskr.extensions import cache, basic_auth
 from flaskr.forms import LoginForm, EstimateForm
 from flaskr.models import db, User, Estimation, StatusEnum, ScenarioEnum
@@ -162,10 +164,9 @@ def estimate():
 
     if form.validate_on_submit():
 
-        id = generate_unique_id()
-
         estimation = Estimation()
         # estimation.email = form.email.data
+        estimation.run_name = form.run_name.data
         estimation.first_name = form.first_name.data
         estimation.last_name = form.last_name.data
         estimation.institution = form.institution.data
@@ -223,7 +224,17 @@ def invalidate():
         estimation.errors = "Invalidated. Try again."
         db.session.commit()
 
-    return ""
+    return "Estimations invalidated: %d" % len(stuck_estimations)
+
+
+@main.route("/invalidate-geocache")
+@main.route("/invalidate-geocache.html")
+def invalidate_geocache():
+    geocache = 'geocache.db'
+
+    unlink(geocache)
+
+    return "Geocache invalidated."
 
 
 @main.route("/compute")
@@ -361,6 +372,8 @@ def compute():  # process the queue of estimation requests
                 destination_address, destination.address,
                 destination.latitude, destination.longitude,
             )
+
+        geocoder.close()
 
         # GTFO IF NO ORIGINS OR NO DESTINATIONS ###################################
 
