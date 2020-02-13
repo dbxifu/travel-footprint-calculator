@@ -22,6 +22,11 @@ enum34==1.1.6
 geopy==1.20.0
 python-dotenv==0.10.3
 
+# Force stable werkzeug
+# see https://gitlab.irap.omp.eu/carbon/travel-carbon-footprint.irap.omp.eu/issues/38
+# see https://github.com/pallets/werkzeug/issues/1714
+Werkzeug==0.16.1
+
 # Spreadsheet reading
 # Note that 0.24 is the most recent version still supporting python 2.7
 pandas==0.24.2
