@@ -196,7 +196,7 @@ def estimate():
         for model in models:
             if getattr(form, 'use_model_%s' % model.slug).data:
                 models_slugs.append(model.slug)
-        estimation.models_slugs = "\n".join(models_slugs)
+        estimation.models_slugs = u"\n".join(models_slugs)
 
         db.session.add(estimation)
         db.session.commit()
@@ -283,6 +283,8 @@ def compute():  # process the queue of estimation requests
         response += u"Processing estimation `%s`...\n" % (
             estimation.public_id
         )
+
+        # GEOCODE ADDRESSES ###################################################
 
         failed_addresses = []
         geocoder = CachedGeocoder()
@@ -573,7 +575,7 @@ def compute():  # process the queue of estimation requests
         # WRITE RESULTS INTO THE DATABASE #########################################
 
         estimation.status = StatusEnum.success
-        estimation.output_yaml = yaml_dump(results)
+        estimation.output_yaml = u"%s" % yaml_dump(results)
         db.session.commit()
 
         # FINALLY, RESPOND ########################################################
