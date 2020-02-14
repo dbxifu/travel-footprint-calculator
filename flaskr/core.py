@@ -1,13 +1,23 @@
 import abc
 import importlib
-from os.path import isfile
+from os.path import isfile, join, abspath, dirname
 from datetime import datetime
 from uuid import uuid4
 
 from .content import content
 
 
-hit_count_path = "VISITS"
+PROJECT_DIRECTORY = abspath(dirname(dirname(__file__)))
+
+
+def get_path(relative_path):
+    """
+    Absolutize a relative path to this project's root directory.
+    """
+    return abspath(join(PROJECT_DIRECTORY, relative_path))
+
+
+hit_count_path = get_path("VISITS")
 
 
 def generate_unique_id():
@@ -58,7 +68,6 @@ def increment_hit_counter():
         hcf.write(str(hit_count))
 
     return hit_count
-
 
 
 # # unused
