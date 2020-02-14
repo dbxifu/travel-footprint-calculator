@@ -1,7 +1,17 @@
 from collections import namedtuple
 from yaml import safe_load as yaml_safe_load
+from os.path import abspath, dirname, join
 
-from core import get_path
+
+PROJECT_DIRECTORY = abspath(dirname(dirname(__file__)))
+
+
+def get_path(relative_path):
+    """
+    Absolutize a relative path to this project's root directory.
+    """
+    return abspath(join(PROJECT_DIRECTORY, relative_path))
+
 
 with open(get_path('content.yml'), 'r') as content_file:
     content_dict = yaml_safe_load(content_file.read())
