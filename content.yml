@@ -17,6 +17,9 @@ meta:
     - name:  Jean-Michel Glorian
       email: Jean-Michel.Glorian@irap.omp.eu
       role:  Benevolent Wizard
+    - name:  Élodie Bourrec
+      email: elodie.bourrec@irap.omp.eu
+      role:  Administratrice
 
 
 # Global configuration for all models
