@@ -1,8 +1,9 @@
 from collections import namedtuple
 from yaml import safe_load as yaml_safe_load
 
+from core import get_path
 
-with open('content.yml', 'r') as content_file:
+with open(get_path('content.yml'), 'r') as content_file:
     content_dict = yaml_safe_load(content_file.read())
 
 
