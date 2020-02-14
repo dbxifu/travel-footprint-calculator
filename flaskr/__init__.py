@@ -40,12 +40,15 @@ def create_app(object_name):
 
     app = Flask(__name__)
 
-    # We bypass object_name (for dev)
+    # We bypass object_name (for dev with flask run)
     if type(object_name) == ScriptInfo:
         object_name = 'flaskr.settings.DevelopmentConfig'
 
     # Load configuration
     app.config.from_object(object_name)
+
+    app.config['BASIC_AUTH_USERNAME'] = os.getenv('ADMIN_USERNAME')
+    app.config['BASIC_AUTH_PASSWORD'] = os.getenv('ADMIN_PASSWORD')
 
     # Initialize
     cache.init_app(app)
@@ -65,8 +68,6 @@ def create_app(object_name):
     # register our blueprints
     app.register_blueprint(main)
 
-    app.config['BASIC_AUTH_USERNAME'] = os.getenv('ADMIN_USERNAME')
-    app.config['BASIC_AUTH_PASSWORD'] = os.getenv('ADMIN_PASSWORD')
 
     # VERSION (move to version.py is necessary)
     version = "0.0.0"

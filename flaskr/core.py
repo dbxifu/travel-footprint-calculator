@@ -4,17 +4,7 @@ from os.path import isfile, join, abspath, dirname
 from datetime import datetime
 from uuid import uuid4
 
-from .content import content
-
-
-PROJECT_DIRECTORY = abspath(dirname(dirname(__file__)))
-
-
-def get_path(relative_path):
-    """
-    Absolutize a relative path to this project's root directory.
-    """
-    return abspath(join(PROJECT_DIRECTORY, relative_path))
+from .content import get_path, content
 
 
 hit_count_path = get_path("VISITS")
