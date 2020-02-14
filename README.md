@@ -41,6 +41,17 @@ Then, source it to enable it.
     cp .env.dist .env
     nano .env
 
+### Configure permissions
+
+`var/runs` must be writeable by the application.
+
+
+## Build CSS and JS ()for prod)
+
+    flask assets build
+
+
+
 
 ## Development
 
@@ -54,8 +65,4 @@ Then, visit http://localhost:5000
 
 > We're trying to remove the need for the `export` statements, but…
 
-
-## Build CSS and JS for prod
-
-    flask assets build
 

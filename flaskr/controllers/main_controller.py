@@ -575,12 +575,13 @@ def compute():  # process the queue of estimation requests
         # WRITE RESULTS INTO THE DATABASE #########################################
 
         estimation.status = StatusEnum.success
-        estimation.output_yaml = u"%s" % yaml_dump(results)
+        # estimation.output_yaml = u"%s" % yaml_dump(results)
+        estimation.set_output_dict(results)
         db.session.commit()
 
         # FINALLY, RESPOND ########################################################
 
-        response += yaml_dump(results) + "\n"
+        # response += yaml_dump(results) + "\n"
 
         return _respond(response)
 
@@ -636,7 +637,8 @@ def consult_estimation(public_id, extension):
         if estimation.status in unavailable_statuses:
             abort(404)
 
-        return estimation.output_yaml
+        return u"%s" % yaml_dump(estimation.get_output_dict())
+        # return estimation.output_yaml
 
     elif 'csv' == extension:
 

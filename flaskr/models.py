@@ -1,3 +1,6 @@
+import enum
+import shelve
+from os.path import join, isfile
 from flask_admin.contrib.sqla import ModelView
 
 from flaskr.core import generate_unique_id, models
@@ -5,7 +8,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from yaml import safe_load as yaml_load
-import enum
+
+from content import get_path
+
+
 
 # These are not the emission "models" in the scientific meaning of the word.
 # They are the SQL Database Models.
@@ -73,15 +79,36 @@ class Estimation(db.Model):
             return self.run_name
         return self.public_id
 
+    def get_output_filename(self):
+        runs_dir = get_path("var/runs")
+        return join(runs_dir, self.public_id)
+
+    def set_output_dict(self, output):
+        # with shelve.open(filename=self.get_output_filename(), protocol=2) as shelf:
+        #     shelf['output'] = output
+        shelf = shelve.open(filename=self.get_output_filename(), protocol=2)
+        shelf['output'] = output
+        shelf.close()
+
     _output_dict = None
 
     def get_output_dict(self):
         if self._output_dict is None:
             if self.output_yaml is None:
-                self._output_dict = None
+                output_filename = self.get_output_filename()
+                if isfile(output_filename):
+                    # with shelve.open(filename=output_filename,
+                    #                  protocol=2) as shelf:
+                    #     self._output_dict = shelf['output']
+                    shelf = shelve.open(filename=output_filename, protocol=2)
+                    self._output_dict = shelf['output']
+                    # self._output_dict = copy(shelf['output'])
+                    shelf.close()
+                else:
+                    self._output_dict = None
             else:
                 self._output_dict = yaml_load(self.output_yaml)
-            return self._output_dict
+        return self._output_dict
 
     def is_one_to_one(self):
         return self.scenario == ScenarioEnum.one_to_one
