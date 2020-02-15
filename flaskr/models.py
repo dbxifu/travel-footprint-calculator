@@ -67,10 +67,20 @@ class Estimation(db.Model):
 
     # Outputs
     scenario = db.Column(db.Enum(ScenarioEnum), default=ScenarioEnum.many_to_many)
-    output_yaml = db.Column(db.UnicodeText())
+    output_yaml = db.Column(db.UnicodeText())  # deprecated, use shelve file
+    informations = db.Column(db.UnicodeText())
     warnings = db.Column(db.UnicodeText())
     errors = db.Column(db.UnicodeText())
 
+    @property
+    def origins_count(self):
+        return self.origin_addresses.strip().count("\n") + 1
+
+    @property
+    def destinations_count(self):
+        return self.destination_addresses.strip().count("\n") + 1
+
+    @property
     def has_failed(self):
         return self.status == StatusEnum.failure
 
@@ -110,15 +120,19 @@ class Estimation(db.Model):
                 self._output_dict = yaml_load(self.output_yaml)
         return self._output_dict
 
+    @property
     def is_one_to_one(self):
         return self.scenario == ScenarioEnum.one_to_one
 
+    @property
     def is_one_to_many(self):
         return self.scenario == ScenarioEnum.one_to_many
 
+    @property
     def is_many_to_one(self):
         return self.scenario == ScenarioEnum.many_to_one
 
+    @property
     def is_many_to_many(self):
         return self.scenario == ScenarioEnum.many_to_many
 
@@ -141,8 +155,8 @@ class EstimationView(ModelView):
         'last_name',
         'models_slugs',
         'scenario',
-        'origin_addresses',
-        'destination_addresses',
+        'origins_count',
+        'destinations_count',
         'warnings',
         'errors',
     )
