@@ -251,9 +251,15 @@ def compute():  # process the queue of estimation requests
         db.session.commit()
 
     def _handle_warning(_estimation, _warning_message):
-        _estimation.warnings = _warning_message
+        if not _estimation.warnings:
+            _estimation.warnings = _warning_message
+        else:
+            _estimation.warnings += u"\n" + _warning_message
+            # _estimation.warnings = u"%s\n%s" % \
+            #                        (_estimation.warnings, _warning_message)
         db.session.commit()
 
+    estimation = None
     try:
         response = ""
 
@@ -296,37 +302,48 @@ def compute():  # process the queue of estimation requests
         origins = []
 
         if origins_addresses_count > maximum_addresses_to_compute:
-            errmsg = u"Too many origins. (%d > %d)  Please contact us for support of that many origins." % (origins_addresses_count, maximum_addresses_to_compute)
+            errmsg = u"Too many origins. (%d > %d) \n" \
+                     u"Please contact us " \
+                     u"for support of more origins." % \
+                     (origins_addresses_count, maximum_addresses_to_compute)
             _handle_failure(estimation, errmsg)
             return _respond(errmsg)
 
         for i in range(origins_addresses_count):
 
             origin_address = origins_addresses[i].strip()
+
+            if not origin_address:
+                continue
+
             if origin_address in failed_addresses:
                 continue
 
             try:
                 origin = geocoder.geocode(origin_address.encode('utf-8'))
             except geopy.exc.GeopyError as e:
-                response += u"Failed to geocode origin `%s`.\n%s\n" % (
-                    origin_address, e,
+                warning = u"Ignoring origin `%s` " \
+                          u"since we failed to geocode it.\n%s\n" % (
+                            origin_address, e,
                 )
-                _handle_warning(estimation, response)
+                response += warning
+                _handle_warning(estimation, warning)
                 failed_addresses.append(origin_address)
                 continue
 
             if origin is None:
-                response += u"Failed to geocode origin `%s`.\n" % (
-                    origin_address,
+                warning = u"Ignoring origin `%s` " \
+                          u"since we failed to geocode it.\n" % (
+                            origin_address,
                 )
-                _handle_warning(estimation, response)
+                response += warning
+                _handle_warning(estimation, warning)
                 failed_addresses.append(origin_address)
                 continue
 
             origins.append(origin)
 
-            response += u"Origin: %s == %s (%f, %f)\n" % (
+            response += u"Origin `%s` geocoded to `%s` (%f, %f).\n" % (
                 origin_address, origin.address,
                 origin.latitude, origin.longitude,
             )
@@ -338,31 +355,45 @@ def compute():  # process the queue of estimation requests
         destinations = []
 
         if destinations_addresses_count > maximum_addresses_to_compute:
-            errmsg = u"Too many destinations. (%d > %d)  Please contact us for support of that many destinations." % (destinations_addresses_count, maximum_addresses_to_compute)
+            errmsg = u"Too many destinations. (%d > %d) \n" \
+                     u"Please contact us " \
+                     u"for support of that many destinations." \
+                     % (
+                         destinations_addresses_count,
+                         maximum_addresses_to_compute,
+                     )
             _handle_failure(estimation, errmsg)
             return _respond(errmsg)
 
         for i in range(destinations_addresses_count):
 
             destination_address = destinations_addresses[i].strip()
+
+            if not destination_address:
+                continue
+
             if destination_address in failed_addresses:
                 continue
 
             try:
                 destination = geocoder.geocode(destination_address.encode('utf-8'))
             except geopy.exc.GeopyError as e:
-                response += u"Failed to geocode destination `%s`.\n%s\n" % (
-                    destination_address, e,
+                warning = u"Ignoring destination `%s` " \
+                          u"since we failed to geocode it.\n%s\n" % (
+                            destination_address, e,
                 )
-                _handle_warning(estimation, response)
+                response += warning
+                _handle_warning(estimation, warning)
                 failed_addresses.append(destination_address)
                 continue
 
             if destination is None:
-                response += u"Failed to geocode destination `%s`.\n" % (
-                    destination_address,
+                warning = u"Ignoring destination `%s` " \
+                          u"since we failed to geocode it.\n" % (
+                            destination_address,
                 )
-                _handle_warning(estimation, response)
+                response += warning
+                _handle_warning(estimation, warning)
                 failed_addresses.append(destination_address)
                 continue
 
@@ -370,7 +401,7 @@ def compute():  # process the queue of estimation requests
 
             destinations.append(destination)
 
-            response += u"Destination: %s == %s (%f, %f)\n" % (
+            response += u"Destination `%s` geocoded to `%s` (%f, %f).\n" % (
                 destination_address, destination.address,
                 destination.latitude, destination.longitude,
             )
@@ -380,11 +411,11 @@ def compute():  # process the queue of estimation requests
         # GTFO IF NO ORIGINS OR NO DESTINATIONS ###################################
 
         if 0 == len(origins):
-            response += u"Failed to geocode all the origin(s).\n"
+            response += u"Failed to geocode ALL the origin(s).\n"
             _handle_failure(estimation, response)
             return _respond(response)
         if 0 == len(destinations):
-            response += u"Failed to geocode all the destination(s).\n"
+            response += u"Failed to geocode ALL the destination(s).\n"
             _handle_failure(estimation, response)
             return _respond(response)
 
@@ -576,6 +607,7 @@ def compute():  # process the queue of estimation requests
 
         estimation.status = StatusEnum.success
         # estimation.output_yaml = u"%s" % yaml_dump(results)
+        estimation.informations = response
         estimation.set_output_dict(results)
         db.session.commit()
 

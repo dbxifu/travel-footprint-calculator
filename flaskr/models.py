@@ -81,6 +81,18 @@ class Estimation(db.Model):
         return self.destination_addresses.strip().count("\n") + 1
 
     @property
+    def errors_tail(self):
+        return self.get_tail(self.errors)
+
+    @property
+    def warnings_tail(self):
+        return self.get_tail(self.warnings)
+
+    def get_tail(self, of_string, of_length=140):
+        if not of_string:
+            return ""
+        return u"...%s" % of_string[-(min(of_length, len(of_string))):]
+
     def has_failed(self):
         return self.status == StatusEnum.failure
 
@@ -120,19 +132,15 @@ class Estimation(db.Model):
                 self._output_dict = yaml_load(self.output_yaml)
         return self._output_dict
 
-    @property
     def is_one_to_one(self):
         return self.scenario == ScenarioEnum.one_to_one
 
-    @property
     def is_one_to_many(self):
         return self.scenario == ScenarioEnum.one_to_many
 
-    @property
     def is_many_to_one(self):
         return self.scenario == ScenarioEnum.many_to_one
 
-    @property
     def is_many_to_many(self):
         return self.scenario == ScenarioEnum.many_to_many
 
@@ -157,8 +165,8 @@ class EstimationView(ModelView):
         'scenario',
         'origins_count',
         'destinations_count',
-        'warnings',
-        'errors',
+        'warnings_tail',
+        'errors_tail',
     )
 
     # Enable search functionality - it will search for terms in
