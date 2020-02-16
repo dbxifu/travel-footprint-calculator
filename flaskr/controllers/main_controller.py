@@ -254,7 +254,7 @@ def compute():  # process the queue of estimation requests
         if not _estimation.warnings:
             _estimation.warnings = _warning_message
         else:
-            _estimation.warnings += u"\n" + _warning_message
+            _estimation.warnings += _warning_message
             # _estimation.warnings = u"%s\n%s" % \
             #                        (_estimation.warnings, _warning_message)
         db.session.commit()

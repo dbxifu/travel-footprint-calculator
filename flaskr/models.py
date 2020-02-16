@@ -12,7 +12,6 @@ from yaml import safe_load as yaml_load
 from content import get_path
 
 
-
 # These are not the emission "models" in the scientific meaning of the word.
 # They are the SQL Database Models.
 # These are also named Entities, in other conventions (we're following flasks")
@@ -71,6 +70,22 @@ class Estimation(db.Model):
     informations = db.Column(db.UnicodeText())
     warnings = db.Column(db.UnicodeText())
     errors = db.Column(db.UnicodeText())
+
+    @property
+    def link(self):
+        return u"https://travel-footprint-calculator.irap.omp.eu/estimation/%s.html" \
+               % self.public_id
+
+    @property
+    def author_name(self):
+        s = u""
+        if self.first_name:
+            s += self.first_name
+        if self.last_name:
+            s += (u" " if s else u"") + self.last_name
+        if self.institution:
+            s += (u" " if s else u"") + self.institution
+        return s
 
     @property
     def origins_count(self):
@@ -153,14 +168,16 @@ class Estimation(db.Model):
         return self._models
 
 
+# BACKOFFICE CONFIGURATION ####################################################
+
 class EstimationView(ModelView):
     # Show only name and email columns in list view
     column_list = (
         'public_id',
+        'link',
         'run_name',
         'status',
-        'first_name',
-        'last_name',
+        'author_name',
         'models_slugs',
         'scenario',
         'origins_count',
@@ -173,7 +190,7 @@ class EstimationView(ModelView):
     # name and email fields
     # column_searchable_list = ('name', 'email')
 
-    column_filters = ('first_name', 'last_name')
+    column_filters = ('first_name', 'last_name', 'status')
 
 
 # USERS #######################################################################
