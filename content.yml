@@ -494,8 +494,9 @@ home:
           in the literature refers either to a Radiative Forcing Index (RFI) 
           or a Global Warming Potential (GWP) integrated over some time period 
           (a 100-year time horizon was adopted for the Kyoto Protocol to the 
-          United Nations Framework Convention on Climate Change).
-          For instance, a Radiative Forcing Index (RFI) of 1.9–2 is used by DEFRA,
+          United Nations Framework Convention on Climate Change). There is a debate 
+          in the science community on how non-CO2 effects should be modelled. 
+          For instance, a RFI multiplier of 1.9–2 is used by DEFRA,
           and a multiplier of 2 is considered by myclimate and ADEME
           (see discussion in [Jungbluth, N. & Meili,
           C. Int J Life Cycle Assess (2019) 24: 404](https://doi.org/10.1007/s11367-018-1556-3).).
@@ -505,14 +506,15 @@ home:
           Ecological and Inclusive Transition do not include a multiplier.
           Therefore, the methods based on ICAO, the French Ministry for the 
           Ecological and Inclusive Transition and KLM data are not recommended,
-          but given as methods providing the lowest emissions.
+          as they do not account for non-CO2 effects, but are still 
+          given as methods providing the lowest emissions.
 
           [![Models used](static/img/recap_scaling_laws.jpg)](static/img/recap_scaling_laws.jpg)
 
       - title: Seating category
         content: |
-          The tool assumes economy seats in computing the carbon 
-          dioxide emission. On average it can be considered that the 
+          The tool assumes economy seats in computing the travel footprint. 
+          On average it can be considered that the 
           footprint can be multiplied by ∼ 1.5, ∼ 2.0 and ∼ 2.5 
           for flying in Premium Economy, Business and First class. 
           
@@ -584,15 +586,18 @@ home:
           exactly the one you had expected (e.g. a city is located at the 
           address of an embassy). An error may also occur if the input file 
           submitted does not comply with the requested format, 
-          including font encoding. 
-          If nothing happens during a request, it 
+          including font encoding. If nothing happens during a simple request, it 
           is most likely caused by the geolocator being unavailable. In 
           this case, try again a few minutes later.
+          In case of very large many-to-many origin-to-destination 
+          combinations, the computing time may become very large. The advice is
+          to split the inputs into parts. This may happen when comparing tens 
+          of thousands origins with hundreds of destinations.
 
       - title: Caveats
         content: |
           The numbers provided by the tool do not come with 
-          uncertainties, and shall be considered indicative of the true emission. 
+          uncertainties, and shall only be considered indicative of the true emission. 
           However, the numbers can be 
           used for relative comparisons, e.g. when comparing two cities 
           for hosting a conference. 
@@ -609,9 +614,9 @@ home:
 
       - title: Reference
         content: |
-          Results from the tool may reference to Barret (2019, 
-          The Athena X-ray Integral Field Unit travel footprint 
-          calculator and its application to X-IFU related travels, in preparation). 
+          Results from the tool may reference to Barret (2020, 
+          An online travel footprint calculator opened to the science community: 
+          application to X-IFU related travels, in preparation). 
  
       - title: Original motivation
         content: |
