@@ -1,8 +1,14 @@
+# Corollaries
+TIME
+VISITS
+
+# Python
 *.pyc
 *.pyo
 *.swp
 *~
 
+# Dotenv
 .env
 
 # Assets compiled by|for prod
