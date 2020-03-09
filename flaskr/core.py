@@ -6,6 +6,9 @@ from uuid import uuid4
 
 from .content import get_path, content
 
+# This is not really a core. Look in __init__.py
+# Using this as misc bag
+
 
 hit_count_path = get_path("VISITS")
 
