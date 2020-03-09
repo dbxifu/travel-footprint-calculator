@@ -146,7 +146,7 @@ jQuery(document).ready(function($){
             .padding([0.2]);
         svg.append("g")
             .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x).tickSize(0));
+            .call(d3.axisBottom(x).tickSize(0).tickFormat(d3.format("d")));
 
         // Add Y axis
         var y = d3.scaleLinear()
