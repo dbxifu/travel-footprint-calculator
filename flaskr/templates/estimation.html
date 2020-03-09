@@ -100,8 +100,9 @@
 {#    <h4>Total CO<sub>2</sub> footprint (in kilograms-equivalent) of each city</h4>#}
 {#    <div id="cities_footprints_d3viz" class="plot-container"></div>#}
     <hr>
+    <div id="cities_footprints_spinner" class="lds-ripple text-center"><div></div><div></div><div></div></div>
+    {# This MUST stay empty (because Simg uses svg.getparentnode.innerhtml) #}
     <div id="cities_footprints_d3viz_lollipop" class="plot-container">
-        <div id="cities_footprints_spinner" class="lds-ripple text-center"><div></div><div></div><div></div></div>
     </div>
 {#    <br>#}
 {#    <p>A Legend here</p>#}
@@ -202,6 +203,9 @@
 <div>
     {{ content.estimation.footer | markdown | safe }}
 </div>
+
+{# Buffer to drop the PNG image into to hack firefox into downloading the PNG #}
+<div id="png_buffer"></div>
 
 {% endif %}{# not estimation.has_failed() #}
 {% endblock %}
@@ -560,7 +564,7 @@ jQuery(document).ready(function($){
             $(vizid+" svg .value-text").css("opacity", 1);
             // May not work everywhere, but…
             var simg = new Simg($(vizid + " svg")[0]);
-            simg.download();
+            simg.download("travel_carbon_footprint_{{ estimation.public_id }}");
             // Hide the values
             $(vizid+" svg .value-text").css("opacity", 0);
             return false;

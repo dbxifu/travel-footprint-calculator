@@ -140,6 +140,8 @@
         var a = document.createElement("a");
         a.download = filename + ".png";
         a.href = img.getAttribute('src');
+        document.getElementById("png_buffer").appendChild(a);
+        console.debug("SIMG RAN");
         a.click();
       });
     }
