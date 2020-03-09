@@ -2,6 +2,9 @@
 TIME
 VISITS
 
+# Project
+var/runs/*
+
 # Python
 *.pyc
 *.pyo
