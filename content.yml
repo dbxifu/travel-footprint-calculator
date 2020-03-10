@@ -45,7 +45,7 @@ models:
     # Color MUST be in the hex form, without alpha
     color: "#9933ff"
     # Whether this model is selected by default in the list.
-    selected: true
+    selected: false
     # The configuration that will be fed to the model.
     # May be anything, really.  Go bonkers!
     config:
@@ -615,12 +615,14 @@ home:
       - title: Reference
         content: |
           Results from the tool may reference to Barret (2020, 
-          An online travel footprint calculator opened to the science community: 
-          application to X-IFU related travels, in preparation). 
+          Estimating, monitoring and minimizing the travel footprint 
+          associated with the development of the Athena X-ray Integral Field Unit,
+          An on-line travel footprint calculator released to the science community,
+          submitted to Experimental Astronomy). 
  
       - title: Original motivation
         content: |
-          Global warming is a threat for life on our planet. Emissions of 
+          Global warming poses a threat for life on our planet. Emissions of 
           carbon dioxide by aircrafts keeps increasing, as the world 
           economy keeps growing (it is about 3% of the anthropogenic 
           emissions nowadays). Carrying scientific research is generally associated 
