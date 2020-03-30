@@ -10,7 +10,9 @@ from os.path import join
 
 from os import unlink
 
-from flaskr.extensions import cache, basic_auth
+from flask_mail import Message
+
+from flaskr.extensions import cache, basic_auth, mail
 from flaskr.forms import LoginForm, EstimateForm
 from flaskr.models import db, User, Estimation, StatusEnum, ScenarioEnum
 from flaskr.geocoder import CachedGeocoder
@@ -736,8 +738,21 @@ def get_scaling_laws_csv():
 
 
 @main.route("/test")
-@basic_auth.required
+# @basic_auth.required
 def dev_test():
     import os
 
-    return os.getenv('ADMIN_USERNAME')
+    # return os.getenv('ADMIN_USERNAME')
+
+
+def send_email(to_recipient, subject, message):
+    try:
+        msg = Message(
+            subject=subject,
+            html=message,
+            sender="bot-noreply@travel-carbon-footprint.irap.omp.eu",
+            recipients=[to_recipient],
+        )
+        mail.send(msg)
+    except:
+        pass
