@@ -3,8 +3,10 @@ import os
 from markdown import markdown
 from dotenv import load_dotenv, find_dotenv, dotenv_values
 # Load config from .env ; do this before local libs (and flask)
-load_dotenv(find_dotenv(), override=True)  # write into OS environment
-local_env = dotenv_values(find_dotenv())   # load it as well to inject it later
+# 1. Write into OS environment -- if this fails you forgot to create .env file
+load_dotenv(find_dotenv(raise_error_if_not_found=True), override=True)
+# 2. Load it as well to inject it later into app.config
+local_env = dotenv_values(find_dotenv())
 
 
 from flask import Flask, url_for
@@ -44,12 +46,10 @@ def create_app(object_name):
     if type(object_name) == ScriptInfo:
         object_name = 'flaskr.settings.DevelopmentConfig'
 
-    # Load configuration
+    # Load the configuration
     app.config.from_object(object_name)
-    if local_env:
-        app.config.update(**local_env)
-    else:
-        pass  # FIXME
+    app.config.update(**local_env)
+
     app.config['BASIC_AUTH_USERNAME'] = os.getenv('ADMIN_USERNAME')
     app.config['BASIC_AUTH_PASSWORD'] = os.getenv('ADMIN_PASSWORD')
 

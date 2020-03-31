@@ -1,19 +1,24 @@
 import tempfile
-db_file = tempfile.NamedTemporaryFile()
+
+
+# Configuration should be done in .env file
+# Create it first:
+#     cp .env.dist .env
+# And then edit it with your own sauce.
+# The contents of .env will override values in here.
 
 
 class Config(object):
-    SECRET_KEY = 'TWOOXYGENONECARBON'
-    # FLASK_RUN_EXTRA_FILES="content.yml"
+    FLASK_RUN_EXTRA_FILES="content.yml"
 
 
 class ProductionConfig(Config):
     ENV = 'production'
+
     SQLALCHEMY_DATABASE_URI = 'sqlite:///../database_prod.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     CACHE_TYPE = 'simple'
-    SECRET_KEY = 'REPLACE M3'  # todo: use a .env file
 
 
 class DevelopmentConfig(Config):
@@ -28,12 +33,15 @@ class DevelopmentConfig(Config):
     ASSETS_DEBUG = True
 
 
+db_file = tempfile.NamedTemporaryFile()
+
+
 class TestConfig(Config):
     ENV = 'test'
     DEBUG = True
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + db_file.name
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///../%s' % db_file.name
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
