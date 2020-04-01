@@ -1,12 +1,19 @@
 #! ../venv/bin/python
 import os
 from markdown import markdown
+
 from dotenv import load_dotenv, find_dotenv, dotenv_values
-# Load config from .env ; do this before local libs (and flask)
+# Load config from .env ; do this before importing local libs (and flask)
 # 1. Write into OS environment -- if this fails you forgot to create .env file
 load_dotenv(find_dotenv(raise_error_if_not_found=True), override=True)
 # 2. Load it as well to inject it later into app.config
 local_env = dotenv_values(find_dotenv())
+# 3. Cast integers to integers
+for key in local_env.keys():
+    try:
+        local_env[key] = int(local_env[key])
+    except ValueError:
+        pass
 
 
 from flask import Flask, url_for
