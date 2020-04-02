@@ -49,7 +49,9 @@ OUT_ENCODING = 'utf-8'
 
 # -----------------------------------------------------------------------------
 
-pi_email = "didier.barret@irap.omp.eu"  # todo: move to content YAML
+pi_email = "didier.barret@irap.omp.eu"  # todo: move to content YAML or .env
+# pi_email = "goutte@protonmail.com"
+base_url = "https://travel-footprint-calculator.irap.omp.eu/"
 
 # -----------------------------------------------------------------------------
 
@@ -240,7 +242,7 @@ def estimate():  # register new estimation request, more accurately
 
         send_email(
             to_recipient=pi_email,
-            subject="[TCFM] New Estimation: %s" % estimation.public_id,
+            subject="[TCFM] New Estimation Request: %s" % estimation.public_id,
             message="TODO"
         )
 
@@ -292,6 +294,15 @@ def compute():  # process the queue of estimation requests
         _estimation.status = StatusEnum.failure
         _estimation.errors = _failure_message
         db.session.commit()
+        send_email(
+            to_recipient=pi_email,
+            subject="[TCFM] Run failed: %s" % _estimation.public_id,
+            message=render_template(
+                'email/run_failed.html',
+                base_url=base_url,
+                estimation=_estimation,
+            )
+        )
 
     def _handle_warning(_estimation, _warning_message):
         if not _estimation.warnings:
@@ -668,11 +679,16 @@ def compute():  # process the queue of estimation requests
         send_email(
             to_recipient=pi_email,
             subject="[TCFM] Run completed: %s" % estimation.public_id,
-            message="TODO"
+            message=render_template(
+                'email/run_completed.html',
+                base_url=base_url,
+                estimation=estimation,
+            )
         )
 
         # FINALLY, RESPOND ####################################################
 
+        # YAML is too expensive, let's not
         # response += yaml_dump(results) + "\n"
 
         return _respond(response)
@@ -804,7 +820,7 @@ def dev_test():
     import os
 
     # email_content = render_template(
-    #     'new_run.email.html',
+    #     'email/run_completed.html',
     #     # run=run,
     # )
     # send_email(

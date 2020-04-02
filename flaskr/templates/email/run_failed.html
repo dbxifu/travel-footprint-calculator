@@ -1,0 +1,23 @@
+{% extends "email/base.html" %}
+
+{% block content %}
+<p>
+    OH, SNAP!
+
+    The run <code>{{ estimation.public_id }}</code> has failed.
+</p>
+
+<p>
+    Here's an excerpt of the caught errors: <br>
+
+    <pre style="color: darkred">
+{{ estimation.errors }}
+    </pre>
+
+    <br>
+    <br>
+
+    You can know more
+    <strong><a href="{{ base_url }}/estimation/{{ estimation.public_id }}.html">on its page</a></strong>.
+</p>
+{% endblock %}
