@@ -722,8 +722,10 @@ def consult_estimation(public_id, extension):
         cw = csv.writer(si, quoting=csv.QUOTE_ALL)
         cw.writerow([
             u"city", u"country", u"address",
-            u"co2 (kg)", u"distance (km)",
-            u"plane trips", u'train trips',
+            u"co2_kg",
+            u"distance_km",
+            u"plane trips_amount",
+            u'train trips_amount',
         ])
 
         results = estimation.get_output_dict()
