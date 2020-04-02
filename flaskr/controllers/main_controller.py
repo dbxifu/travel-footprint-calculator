@@ -82,6 +82,10 @@ def home():
 
 
 def gather_addresses(from_list, from_file):
+    """
+    Gather a list of addresses from the provided list and file.
+    If the file is provided the list is ignored.
+    """
     addresses = []
     if from_file:
         file_mimetype = from_file.mimetype
@@ -119,7 +123,6 @@ def gather_addresses(from_list, from_file):
 
         # Python 3.7 only
         # elif from_file.filename.endswith('ods'):
-        #
         #     rows_dicts = read_ods(PandasStringIO(file_contents), 1) \
         #         .rename(str.lower, axis='columns') \
         #         .to_dict(orient="row")
@@ -167,13 +170,10 @@ def gather_addresses(from_list, from_file):
     return "\n".join(addresses)
 
 
-###############################################################################
-# ROUTES ######################################################################
-
-
 @main.route("/estimate", methods=["GET", "POST"])
 @main.route("/estimate.html", methods=["GET", "POST"])
 def estimate():  # register new estimation request, more accurately
+    maximum_travels_to_compute = 1000000
     models = get_emission_models()
     form = EstimateForm()
 
@@ -211,10 +211,29 @@ def estimate():  # register new estimation request, more accurately
         estimation.use_train_below_km = form.use_train_below_km.data
 
         models_slugs = []
+        models_count = 0
         for model in models:
             if getattr(form, 'use_model_%s' % model.slug).data:
                 models_slugs.append(model.slug)
+                models_count += 1
         estimation.models_slugs = u"\n".join(models_slugs)
+
+        travels_to_compute = \
+            models_count * \
+            (estimation.origin_addresses.count("\n") + 1) * \
+            (estimation.destination_addresses.count("\n") + 1)
+        if travels_to_compute > maximum_travels_to_compute:
+            message = """
+            Too many travels to compute. (%d > %d)
+            We're working on increasing this limitation.
+            Please contact us directly if you wish to boost this issue
+            or get a dedicated estimation.
+            """ % (travels_to_compute, maximum_travels_to_compute)
+            form.origin_addresses.errors.append(message)
+            form.destination_addresses.errors.append(message)
+            # form.origin_addresses_file.errors.append(message)
+            # form.destination_addresses_file.errors.append(message)
+            return show_form()
 
         db.session.add(estimation)
         db.session.commit()
@@ -264,7 +283,7 @@ def invalidate_geocache():
 @main.route("/compute")
 def compute():  # process the queue of estimation requests
 
-    maximum_addresses_to_compute = 30000
+    # maximum_addresses_to_compute = 30000
 
     def _respond(_msg):
         return "<pre>%s</pre>" % _msg
@@ -325,13 +344,13 @@ def compute():  # process the queue of estimation requests
         origins_addresses_count = len(origins_addresses)
         origins = []
 
-        if origins_addresses_count > maximum_addresses_to_compute:
-            errmsg = u"Too many origins. (%d > %d) \n" \
-                     u"Please contact us " \
-                     u"for support of more origins." % \
-                     (origins_addresses_count, maximum_addresses_to_compute)
-            _handle_failure(estimation, errmsg)
-            return _respond(errmsg)
+        # if origins_addresses_count > maximum_addresses_to_compute:
+        #     errmsg = u"Too many origins. (%d > %d) \n" \
+        #              u"Please contact us " \
+        #              u"for support of more origins." % \
+        #              (origins_addresses_count, maximum_addresses_to_compute)
+        #     _handle_failure(estimation, errmsg)
+        #     return _respond(errmsg)
 
         for i in range(origins_addresses_count):
 
@@ -378,16 +397,16 @@ def compute():  # process the queue of estimation requests
         destinations_addresses_count = len(destinations_addresses)
         destinations = []
 
-        if destinations_addresses_count > maximum_addresses_to_compute:
-            errmsg = u"Too many destinations. (%d > %d) \n" \
-                     u"Please contact us " \
-                     u"for support of that many destinations." \
-                     % (
-                         destinations_addresses_count,
-                         maximum_addresses_to_compute,
-                     )
-            _handle_failure(estimation, errmsg)
-            return _respond(errmsg)
+        # if destinations_addresses_count > maximum_addresses_to_compute:
+        #     errmsg = u"Too many destinations. (%d > %d) \n" \
+        #              u"Please contact us " \
+        #              u"for support of that many destinations." \
+        #              % (
+        #                  destinations_addresses_count,
+        #                  maximum_addresses_to_compute,
+        #              )
+        #     _handle_failure(estimation, errmsg)
+        #     return _respond(errmsg)
 
         for i in range(destinations_addresses_count):
 
