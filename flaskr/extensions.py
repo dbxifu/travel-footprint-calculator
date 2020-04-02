@@ -2,6 +2,7 @@ import sys
 import traceback
 from os import getenv
 
+
 from flask_admin import Admin
 from flask_basicauth import BasicAuth
 from flask_caching import Cache
@@ -11,6 +12,7 @@ from flask_assets import Environment as Assets
 from flask_mail import Mail, Message
 
 from flaskr.models import User
+
 
 # Setup flask cache
 cache = Cache()
@@ -41,7 +43,9 @@ def load_user(userid):
 
 def send_email(to_recipient, subject, message):
 
-    print(getenv('MAIL_PORT'))
+    if 'production' != getenv('FLASK_ENV', 'production'):
+        print("Skipping sending email because we are not in production.")
+        return
 
     try:
         msg = Message(
