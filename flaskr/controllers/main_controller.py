@@ -167,6 +167,10 @@ def gather_addresses(from_list, from_file):
     return "\n".join(addresses)
 
 
+###############################################################################
+# ROUTES ######################################################################
+
+
 @main.route("/estimate", methods=["GET", "POST"])
 @main.route("/estimate.html", methods=["GET", "POST"])
 def estimate():  # register new estimation request, more accurately
@@ -457,8 +461,7 @@ def compute():  # process the queue of estimation requests
 
         # UTILITY PRIVATE FUNCTION(S) #########################################
 
-        def get_city_key(_location):
-            # Will this hack hold?  Suspense...
+        def _get_city_key(_location):
             return _location.address.split(',')[0]
 
             # _city_key = _location.address
@@ -469,6 +472,9 @@ def compute():  # process the queue of estimation requests
             # elif 'state' in _location.raw['address']:
             #     _city_key = _location.raw['address']['state']
             # return _city_key
+
+        def _get_country_key(_location):
+            return _location.address.split(',')[-1]
 
         def compute_one_to_many(
                 _origin,
@@ -494,13 +500,14 @@ def compute():  # process the queue of estimation requests
                         extra_config=_extra_config,
                     )
 
-                    _key = get_city_key(_destination)
+                    _key = _get_city_key(_destination)
 
                     destinations_by_city_key[_key] = _destination
 
                     if _key not in cities_dict:
                         cities_dict[_key] = {
                             'city': _key,
+                            'country': _get_country_key(_destination),
                             'address': _destination.address,
                             'footprint': 0.0,
                             'distance': 0.0,
@@ -543,6 +550,7 @@ def compute():  # process the queue of estimation requests
                 cities_mean_dict[city] = {
                     'address': destinations_by_city_key[city].address,
                     'city': city,
+                    'country': _get_country_key(destinations_by_city_key[city]),
                     'footprint': city_mean_foot,
                     'distance': city_mean_dist,
                     'train_trips': city_train_trips,
@@ -604,7 +612,8 @@ def compute():  # process the queue of estimation requests
             unique_city_keys = []
             result_cities = []
             for destination in destinations:
-                city_key = get_city_key(destination)
+                city_key = _get_city_key(destination)
+                country_key = _get_country_key(destination)
 
                 if city_key in unique_city_keys:
                     continue
@@ -617,6 +626,7 @@ def compute():  # process the queue of estimation requests
                     _extra_config=extra_config,
                 )
                 city_results['city'] = city_key
+                city_results['country'] = country_key
                 city_results['address'] = destination.address
                 result_cities.append(city_results)
 
@@ -711,7 +721,7 @@ def consult_estimation(public_id, extension):
         si = StringIO()
         cw = csv.writer(si, quoting=csv.QUOTE_ALL)
         cw.writerow([
-            u"city", u"address",
+            u"city", u"country", u"address",
             u"co2 (kg)", u"distance (km)",
             u"plane trips", u'train trips',
         ])
@@ -720,6 +730,7 @@ def consult_estimation(public_id, extension):
         for city in results['cities']:
             cw.writerow([
                 city['city'].encode(OUT_ENCODING),
+                city['country'].encode(OUT_ENCODING),
                 city['address'].encode(OUT_ENCODING),
                 round(city['footprint'], 3),
                 round(city['distance'], 3),

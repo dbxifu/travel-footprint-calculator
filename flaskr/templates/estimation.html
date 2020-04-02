@@ -33,13 +33,13 @@
 {% for city in cities %}
     <li>
         <span class="city-name" title="{{ city.address }}">
-    {% if loop.first %}
+{% if loop.first %}
         <strong>
-        {{ city.city }}
+{% endif %}
+        {{ city.city }}, {{ city.country }}
+{% if loop.first %}
         </strong>
-    {% else %}
-        {{ city.city }}
-    {% endif %}
+{% endif %}
         </span>
         –
         {{ render_footprint(city.footprint) }}
