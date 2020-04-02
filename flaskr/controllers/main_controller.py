@@ -4,21 +4,30 @@ from copy import deepcopy
 import geopy
 import sqlalchemy
 
-from flask import Blueprint, render_template, flash, request, redirect, \
-    url_for, abort, send_from_directory, Response
 from os.path import join
+from os import unlink, getenv
 
-from os import unlink
-
-from flask_mail import Message
-
-from flaskr.extensions import cache, basic_auth, mail
+from flask import (
+    Blueprint,
+    Response,
+    render_template,
+    flash,
+    request,
+    redirect,
+    url_for,
+    abort,
+    send_from_directory,
+)
+from flaskr.extensions import cache, basic_auth, mail, send_email
 from flaskr.forms import LoginForm, EstimateForm
 from flaskr.models import db, User, Estimation, StatusEnum, ScenarioEnum
 from flaskr.geocoder import CachedGeocoder
 
-from flaskr.core import generate_unique_id, \
-    get_emission_models, increment_hit_counter
+from flaskr.core import (
+    generate_unique_id,
+    get_emission_models,
+    increment_hit_counter,
+)
 from flaskr.content import content
 
 from wtforms import validators
@@ -39,6 +48,9 @@ OUT_ENCODING = 'utf-8'
 
 
 # -----------------------------------------------------------------------------
+
+pi_email = "didier.barret@irap.omp.eu"  # todo: move to content YAML
+
 # -----------------------------------------------------------------------------
 
 
@@ -157,7 +169,7 @@ def gather_addresses(from_list, from_file):
 
 @main.route("/estimate", methods=["GET", "POST"])
 @main.route("/estimate.html", methods=["GET", "POST"])
-def estimate():
+def estimate():  # register new estimation request, more accurately
     models = get_emission_models()
     form = EstimateForm()
 
@@ -202,6 +214,12 @@ def estimate():
 
         db.session.add(estimation)
         db.session.commit()
+
+        send_email(
+            to_recipient=pi_email,
+            subject="[TCFM] New Estimation: %s" % estimation.public_id,
+            message="TODO"
+        )
 
         flash("Estimation request submitted successfully.", "success")
         return redirect(url_for(
@@ -297,7 +315,7 @@ def compute():  # process the queue of estimation requests
         failed_addresses = []
         geocoder = CachedGeocoder()
 
-        # GEOCODE ORIGINS #########################################################
+        # GEOCODE ORIGINS #####################################################
 
         origins_addresses = estimation.origin_addresses.strip().split("\n")
         origins_addresses_count = len(origins_addresses)
@@ -350,7 +368,7 @@ def compute():  # process the queue of estimation requests
                 origin.latitude, origin.longitude,
             )
 
-        # GEOCODE DESTINATIONS ####################################################
+        # GEOCODE DESTINATIONS ################################################
 
         destinations_addresses = estimation.destination_addresses.strip().split("\n")
         destinations_addresses_count = len(destinations_addresses)
@@ -378,7 +396,9 @@ def compute():  # process the queue of estimation requests
                 continue
 
             try:
-                destination = geocoder.geocode(destination_address.encode('utf-8'))
+                destination = geocoder.geocode(
+                    destination_address.encode('utf-8')
+                )
             except geopy.exc.GeopyError as e:
                 warning = u"Ignoring destination `%s` " \
                           u"since we failed to geocode it.\n%s\n" % (
@@ -410,7 +430,7 @@ def compute():  # process the queue of estimation requests
 
         geocoder.close()
 
-        # GTFO IF NO ORIGINS OR NO DESTINATIONS ###################################
+        # GTFO IF NO ORIGINS OR NO DESTINATIONS ###############################
 
         if 0 == len(origins):
             response += u"Failed to geocode ALL the origin(s).\n"
@@ -421,7 +441,7 @@ def compute():  # process the queue of estimation requests
             _handle_failure(estimation, response)
             return _respond(response)
 
-        # GRAB AND CONFIGURE THE EMISSION MODELS ##################################
+        # GRAB AND CONFIGURE THE EMISSION MODELS ##############################
 
         emission_models = estimation.get_models()
         # print(emission_models)
@@ -431,11 +451,11 @@ def compute():  # process the queue of estimation requests
             # 'use_train_below_distance': 300,
         }
 
-        # PREPARE RESULT DICTIONARY THAT WILL BE STORED ###########################
+        # PREPARE RESULT DICTIONARY THAT WILL BE STORED #######################
 
         results = {}
 
-        # UTILITY PRIVATE FUNCTION(S) #############################################
+        # UTILITY PRIVATE FUNCTION(S) #########################################
 
         def get_city_key(_location):
             # Will this hack hold?  Suspense...
@@ -550,9 +570,9 @@ def compute():  # process the queue of estimation requests
 
             return _results
 
-        # SCENARIO A : One Origin, At Least One Destination #######################
+        # SCENARIO A : One Origin, At Least One Destination ###################
         #
-        # In this scenario, we compute the sum of each of the travels' footprint,
+        # We compute the sum of each of the travels' footprint,
         # for each of the Emission Models, and present a mean of all Models.
         #
         if 1 == len(origins):
@@ -563,7 +583,7 @@ def compute():  # process the queue of estimation requests
                 _extra_config=extra_config,
             )
 
-        # SCENARIO B : At Least One Origin, One Destination #######################
+        # SCENARIO B : At Least One Origin, One Destination ###################
         #
         # Same as A for now.
         #
@@ -575,7 +595,7 @@ def compute():  # process the queue of estimation requests
                 _extra_config=extra_config,
             )
 
-        # SCENARIO C : At Least One Origin, At Least One Destination ##############
+        # SCENARIO C : At Least One Origin, At Least One Destination ##########
         #
         # Run Scenario A for each Destination, and expose optimum Destination.
         #
@@ -605,15 +625,24 @@ def compute():  # process the queue of estimation requests
                 'cities': result_cities,
             }
 
-        # WRITE RESULTS INTO THE DATABASE #########################################
+        # WRITE RESULTS INTO THE DATABASE #####################################
 
         estimation.status = StatusEnum.success
+        # Don't use YAML, it is too slow for big data.
         # estimation.output_yaml = u"%s" % yaml_dump(results)
         estimation.informations = response
         estimation.set_output_dict(results)
         db.session.commit()
 
-        # FINALLY, RESPOND ########################################################
+        # SEND AN EMAIL #######################################################
+
+        send_email(
+            to_recipient=pi_email,
+            subject="[TCFM] Run completed: %s" % estimation.public_id,
+            message="TODO"
+        )
+
+        # FINALLY, RESPOND ####################################################
 
         # response += yaml_dump(results) + "\n"
 
@@ -742,17 +771,14 @@ def get_scaling_laws_csv():
 def dev_test():
     import os
 
-    # return os.getenv('ADMIN_USERNAME')
+    # email_content = render_template(
+    #     'new_run.email.html',
+    #     # run=run,
+    # )
+    # send_email(
+    #     'goutte@protonmail.com',
+    #     subject=u"[TCFC] New run request",
+    #     message=email_content
+    # )
 
-
-def send_email(to_recipient, subject, message):
-    try:
-        msg = Message(
-            subject=subject,
-            html=message,
-            sender="bot-noreply@travel-carbon-footprint.irap.omp.eu",
-            recipients=[to_recipient],
-        )
-        mail.send(msg)
-    except:
-        pass
+    return "ok"
