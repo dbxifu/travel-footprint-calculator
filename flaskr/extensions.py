@@ -10,6 +10,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask_login import LoginManager
 from flask_assets import Environment as Assets
 from flask_mail import Mail, Message
+from flask_sessionstore import Session
 
 from flaskr.models import User
 
@@ -17,8 +18,11 @@ from flaskr.models import User
 # Setup flask cache
 cache = Cache()
 
-# Init flask assets
+# Flask assets
 assets_env = Assets()
+
+# Session Store for captcha and perhaps visits counter
+session = Session()
 
 # Mail handler
 mail = Mail()

@@ -32,6 +32,7 @@ from flaskr.extensions import (
     debug_toolbar,
     login_manager,
     mail,
+    session,
 )
 from flaskr.content import content
 from flaskr.core import increment_hit_counter, get_hit_counter
@@ -60,8 +61,16 @@ def create_app(object_name):
     app.config['BASIC_AUTH_USERNAME'] = os.getenv('ADMIN_USERNAME')
     app.config['BASIC_AUTH_PASSWORD'] = os.getenv('ADMIN_PASSWORD')
 
+    app.config['CAPTCHA_ENABLE'] = True
+    app.config['CAPTCHA_LENGTH'] = 5
+    app.config['CAPTCHA_WIDTH'] = 256
+    app.config['CAPTCHA_HEIGHT'] = 158
+    app.config['SESSION_TYPE'] = 'sqlalchemy'
+    # app.config['SESSION_TYPE'] = 'memcached'
+
     # Initialize
     cache.init_app(app)
+    session.init_app(app)
     mail.init_app(app)
     debug_toolbar.init_app(app)
     db.init_app(app)
@@ -69,6 +78,9 @@ def create_app(object_name):
     admin.init_app(app)
     admin.add_view(EstimationView(Estimation, db.session))
     basic_auth.init_app(app)
+
+    # For sessionstorage
+    app.session_interface.db.create_all()
 
     # Import and register the different asset bundles
     assets_env.init_app(app)
