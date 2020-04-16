@@ -9,7 +9,7 @@ from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from yaml import safe_load as yaml_load
 
-from content import get_path
+from content import get_path, base_url
 
 
 # These are not the emission "models" in the scientific meaning of the word.
@@ -73,8 +73,8 @@ class Estimation(db.Model):
 
     @property
     def link(self):
-        return u"https://travel-footprint-calculator.irap.omp.eu/estimation/%s.html" \
-               % self.public_id
+        return u"%s/estimation/%s.html" \
+               % (base_url, self.public_id)
 
     @property
     def author_name(self):
@@ -84,7 +84,7 @@ class Estimation(db.Model):
         if self.last_name:
             s += (u" " if s else u"") + self.last_name
         if self.institution:
-            s += (u" " if s else u"") + self.institution
+            s += (u", " if s else u"") + self.institution
         return s
 
     @property

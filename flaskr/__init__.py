@@ -66,7 +66,6 @@ def create_app(object_name):
     app.config['CAPTCHA_WIDTH'] = 256
     app.config['CAPTCHA_HEIGHT'] = 158
     app.config['SESSION_TYPE'] = 'sqlalchemy'
-    # app.config['SESSION_TYPE'] = 'memcached'
 
     # Initialize
     cache.init_app(app)
@@ -79,7 +78,7 @@ def create_app(object_name):
     admin.add_view(EstimationView(Estimation, db.session))
     basic_auth.init_app(app)
 
-    # For sessionstorage
+    # For session storage
     app.session_interface.db.create_all()
 
     # Import and register the different asset bundles

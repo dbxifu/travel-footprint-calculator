@@ -33,6 +33,8 @@ class Struct(object):
 
 content = Struct(content_dict)
 
+base_url = "https://travel-footprint-calculator.irap.omp.eu"
+
 
 # For Python3?
 # def dict2obj(d):
