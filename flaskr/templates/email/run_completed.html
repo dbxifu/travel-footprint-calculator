@@ -4,9 +4,14 @@
 <p>
     Good news!
 
-    The run <code>{{ estimation.public_id }}</code> has completed successfully.
+    The run
+{% if estimation.run_name %}
+    <strong>"{{ estimation.run_name }}"</strong>
+{% endif %}
+    <code>{{ estimation.public_id }}</code>
+    has completed successfully.
 
     It is
-    <strong><a href="{{ base_url }}/estimation/{{ estimation.public_id }}.html">available here</a></strong>.
+    <strong><a href="{{ estimation.link }}">available here</a></strong>.
 </p>
 {% endblock %}
