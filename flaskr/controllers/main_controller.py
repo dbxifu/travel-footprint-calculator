@@ -49,7 +49,7 @@ OUT_ENCODING = 'utf-8'
 
 # -----------------------------------------------------------------------------
 
-pi_email = "didier.barret@irap.omp.eu"  # todo: move to content YAML or .env
+pi_email = "didier.barret@gmail.com"  # todo: move to content YAML or .env
 # pi_email = "goutte@protonmail.com"
 
 # -----------------------------------------------------------------------------
