@@ -1,0 +1,67 @@
+{% extends "email/base.html" %}
+
+{% block content %}
+<p>
+    The run
+{% if estimation.run_name %}
+    <strong>"{{ estimation.run_name }}"</strong>
+{% endif %}
+    <code>{{ estimation.public_id }}</code> has been requested.
+
+    It will be
+    <strong><a href="{{ estimation.link }}">available here</a></strong>
+    when it's done.
+</p>
+
+<hr>
+
+{# Styles are embedded, because that's how it works with emailing. #}
+
+<table>
+    <tbody>
+    <tr>
+        <td style="padding-right: 30px;">
+            Author
+        </td>
+        <td>
+            <pre>{{ estimation.author_name }}</pre>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding-right: 30px;">
+            {{ estimation.origins_count }}
+            Origin{% if estimation.origins_count > 1 %}s{% endif %}
+        </td>
+        <td>
+            <pre>
+
+{{ estimation.origin_addresses | truncate(1024, true, '…') }}
+            </pre>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding-right: 30px;">
+            {{ estimation.destinations_count }}
+            Destination{% if estimation.destinations_count > 1 %}s{% endif %}
+        </td>
+        <td>
+            <pre>
+
+{{ estimation.destination_addresses | truncate(1024, true, '…') }}
+            </pre>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding-right: 30px;">
+            Models
+        </td>
+        <td>
+            <pre>
+
+{{ estimation.models_slugs }}
+            </pre>
+        </td>
+    </tr>
+    </tbody>
+</table>
+{% endblock %}

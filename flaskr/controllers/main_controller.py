@@ -28,7 +28,7 @@ from flaskr.core import (
     get_emission_models,
     increment_hit_counter,
 )
-from flaskr.content import content
+from flaskr.content import content, base_url
 
 from wtforms import validators
 
@@ -51,7 +51,6 @@ OUT_ENCODING = 'utf-8'
 
 pi_email = "didier.barret@irap.omp.eu"  # todo: move to content YAML or .env
 # pi_email = "goutte@protonmail.com"
-base_url = "https://travel-footprint-calculator.irap.omp.eu/"
 
 # -----------------------------------------------------------------------------
 
@@ -243,7 +242,11 @@ def estimate():  # register new estimation request, more accurately
         send_email(
             to_recipient=pi_email,
             subject="[TCFM] New Estimation Request: %s" % estimation.public_id,
-            message="TODO"
+            message=render_template(
+                'email/run_requested.html',
+                base_url=base_url,
+                estimation=estimation,
+            )
         )
 
         flash("Estimation request submitted successfully.", "success")
