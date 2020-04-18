@@ -33,6 +33,7 @@ from flaskr.extensions import (
     login_manager,
     mail,
     session,
+    captcha,
 )
 from flaskr.content import content
 from flaskr.core import increment_hit_counter, get_hit_counter
@@ -70,6 +71,7 @@ def create_app(object_name):
     # Initialize
     cache.init_app(app)
     session.init_app(app)
+    captcha.init_app(app)
     mail.init_app(app)
     debug_toolbar.init_app(app)
     db.init_app(app)

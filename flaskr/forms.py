@@ -13,9 +13,11 @@ from werkzeug.datastructures import FileStorage
 from .models import User
 from .content import content_dict as content
 from .core import models
+from .extensions import captcha
 
 form_content = content['estimate']['form']
 train_values = form_content['use_train_below_km']['values']
+
 
 # ESTIMATION FORM #############################################################
 
@@ -130,6 +132,14 @@ class EstimateForm(FlaskForm):
             # )
         ],
     )
+    captcha = StringField(
+        label=form_content['captcha']['label'],
+        description=form_content['captcha']['description'],
+        validators=[
+            validators.InputRequired(),
+            validators.Length(max=16),
+        ],
+    )
 
     upload_set = ['csv', 'xls', 'xlsx']
 
@@ -157,10 +167,16 @@ class EstimateForm(FlaskForm):
         if not check_validate:
             return False
 
+        if not captcha.validate():
+            self.captcha.errors.append(
+                "Captcha do not match.  Try again."
+            )
+            return False
+
         uses_at_least_one_model = False
         for model in models:
             use_model = getattr(self, 'use_model_%s' % model.slug)
-            #print("Model data", model.slug, use_model.data)
+            # print("Model data", model.slug, use_model.data)
             if use_model.data:
                 uses_at_least_one_model = True
 

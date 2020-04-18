@@ -11,6 +11,7 @@ from flask_login import LoginManager
 from flask_assets import Environment as Assets
 from flask_mail import Mail, Message
 from flask_sessionstore import Session
+from flask_session_captcha import FlaskSessionCaptcha
 
 from flaskr.models import User
 
@@ -23,6 +24,9 @@ assets_env = Assets()
 
 # Session Store for captcha and perhaps visits counter
 session = Session()
+
+# Captcha
+captcha = FlaskSessionCaptcha()
 
 # Mail handler
 mail = Mail()

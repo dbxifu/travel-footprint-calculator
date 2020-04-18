@@ -795,6 +795,10 @@ estimate:
 #        (useful when setting up a meeting/conference)
 #      description: |
 #        We will only look through Cities specified in the Destination Cities.
+    captcha:
+      label: Prove you are not a bot
+      description: |
+        We have to protact against malicious spammers.
     use_atmosfair_rfi:
       label: |
         Use the <acronym title="Radiative Forcing Index">RFI</acronym>
