@@ -157,13 +157,15 @@ def gather_addresses(from_list, from_file):
         addresses = from_list.replace("\r", '').split("\n")
 
     clean_addresses = []
+    # Ignore inevitable copy/paste bloopers
+    to_ignore = re.compile(r"City\s*,\s*Country", re.I & re.U)
     for address in addresses:
         if not address:
             continue
         if type(address).__name__ == 'str':
             address = unicode(address, 'utf-8')
-        if re.match(r"City\s*,\s*Country", address, re.I & re.U) is not None:
-            continue  # ignore inevitable copy/paste bloopers
+        if to_ignore.match(address) is not None:
+            continue
         clean_addresses.append(address)
     addresses = clean_addresses
 
