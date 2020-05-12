@@ -86,7 +86,7 @@
                     <div class="form-group">
                         {{ render_field(form.origin_addresses) }}
                         <small class="form-text text-muted">
-                            {{ content.estimate.help.origin_addresses | safe }}
+                            {{ content.estimate.help.origin_addresses | markdown | safe }}
                         </small>
                     </div>
                 </div>
@@ -99,7 +99,7 @@
                     <div class="form-group">
                         {{ render_field(form.origin_addresses_file) }}
                         <small class="form-text text-muted">
-                            {{ content.estimate.help.origin_addresses_file | safe }}
+                            {{ content.estimate.help.origin_addresses_file | markdown | safe }}
                         </small>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                     <div class="form-group">
                         {{ render_field(form.destination_addresses) }}
                         <small class="form-text text-muted">
-                            {{ content.estimate.help.destination_addresses | safe }}
+                            {{ content.estimate.help.destination_addresses | markdown | safe }}
                         </small>
                     </div>
                 </div>
@@ -123,7 +123,7 @@
                     <div class="form-group">
                         {{ render_field(form.destination_addresses_file) }}
                         <small class="form-text text-muted">
-                            {{ content.estimate.help.destination_addresses_file | safe }}
+                            {{ content.estimate.help.destination_addresses_file | markdown | safe }}
                         </small>
                     </div>
                 </div>
