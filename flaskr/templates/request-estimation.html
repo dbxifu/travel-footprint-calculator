@@ -218,11 +218,9 @@
 // This breaks accessibility and form input retention,
 // so we're trying to only enable it for the iDiot platforms.
 $(function() {
+    var isHell = navigator.platform.match(/(iPhone|iP[ao]d|Mac|Pike)/i);
 
-    //var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-    var isDumb = navigator.platform.match(/i(Phone|Pod))/i);
-
-    if (isDumb) {
+    if (isHell) {
         var style = $('<style>textarea[data-placeholder].active { color: #666; }</style>')
         $('html > head').append(style);
 
