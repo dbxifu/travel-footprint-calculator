@@ -711,10 +711,15 @@ estimate:
       Please provide multiple cities and countries to compute the location
       of the minimum emission.
     destination_addresses_file: |
-      If you provide a file, we'll use it instead of the list on the left.
-      <br>
-      The spreadsheet's first sheet must have an <code>Address</code> column,
-      or a <code>City</code> and <code>Country</code> columns.
+      Need inspiration?
+      Look at the airports in
+      [Africa](/static/public/sample/Large_airports_in_Africa.csv),
+      [Asia](/static/public/sample/Large_airports_in_Asia.csv),
+      [Europe](/static/public/sample/Large_airports_in_Europe.csv),
+      [North America](/static/public/sample/Large_airports_in_NorthAmerica.csv),
+      [Oceania](/static/public/sample/Large_airports_in_Oceania.csv),
+      [South America](/static/public/sample/Large_airports_in_SouthAmerica.csv),
+      or [all of them](/static/public/sample/Large_airports_in_all_continents.csv).
     use_train_below_km: |
       For <small>(single)</small> trips below this distance,
       we'll ignore the plane models and use <code>23 g.km<sup>-1</sup></code>.
