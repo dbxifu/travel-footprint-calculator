@@ -1,6 +1,7 @@
 import traceback
 from copy import deepcopy
 
+import re
 import geopy
 import sqlalchemy
 
@@ -159,10 +160,11 @@ def gather_addresses(from_list, from_file):
     for address in addresses:
         if not address:
             continue
-        elif type(address).__name__ == 'str':
-            clean_addresses.append(unicode(address, 'utf-8'))
-        else:
-            clean_addresses.append(address)
+        if type(address).__name__ == 'str':
+            address = unicode(address, 'utf-8')
+        if re.match(r"City\s*,\s*Country", address, re.I & re.U) is not None:
+            continue  # ignore inevitable copy/paste bloopers
+        clean_addresses.append(address)
     addresses = clean_addresses
 
     # Remove empty lines (if any) and white characters
