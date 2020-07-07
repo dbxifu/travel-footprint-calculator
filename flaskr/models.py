@@ -1,16 +1,15 @@
-import enum
 import shelve
 from os.path import join, isfile
-from flask_admin.contrib.sqla import ModelView
 
-from flaskr.core import generate_unique_id, models
-from flask_sqlalchemy import SQLAlchemy
+import enum
+from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin, AnonymousUserMixin
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from yaml import safe_load as yaml_load
 
 from content import get_path, base_url
-
+from flaskr.core import generate_unique_id, models
 
 # These are not the emission "models" in the scientific meaning of the word.
 # They are the SQL Database Models.
@@ -43,11 +42,12 @@ class Estimation(db.Model):
         default=lambda: generate_unique_id(),
         unique=True
     )
+    status = db.Column(db.Enum(StatusEnum), default=StatusEnum.pending)
+
     email = db.Column(db.Unicode(1024))
     first_name = db.Column(db.Unicode(1024))  # Antoine
     last_name = db.Column(db.Unicode(1024))   # Goutenoir
     institution = db.Column(db.Unicode(1024))   # IRAP
-    status = db.Column(db.Enum(StatusEnum), default=StatusEnum.pending)
     run_name = db.Column(db.Unicode(1024))   # JPGU 2020
 
     # City, Country
