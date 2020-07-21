@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-
+# Run this and then visit http://localhost:5000
 
 source venv/bin/activate
 export FLASK_APP=flaskr
