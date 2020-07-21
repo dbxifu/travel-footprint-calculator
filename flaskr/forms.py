@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileAllowed
+from werkzeug.datastructures import FileStorage
 from wtforms import \
     StringField, \
     PasswordField, \
@@ -8,12 +8,11 @@ from wtforms import \
     BooleanField, \
     FileField
 from wtforms import validators
-from werkzeug.datastructures import FileStorage
 
-from .models import User
 from .content import content_dict as content
 from .core import models
 from .extensions import captcha
+from .models import User
 
 form_content = content['estimate']['form']
 train_values = form_content['use_train_below_km']['values']
@@ -40,7 +39,7 @@ class EstimateForm(FlaskForm):
             validators.Length(max=128),
         ],
         render_kw={
-            "placeholder": form_content['run_name']['placeholder']
+            "placeholder": form_content['run_name']['placeholder'],
         },
     )
     first_name = StringField(
@@ -51,7 +50,8 @@ class EstimateForm(FlaskForm):
             validators.Length(max=128),
         ],
         render_kw={
-            "placeholder": form_content['first_name']['placeholder']
+            "placeholder": form_content['first_name']['placeholder'],
+            "autocomplete": "given-name",
         },
     )
     last_name = StringField(
@@ -62,7 +62,8 @@ class EstimateForm(FlaskForm):
             validators.Length(max=128),
         ],
         render_kw={
-            "placeholder": form_content['last_name']['placeholder']
+            "placeholder": form_content['last_name']['placeholder'],
+            "autocomplete": "family-name",
         },
     )
     institution = StringField(
@@ -95,7 +96,7 @@ class EstimateForm(FlaskForm):
             validators.DataRequired(),
         ],
         render_kw={
-            "placeholder": form_content['origin_addresses']['placeholder']
+            "placeholder": form_content['origin_addresses']['placeholder'],
         },
     )
     destination_addresses = TextAreaField(
@@ -105,7 +106,7 @@ class EstimateForm(FlaskForm):
             validators.DataRequired(),
         ],
         render_kw={
-            "placeholder": form_content['destination_addresses']['placeholder']
+            "placeholder": form_content['destination_addresses']['placeholder'],
         },
     )
     origin_addresses_file = FileField(
