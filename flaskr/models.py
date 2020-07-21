@@ -45,10 +45,10 @@ class Estimation(db.Model):
     status = db.Column(db.Enum(StatusEnum), default=StatusEnum.pending)
 
     email = db.Column(db.Unicode(1024))
-    first_name = db.Column(db.Unicode(1024))  # Antoine
-    last_name = db.Column(db.Unicode(1024))   # Goutenoir
-    institution = db.Column(db.Unicode(1024))   # IRAP
-    run_name = db.Column(db.Unicode(1024))   # JPGU 2020
+    first_name = db.Column(db.Unicode(1024))   # Antoine
+    last_name = db.Column(db.Unicode(1024))    # Goutenoir
+    institution = db.Column(db.Unicode(1024))  # IRAP
+    run_name = db.Column(db.Unicode(1024))     # JPGU 2020
 
     # City, Country
     # One address per line
