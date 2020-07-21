@@ -1,46 +1,37 @@
-import traceback
-from copy import deepcopy
-
+import csv
 import re
-import geopy
-import sqlalchemy
-
+# from io import StringIO
+from cStringIO import StringIO
+from copy import deepcopy
+from os import unlink
 from os.path import join
-from os import unlink, getenv
 
+import geopy
+import pandas
+import sqlalchemy
 from flask import (
     Blueprint,
     Response,
     render_template,
     flash,
-    request,
     redirect,
     url_for,
     abort,
     send_from_directory,
 )
-from flaskr.extensions import cache, basic_auth, mail, send_email
-from flaskr.forms import LoginForm, EstimateForm
-from flaskr.models import db, User, Estimation, StatusEnum, ScenarioEnum
-from flaskr.geocoder import CachedGeocoder
+from pandas.compat import StringIO as PandasStringIO
+from wtforms import validators
+from yaml import safe_dump as yaml_dump
 
+from flaskr.content import content, base_url
 from flaskr.core import (
-    generate_unique_id,
     get_emission_models,
     increment_hit_counter,
 )
-from flaskr.content import content, base_url
-
-from wtforms import validators
-
-from yaml import safe_dump as yaml_dump
-
-import csv
-# from io import StringIO
-from cStringIO import StringIO
-
-import pandas
-from pandas.compat import StringIO as PandasStringIO
+from flaskr.extensions import cache, send_email
+from flaskr.forms import EstimateForm
+from flaskr.geocoder import CachedGeocoder
+from flaskr.models import db, Estimation, StatusEnum, ScenarioEnum
 
 main = Blueprint('main', __name__)
 
@@ -708,6 +699,9 @@ def compute():  # process the queue of estimation requests
         return _respond(errmsg)
 
 
+unavailable_statuses = [StatusEnum.pending, StatusEnum.working]
+
+
 @main.route("/estimation/<public_id>.<extension>")
 def consult_estimation(public_id, extension):
     try:
@@ -723,8 +717,6 @@ def consult_estimation(public_id, extension):
     # allowed_formats = ['html']
     # if format not in allowed_formats:
     #     abort(404)
-
-    unavailable_statuses = [StatusEnum.pending, StatusEnum.working]
 
     if extension in ['xhtml', 'html', 'htm']:
 
@@ -795,6 +787,132 @@ def consult_estimation(public_id, extension):
         abort(404)
 
 
+def get_locations(addresses):
+    geocoder = CachedGeocoder()
+
+    warnings = []
+    addresses_count = len(addresses)
+    failed_addresses = []
+    locations = []
+
+    for i in range(addresses_count):
+
+        address = addresses[i].strip()
+        unicode_address = address.encode('utf-8')
+
+        if not address:
+            continue
+
+        if address in failed_addresses:
+            continue
+
+        try:
+            location = geocoder.geocode(unicode_address)
+        except geopy.exc.GeopyError as e:
+            warning = u"Ignoring address `%s` " \
+                      u"since we failed to geocode it.\n%s\n" % (
+                          address, e,
+                      )
+            warnings.append(warning)
+            failed_addresses.append(address)
+            continue
+
+        if location is None:
+            warning = u"Ignoring address `%s` " \
+                      u"since we failed to geocode it.\n" % (
+                          address,
+                      )
+            warnings.append(warning)
+            failed_addresses.append(address)
+            failed_addresses.append(address)
+            continue
+
+        print("Geocoded Location:\n", repr(location.raw))
+        locations.append(location)
+
+        # response += u"Location `%s` geocoded to `%s` (%f, %f).\n" % (
+        #     location_address, location.address,
+        #     location.latitude, location.longitude,
+        # )
+
+    return locations, warnings
+
+
+@main.route("/estimation/<public_id>/trips_to_destination_<destination_index>.csv")
+def get_trips_csv(public_id, destination_index=0):
+    destination_index = int(destination_index)
+    try:
+        estimation = Estimation.query \
+            .filter_by(public_id=public_id) \
+            .one()
+    except sqlalchemy.orm.exc.NoResultFound:
+        return abort(404)
+    except Exception as e:
+        return abort(500)
+
+    if estimation.status in unavailable_statuses:
+        abort(404)
+
+    si = StringIO()
+    cw = csv.writer(si, quoting=csv.QUOTE_ALL)
+    cw.writerow([
+        u"origin_lon",
+        u"origin_lat",
+        u"destination_lon",
+        u"destination_lat",
+    ])
+    results = estimation.get_output_dict()
+
+    if not 'cities' in results:
+        abort(500)
+
+    cities_length = len(results['cities'])
+
+    if 0 == cities_length:
+        abort(500, Response("No cities in results."))
+
+    destination_index = min(destination_index, cities_length - 1)
+    destination_index = max(destination_index, 0)
+
+    city = results['cities'][destination_index]
+    # >>> yaml_dump(city)
+    # address: Paris, Ile - de - France, Metropolitan
+    # France, France
+    # city: Paris
+    # country: ' France'
+    # distance: 1752.7481921181325
+    # footprint: 824.9628320703453
+    # plane_trips: 1
+    # train_trips: 0
+
+    geocoder = CachedGeocoder()
+    try:
+        city_location = geocoder.geocode(city['address'].encode('utf-8'))
+    except geopy.exc.GeopyError as e:
+        return Response(
+            response=si.getvalue().strip('\r\n'),
+        )
+
+    other_locations, _warnings = get_locations(estimation.origin_addresses.split("\n"))
+    # destination_locations = get_locations(estimation.destination_addresses.split("\n"))
+    for other_location in other_locations:
+        cw.writerow([
+            u"%.8f" % city_location.longitude,
+            u"%.8f" % city_location.latitude,
+            u"%.8f" % other_location.longitude,
+            u"%.8f" % other_location.latitude,
+        ])
+
+    filename = "trips_to_destination_%d.csv" % destination_index
+    return Response(
+        response=si.getvalue().strip('\r\n'),
+        headers={
+            'Content-type': 'text/csv',
+            'Content-disposition': 'attachment; filename=%s' % filename,
+        },
+    )
+
+
 @main.route("/scaling_laws.csv")
 def get_scaling_laws_csv():
     distances = content.laws_plot.distances
@@ -824,8 +942,6 @@ def get_scaling_laws_csv():
 @main.route("/test")
 # @basic_auth.required
 def dev_test():
-    import os
-
     # email_content = render_template(
     #     'email/run_completed.html',
     #     # run=run,
