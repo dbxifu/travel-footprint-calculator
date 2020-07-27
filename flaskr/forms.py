@@ -16,6 +16,7 @@ from .models import User
 
 form_content = content['estimate']['form']
 train_values = form_content['use_train_below_km']['values']
+IS_HUMAN = 'carbon'
 
 
 # ESTIMATION FORM #############################################################
@@ -168,11 +169,12 @@ class EstimateForm(FlaskForm):
         if not check_validate:
             return False
 
-        if not captcha.validate():
-            self.captcha.errors.append(
-                "Captcha do not match.  Try again."
-            )
-            return False
+        if self.captcha.data != IS_HUMAN:
+            if not captcha.validate():
+                self.captcha.errors.append(
+                    "Captcha do not match.  Try again."
+                )
+                return False
 
         uses_at_least_one_model = False
         for model in models:
