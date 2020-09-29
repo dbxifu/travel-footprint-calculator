@@ -50,7 +50,6 @@ def load_user(userid):
 
 
 def send_email(to_recipient, subject, message):
-
     if 'production' != getenv('FLASK_ENV', 'production'):
         print("Skipping sending email because we are not in production.")
         return
@@ -70,3 +69,12 @@ def send_email(to_recipient, subject, message):
         print("ERROR Sending email:\n%s" % str(e))
         traceback.print_exc(file=sys.stderr)
 
+
+def icon2html(text):
+    import re
+    icon_html = r"""<svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="/static/bootstrap-icons-1.0.0/bootstrap-icons.svg#\1"/></svg>"""
+    return re.sub(
+        "<icon +([^ ]+)>",
+        icon_html,
+        text
+    )

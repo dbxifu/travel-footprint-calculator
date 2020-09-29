@@ -33,6 +33,7 @@ class Struct(object):
 
 content = Struct(content_dict)
 
+# Move this to ENV, perhaps
 base_url = "https://travel-footprint-calculator.irap.omp.eu"
 
 

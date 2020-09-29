@@ -161,3 +161,12 @@ span[title] {
         opacity: 0;
     }
 }
+
+
+/** BOOTSTRAP ICONS **********************************************************/
+
+svg.bi {
+    /* vertical alignment is … sketchy, let's do this the old way */
+    position: relative;
+    top: 2px;
+}

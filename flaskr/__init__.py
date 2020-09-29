@@ -34,6 +34,7 @@ from flaskr.extensions import (
     mail,
     session,
     captcha,
+    icon2html,
 )
 from flaskr.content import content
 from flaskr.core import increment_hit_counter, get_hit_counter
@@ -109,6 +110,7 @@ def create_app(object_name):
     # Markdown jinja2 filter
     @app.template_filter('markdown')
     def markdown_filter(text):
+        text = icon2html(text)
         return markdown(text, extensions=['extra'])
 
     # Authentication Gate for the Admin
