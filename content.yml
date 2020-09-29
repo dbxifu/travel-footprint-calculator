@@ -375,7 +375,7 @@ laws_plot:
 # The content is Markdown.  HTML is also allowed.
 # If you also want Markdown in the titles, just ask.
 home:
-  # The hero block (aka. jumbotron) is the top-level, salient block
+  # The hero block (aka. jumbotron) is the top-level, salient block.
   # It's like a welcoming mat :)
   hero:
     title: Estimate your travel carbon footprint
@@ -384,13 +384,13 @@ home:
     description: |
       Travel footpint calculator provided by Didier Barret
       <br>
-      <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+      <icon globe>
       CNRS,
-      <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+      <icon house>
       [IRAP](http://www.irap.omp.eu),
-      <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+      <icon bell>
       [@DidierBarret](https://twitter.com/DidierBarret),
-      <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+      <icon envelope>
       [didier.barret@gmail.com](mailto:didier.barret@gmail.com)
 
   # Three blocks per section.
@@ -830,7 +830,9 @@ estimation:
     description: |
       Thank you for using our service.
       <br>
+      <strong>
       Bookmark this webpage, it is private and unlisted.
+      </strong>
   failure:
     hero:
       title: Your estimation has failed!
@@ -858,6 +860,11 @@ estimation:
   footer: |
     ### See also
     - [EPA's Equivalencies Calculator](https://www.epa.gov/sites/production/files/widgets/ghg-calc/calculator.html#emissions)
+
+    ### Contact Us
+    - <icon envelope> [didier.barret@irap.omp.eu](mailto:didier.barret@irap.omp.eu)
+    - <icon bug> [Report](https://gitlab.irap.omp.eu/carbon/travel-carbon-footprint.irap.omp.eu/issues) an issue
+    - <icon puzzle> [Hire](mailto:antoine@goutenoir.com) a nerd
 
 footer:
   credits: |
