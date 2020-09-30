@@ -144,19 +144,19 @@ function draw_emissions_per_distance(divId, csvUrl) {
                 let attendeeSum = 0;
                 let rows = [];
 
-                const on_csv_loading = function (data) {
-                    let trainAttendee = parseInt(data["train trips_amount"]);
-                    let planeAttendee = parseInt(data["plane trips_amount"]);
+                const on_csv_datum = function (datum) {
+                    let trainAttendee = parseInt(datum["train trips_amount"]);
+                    let planeAttendee = parseInt(datum["plane trips_amount"]);
                     if (trainAttendee === 0 && planeAttendee === 0) {
                         return;
                     }
                     let attendeeNumber = trainAttendee + planeAttendee;
-                    let distance_km = data.distance_km / attendeeNumber;
-                    let co2_kg = parseFloat(data.co2_kg);
+                    let distance_km = datum.distance_km / attendeeNumber;
+                    let co2_kg = parseFloat(datum.co2_kg);
                     if (co2_kg === "NaN" || distance_km / 500 > 37 || distance_km === "NaN") {
                         return;
                     }
-                    rows.push(data);
+                    rows.push(datum);
                     maxDistance = Math.max(maxDistance, distance_km);
                     emissionsSum += co2_kg;
 
@@ -290,11 +290,8 @@ function draw_emissions_per_distance(divId, csvUrl) {
                     addVerticalLineAndListenCursor(x, attendeeNumberPerGroup, attendeeSum);
                 };
 
-                d3.csv(csvUrl, on_csv_loading).then(on_csv_ready);
-                // d3.queue()
-                //     .defer(d3.csv, csvUrl, on_csv_loading)
-                //     .await(on_csv_ready);
-
+                d3.csv(csvUrl, on_csv_datum)
+                    .then(on_csv_ready);
             }
         };
 
