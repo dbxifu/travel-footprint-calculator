@@ -103,6 +103,10 @@
 {#    <div id="cities_footprints_d3viz" class="plot-container"></div>#}
     <hr>
     <div id="cities_footprints_spinner" class="lds-ripple text-center"><div></div><div></div><div></div></div>
+
+    <div id="emissions_per_distance_histogram" class="plot-container">
+    </div>
+
     {# This MUST stay empty (because Simg uses svg.getparentnode.innerhtml) #}
     <div id="cities_footprints_d3viz_lollipop" class="plot-container">
     </div>
@@ -224,10 +228,11 @@
 {% block js %}
 {% if not estimation.has_failed() %}
 
-<script src="/static/js/vendor/d3.v4.js"></script>
+<script src="/static/js/vendor/d3.v6.js"></script>
 <script src="/static/js/vendor/d3-legend.js"></script>
 <script src="/static/js/vendor/d3-scale-chromatic.v1.min.js"></script>
 <script src="/static/js/vendor/d3-geo-projection.v2.min.js"></script>
+<script src="/static/js/plots/emissions-per-distance.js"></script>
 {#<script src="https://d3js.org/d3.v4.js"></script>#}
 {#<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>#}
 
@@ -270,6 +275,13 @@ var plots_config = {
 };
 
 /** PLOTS **/
+
+draw_emissions_per_distance(
+    "emissions_per_distance_histogram",
+    "/estimation/{{ estimation.public_id }}.csv"
+);
+
+console.log("Done.");
 
 {#
 jQuery(document).ready(function($){
@@ -374,8 +386,7 @@ jQuery(document).ready(function($){
         .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")");
 
-    d3.csv(csvUrl, function (data) {
-
+    d3.csv(csvUrl).then(function (data) {
         // Extrema
         var data_x_max = d3.max(data, function (d) {
             return parseFloat(d[x_key]);
@@ -630,12 +641,17 @@ jQuery(document).ready(function($) {
     var geopath = d3.geoPath().projection(projection);
 
     // Load world shape AND list of connection
-    d3.queue()
-        .defer(d3.json, worldDataUrl)
+    {#d3.queue()#}
+    {#    .defer(d3.json, worldDataUrl)#}
         {#.defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")  // World shape#}
-        .defer(d3.csv, travelsDataUrl)
+    {#    .defer(d3.csv, travelsDataUrl)#}
         {#.defer(d3.csv, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_connectionmap.csv") // Position of circles#}
-        .await(on_map_ready);
+    {#    .await(on_map_ready);#}
+    var worldDataPromise = d3.json(worldDataUrl);
+    var travelsDataPromise = d3.csv(travelsDataUrl);
+    Promise.all([worldDataPromise, travelsDataPromise]).then(function(values){
+        on_map_ready(null, values[0], values[1]);
+    });
 
     function on_map_ready(error, dataGeo, data) {
 
