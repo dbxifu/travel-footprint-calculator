@@ -21,12 +21,12 @@ function getBottomTicks(maxDistance) {
     return range;
 }
 
-function getLeftTicks(maxEmission) {
-    return getTicks(maxEmission, Math.floor((maxEmission / 8) / 1000)* 1000) ;
+function getLeftTicks(maxemissions) {
+    return getTicks(maxemissions, Math.floor((maxemissions / 8) / 1000)* 1000) ;
 }
 
-function getRightTicks(maxEmissionPercent) {
-    return getTicks(maxEmissionPercent, 2);
+function getRightTicks(maxemissionsPercent) {
+    return getTicks(maxemissionsPercent, 2);
 }
 
 function getAttendeeOnRight(sliceId, attendeeNumberPerGroup)
@@ -127,8 +127,8 @@ function addVerticalLineAndListenCursor(xScale, attendeeNumberPerGroup, attendee
 
 document.onreadystatechange = () => {
     if (document.readyState === 'complete') {
-        let maxEmission = 0;
-        let maxEmissionPercent = 0;
+        let maxemissions = 0;
+        let maxemissionsPercent = 0;
         let maxDistance = 0;
         let svg = d3.select("#" + divId)
             .append("svg")
@@ -139,9 +139,9 @@ document.onreadystatechange = () => {
             .attr("transform",
                 "translate(" + margin.left + "," + margin.top + ")");
 
-        let emissionPerGroup = [];
+        let emissionsPerGroup = [];
         let attendeeNumberPerGroup = [];
-        let emissionSum = 0;
+        let emissionsSum = 0;
         let attendeeSum = 0;
         let rows = [];
 
@@ -162,11 +162,11 @@ document.onreadystatechange = () => {
             }
             rows.push(data);
             maxDistance = Math.max(maxDistance, distance_km);
-            emissionSum += co2_kg;
+            emissionsSum += co2_kg;
         }).then((() => {
             for (let i = 0; i <= maxDistance/500; i++)
             {
-                emissionPerGroup[i] = 0;
+                emissionsPerGroup[i] = 0;
                 attendeeNumberPerGroup[i] = 0;
             }
             rows.forEach((element, index) => {
@@ -175,13 +175,13 @@ document.onreadystatechange = () => {
                 let attendeeNumber = trainAttendee + planeAttendee;
                 let distance_km = element.distance_km / attendeeNumber;
                 let co2_kg = parseFloat(element.co2_kg);
-                emissionPerGroup[Math.floor(distance_km/500)] += parseFloat(co2_kg);
+                emissionsPerGroup[Math.floor(distance_km/500)] += parseFloat(co2_kg);
                 attendeeNumberPerGroup[Math.floor(distance_km/500)] += attendeeNumber;
                 attendeeSum += attendeeNumber;
             });
-            emissionPerGroup.forEach((element, index) => {
-                maxEmission = Math.max(maxEmission, element);
-                maxEmissionPercent = Math.max(maxEmissionPercent, element / emissionSum * 100.0)
+            emissionsPerGroup.forEach((element, index) => {
+                maxemissions = Math.max(maxemissions, element);
+                maxemissionsPercent = Math.max(maxemissionsPercent, element / emissionsSum * 100.0)
             });
             maxDistance += 2000;
             // console.log(maxDistance);
@@ -214,20 +214,20 @@ document.onreadystatechange = () => {
 
             // Y axis Left
             let yl = d3.scaleLinear()
-                .domain([0, maxEmission])
+                .domain([0, maxemissions])
                 .range([height, 0]);
             let ylAxis = d3.axisLeft(yl)
-                .tickValues(getLeftTicks(maxEmission));
+                .tickValues(getLeftTicks(maxemissions));
             svg.append("g")
                 .attr("class", "yl axis")
                 .call(ylAxis);
 
             // Y axis Right
             let yr = d3.scaleLinear()
-                .domain([0, maxEmissionPercent])
+                .domain([0, maxemissionsPercent])
                 .range([height, 0]);
             let yrAxis = d3.axisRight(yr)
-                .tickValues(getRightTicks(maxEmissionPercent));
+                .tickValues(getRightTicks(maxemissionsPercent));
             svg.append("g")
                 .attr("transform", "translate(" + width + ", 0)")
                 .attr("class", "yr axis")
@@ -263,7 +263,7 @@ document.onreadystatechange = () => {
             let histolol = histogram(0);
             // console.log(histolol);
             let barSettings = [];
-            emissionPerGroup.forEach((element, index) => {
+            emissionsPerGroup.forEach((element, index) => {
                 barSettings[index]=
                 {
                     height : element,
