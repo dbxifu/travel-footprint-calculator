@@ -1,11 +1,11 @@
-
-function draw_emissions_per_distance(divId, csvUrl) {
-    // let divId = "emissions_per_distance_histogram";
-
+function draw_emissions_per_distance(divSelector, csvUrl) {
     // set the dimensions and margins of the graph
-    let margin = {top: 30, right: 62, bottom: 62, left: 72},
+    let margin = {top: 42, right: 88, bottom: 62, left: 98},
         width = 960 - margin.left - margin.right,
         height = 540 - margin.top - margin.bottom;
+
+    const sliceThickness = 500.0;
+
 
     function getTicks(maxValue, interval, startValue = 0) {
         let range = [];
@@ -29,76 +29,88 @@ function draw_emissions_per_distance(divId, csvUrl) {
         return getTicks(maxemissionsPercent, 2);
     }
 
-    function getAttendeeOnRight(sliceId, attendeeNumberPerGroup) {
-        let attendeeSum = 0;
+    function getAttendeesAmountOnRight(sliceId, attendeeNumberPerGroup) {
+        let attendeesAmount = 0;
         let sliceInt = Math.floor(sliceId);
         let sliceFloat = sliceId - sliceInt;
         for (let i = sliceInt; i < attendeeNumberPerGroup.length; i++) {
-            attendeeSum += attendeeNumberPerGroup[i] * (1 - sliceFloat);
+            attendeesAmount += attendeeNumberPerGroup[i] * (1 - sliceFloat);
             sliceFloat = 0;
         }
-        return attendeeSum;
+        return attendeesAmount;
 
     }
 
-    function setupCursorBoxes(event, attendeeSum, attendeeNumberPerGroup, xScale, box, vertical, rightArea) {
+    function setupCursorBoxes(event, attendeeSum, attendeeNumberPerGroup, xScale, tooltip, vertical, rightArea) {
         const x = d3.pointer(event)[0];
         const y = d3.pointer(event)[1];
         // var y = d3.event.pageY - document.getElementById(<id-of-your-svg>).getBoundingClientRect().y + 10
         // x += 5;
+
+        // console.log("Mouse move", x, y);
+
         vertical.style("left", x + "px");
         rightArea.style("left", x + "px");
-        box.style("left", (x + 10) + "px");
-        box.style("top", (y - 20) + "px");
-        let sliceId = xScale.invert(x - d3.selectAll("g.yl.axis")._groups[0][0].getBoundingClientRect().right) / 500;
+        tooltip.style("left", (x + 10) + "px");
+        tooltip.style("top", (y - 20) + "px");
+
+        // let sliceId = xScale.invert(x - d3.selectAll("g.yl.axis")._groups[0][0].getBoundingClientRect().right) / 500;
+
+        let sliceId = xScale.invert(x - margin.left) / sliceThickness;
+
+        console.log(`Slice ${sliceId} under the mouse.`);
+
         // let sliceId = xScale.invert(x * 1.025 - d3.selectAll("g.yl.axis")._groups[0][0].getBoundingClientRect().x- margin.left)/500 +1;
-        let attendeePercent = (getAttendeeOnRight(sliceId, attendeeNumberPerGroup) / attendeeSum * 100.0).toFixed(1);
-        if (x > d3.selectAll("g.yr.axis")._groups[0][0].getBoundingClientRect().x ||
-            x < d3.selectAll("g.yl.axis")._groups[0][0].getBoundingClientRect().right) {
+        let attendeePercent = (getAttendeesAmountOnRight(sliceId, attendeeNumberPerGroup) / attendeeSum * 100.0).toFixed(1);
+        if (
+            x < margin.left
+            ||
+            x > width + margin.left
+        ) {
             rightArea.style("width", 0);
             vertical.style("width", 0);
-            box.style("display", "none");
+            tooltip.style("display", "none");
         }
         else {
             rightArea.style("width", d3.selectAll("g.yr.axis")._groups[0][0].getBoundingClientRect().x - x);
             vertical.style("width", "2px");
-            box.style("display", "inherit");
+            tooltip.style("display", "inherit");
         }
-        box.text(attendeePercent + " % of attendees");
-        box.text(attendeePercent + " % of attendees");
+        tooltip.text(attendeePercent + " % of attendees");
         // console.log(d3.selectAll("g.x.axis")._groups[0][0]);
         // console.log(d3.selectAll("g.x.axis")._groups[0][0].getBoundingClientRect().x);
     }
 
     function addVerticalLineAndListenCursor(xScale, attendeeNumberPerGroup, attendeeSum) {
-        let vertical = d3.select("#" + divId)
+        let verticalRuler = d3.select(divSelector)
             .append("div")
-            .attr("class", "remove")
+            // .attr("class", "remove")
             .style("position", "absolute")
             .style("z-index", "19")
             .style("width", "2px")
             .style("height", (height) + "px")
             .style("top", (10 + margin.top) + "px")
             .style("bottom", "30px")
-            .style("left", "0px")
+            .style("left", "-10px")
             .style("background", "#000");
 
-        let rightArea = d3.select("#" + divId)
+        let rightArea = d3.select(divSelector)
             .append("div")
-            .attr("class", "remove")
+            // .attr("class", "remove")
             .style("position", "absolute")
             .style("z-index", "-50")
-            .style("width", "2000px")
+            .style("width", "0px")
+            // .style("width", "2000px")
             .style("height", (height) + "px")
             .style("top", (10 + margin.top) + "px")
             .style("bottom", "30px")
             .style("left", "0px")
             .style("background", "rgba(60, 200, 60, 0.3)");
 
-
-        let box = d3.select("#" + divId)
+        let tooltip = d3.select(divSelector)
             .append("div")
-            .attr("class", "remove")
+            .attr("class", "no-pointer-events")
+            .style("display", "none")
             .style("position", "absolute")
             .style("z-index", "20")
             .style("width", "150px")
@@ -109,12 +121,12 @@ function draw_emissions_per_distance(divId, csvUrl) {
             .style("border", "1px solid grey")
             .style("background", "rgba(255, 255, 255, 0.7)");
 
-        d3.select("#" + divId)
+        d3.select(divSelector + " svg")
             .on("mousemove", function (event) {
-                setupCursorBoxes(event, attendeeSum, attendeeNumberPerGroup, xScale, box, vertical, rightArea);
+                setupCursorBoxes(event, attendeeSum, attendeeNumberPerGroup, xScale, tooltip, verticalRuler, rightArea);
             })
             .on("mouseover", function (event) {
-                setupCursorBoxes(event, attendeeSum, attendeeNumberPerGroup, xScale, box, vertical, rightArea);
+                setupCursorBoxes(event, attendeeSum, attendeeNumberPerGroup, xScale, tooltip, verticalRuler, rightArea);
             });
     }
 
@@ -122,9 +134,9 @@ function draw_emissions_per_distance(divId, csvUrl) {
         let maxemissions = 0;
         let maxemissionsPercent = 0;
         let maxDistance = 0;
-        let svg = d3.select("#" + divId)
+        let svg = d3.select(divSelector)
             .append("svg")
-            .attr("id", divId + "-svg")
+            // .attr("id", divSelector + "-svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
@@ -177,7 +189,7 @@ function draw_emissions_per_distance(divId, csvUrl) {
             maxDistance += 2000;
             // console.log(maxDistance);
 
-            //Title
+            // Title
             svg.append("text")
                 .attr("transform",
                     "translate(" + (70 + margin.left) + ", -12)")
@@ -247,7 +259,7 @@ function draw_emissions_per_distance(divId, csvUrl) {
                 .style("text-anchor", "middle")
                 .text("Emission (tCO2e)");
             // set the parameters for the histogram
-            var histogram = d3.histogram()
+            const histogram = d3.histogram()
                 .domain(x.domain())  // then the domain of the graphic
                 .thresholds(x.ticks(Math.floor(maxDistance / 500))); // then the numbers of bins
 

@@ -95,6 +95,10 @@ span.required-asterisk {
     top: 2px;
 }
 
+.no-pointer-events {
+    pointer-events: none;
+}
+
 
 /** TWEAKS *******************************************************************/
 
