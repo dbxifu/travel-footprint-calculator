@@ -1,4 +1,3 @@
-// export draw_emissions_per_distance
 
 function draw_emissions_per_distance(divId, csvUrl) {
     // let divId = "emissions_per_distance_histogram";
@@ -43,9 +42,6 @@ function draw_emissions_per_distance(divId, csvUrl) {
     }
 
     function setupCursorBoxes(event, attendeeSum, attendeeNumberPerGroup, xScale, box, vertical, rightArea) {
-        // mousex = d3.mouse(this);
-        // const x = d3.mouse(this)[0];
-        // const y = d3.mouse(this)[1];
         const x = d3.pointer(event)[0];
         const y = d3.pointer(event)[1];
         // var y = d3.event.pageY - document.getElementById(<id-of-your-svg>).getBoundingClientRect().y + 10
@@ -112,13 +108,13 @@ function draw_emissions_per_distance(divId, csvUrl) {
             .style("left", "0px")
             .style("border", "1px solid grey")
             .style("background", "rgba(255, 255, 255, 0.7)");
+
         d3.select("#" + divId)
             .on("mousemove", function (event) {
                 setupCursorBoxes(event, attendeeSum, attendeeNumberPerGroup, xScale, box, vertical, rightArea);
             })
             .on("mouseover", function (event) {
                 setupCursorBoxes(event, attendeeSum, attendeeNumberPerGroup, xScale, box, vertical, rightArea);
-
             });
     }
 

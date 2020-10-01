@@ -82,6 +82,7 @@ span.required-asterisk {
 .plot-container {
     /*background: #ff3399;*/
     border: 2px dotted #888;
+    position: relative;
 }
 .legend-list {
     list-style: none;
