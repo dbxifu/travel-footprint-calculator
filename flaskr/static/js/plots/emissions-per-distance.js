@@ -1,6 +1,6 @@
 function draw_emissions_per_distance(divSelector, csvUrl) {
     // set the dimensions and margins of the graph
-    let margin = {top: 42, right: 88, bottom: 62, left: 98},
+    let margin = {top: 48, right: 88, bottom: 68, left: 98},
         width = 960 - margin.left - margin.right,
         height = 540 - margin.top - margin.bottom;
 
@@ -51,6 +51,7 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
 
         vertical.style("left", x + "px");
         rightArea.style("left", x + "px");
+        rightArea.style("width", (width+margin.left-x) + "px");
         tooltip.style("left", (x + 10) + "px");
         tooltip.style("top", (y - 20) + "px");
 
@@ -58,7 +59,7 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
 
         let sliceId = xScale.invert(x - margin.left) / sliceThickness;
 
-        console.log(`Slice ${sliceId} under the mouse.`);
+        // console.log(`Slice ${sliceId} under the mouse.`);
 
         // let sliceId = xScale.invert(x * 1.025 - d3.selectAll("g.yl.axis")._groups[0][0].getBoundingClientRect().x- margin.left)/500 +1;
         let attendeePercent = (getAttendeesAmountOnRight(sliceId, attendeeNumberPerGroup) / attendeeSum * 100.0).toFixed(1);
@@ -66,6 +67,10 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
             x < margin.left
             ||
             x > width + margin.left
+            ||
+            y < margin.top
+            ||
+            y > height + margin.top
         ) {
             rightArea.style("width", 0);
             vertical.style("width", 0);
@@ -89,7 +94,7 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
             .style("z-index", "19")
             .style("width", "2px")
             .style("height", (height) + "px")
-            .style("top", (10 + margin.top) + "px")
+            .style("top", (margin.top) + "px")
             .style("bottom", "30px")
             .style("left", "-10px")
             .style("background", "#000");
@@ -100,9 +105,8 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
             .style("position", "absolute")
             .style("z-index", "-50")
             .style("width", "0px")
-            // .style("width", "2000px")
             .style("height", (height) + "px")
-            .style("top", (10 + margin.top) + "px")
+            .style("top", (margin.top) + "px")
             .style("bottom", "30px")
             .style("left", "0px")
             .style("background", "rgba(60, 200, 60, 0.3)");
@@ -192,8 +196,7 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
             // Title
             svg.append("text")
                 .attr("transform",
-                    "translate(" + (70 + margin.left) + ", -12)")
-                .style("text-anchor", "middle")
+                    "translate(" + (0) + ", -18)")
                 .style("font-weight", "bold")
                 .style("font-size", "130%")
                 .text("Emissions per distance");
@@ -239,7 +242,7 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
             svg.append("text")
                 .attr("transform",
                     "translate(" + (width / 2) + " ," +
-                    (height + margin.top + 12) + ")")
+                    (height + margin.top + 2) + ")")
                 .style("text-anchor", "middle")
                 .text("Distance travelled (km)");
 
@@ -247,17 +250,17 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
                 .attr("transform",
                     "translate(" + (width) + ", 0), rotate(-90)")
                 .attr("x", 0 - (height / 2))
-                .attr("y", 42)
+                .attr("y", 13 + margin.right / 2.0)
                 .style("text-anchor", "middle")
-                .text("Share of emission [%]");
+                .text("Share of emission (%)");
 
             svg.append("text")
                 .attr("transform", "rotate(-90)")
-                .attr("y", 0 - margin.left)
+                .attr("y", 0 - (5 * margin.left / 6.0))
                 .attr("x", 0 - (height / 2))
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
-                .text("Emission (tCO2e)");
+                .text("Emission (kgCO2e)");
             // set the parameters for the histogram
             const histogram = d3.histogram()
                 .domain(x.domain())  // then the domain of the graphic
