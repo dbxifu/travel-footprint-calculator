@@ -103,10 +103,6 @@
 {#    <div id="cities_footprints_d3viz" class="plot-container"></div>#}
     <hr>
     <div id="cities_footprints_spinner" class="lds-ripple text-center"><div></div><div></div><div></div></div>
-
-    <div id="emissions_per_distance_histogram" class="plot-container">
-    </div>
-
     {# This MUST stay empty (because Simg uses svg.getparentnode.innerhtml) #}
     <div id="cities_footprints_d3viz_lollipop" class="plot-container">
     </div>
@@ -115,8 +111,21 @@
 </div>
 
 <hr>
-{% endif %}
 
+{# EMISSIONS PER DISTANCE HISTOGRAM ##########################################}
+{# That plot makes no sense with our many to many data. #}
+{% if not estimation.is_many_to_many() %}
+<div class="row">
+    <div id="emissions_per_distance_histogram" class="plot-container"></div>
+</div>
+<hr>
+{% endif %}
+{#############################################################################}
+
+{% endif %}{# not estimation.has_failed() #}
+
+
+{# LIST OF CITIES ############################################################}
 <div class="row">
 
 {% if not estimation.has_failed() %}
@@ -216,7 +225,7 @@
     {{ content.estimation.footer | markdown | safe }}
 </div>
 
-{# Buffer to drop the PNG image into to trick firefox into downloading the PNG #}
+{# Buffer to drop the PNG image into, to trick firefox into downloading the PNG #}
 <div id="png_buffer"></div>
 
 {% endif %}{# not estimation.has_failed() #}
@@ -233,53 +242,22 @@
 <script src="/static/js/vendor/d3-legend.js"></script>
 <script src="/static/js/vendor/d3-scale-chromatic.v1.min.js"></script>
 <script src="/static/js/vendor/d3-geo-projection.v2.min.js"></script>
+<script src="/static/js/plots/utils.js"></script>
 <script src="/static/js/plots/emissions-per-distance.js"></script>
 <script src="/static/js/plots/travel-legs-worldmap.js"></script>
 
 <script type="text/javascript">
 
-/** POLYFILLS **/
-Math.log10 = Math.log10 || function(x) { return Math.log(x) * Math.LOG10E; };
-
-/**
- * Useful for axes' domains on plots.
- * @param value
- * @returns {number}
- */
-var ceil_value_to_magnitude = function(value) {
-    var sign = 1;
-    if (value < 0) {
-        value = Math.abs(value);
-        sign = -1;
-    }
-    if (value < 1) {
-        return sign;
-    }
-
-    var low = Math.pow(10, Math.floor(Math.log10(value)));
-
-    var cursor = low;
-    var noloop = 0;
-    while ((cursor < value) && (noloop <= 100)) {
-        cursor += 0.1 * low;
-        noloop += 1;
-    }
-
-    return sign * cursor;
-};
-
-/** CONFIG **/
-
 var plots_config = {
     'cities_count': {{ estimation_output.cities | length }}
 };
 
-/** PLOTS **/
-
+{% if not estimation.is_many_to_many() %}
 draw_emissions_per_distance(
     "#emissions_per_distance_histogram",
     "/estimation/{{ estimation.public_id }}.csv"
 );
+{% endif %}
 
 
 draw_travel_legs_worldmap(
@@ -374,7 +352,7 @@ jQuery(document).ready(function($){
 
     var margin = {top: 40, right: 40, bottom: 150, left: 180},
         height = Math.max(300, 100 + 16*plots_config['cities_count']) - margin.top - margin.bottom;
-    var width = Math.max(880, $(vizid).parent().width());
+    var width = Math.max(800, $(vizid).parent().width());
     width = width - margin.left - margin.right;
 
     var svg_tag = d3.select(vizid)

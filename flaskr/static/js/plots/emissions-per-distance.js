@@ -1,4 +1,4 @@
-function draw_emissions_per_distance(divSelector, csvUrl) {
+function draw_emissions_per_distance(containerSelector, csvUrl) {
     // set the dimensions and margins of the graph
     let margin = {top: 48, right: 88, bottom: 68, left: 98},
         width = 960 - margin.left - margin.right,
@@ -75,13 +75,14 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
             vertical.style("display", "inherit");
             tooltip.style("display", "inherit");
         }
-        tooltip.text(attendeePercent + " % of attendees");
+
+        tooltip.text((((attendeePercent<10)?'0':'') + attendeePercent) + "% of attendees");
     }
 
     function addVerticalLineAndListenCursor(xScale, attendeeNumberPerGroup, attendeeSum) {
-        let verticalRuler = d3.select(divSelector)
+        let verticalRuler = d3.select(containerSelector)
             .append("div")
-            // .attr("class", "remove")
+            .attr("class", "no-pointer-events")
             .style("display", "none")
             .style("position", "absolute")
             .style("z-index", "19")
@@ -92,9 +93,9 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
             .style("left", "-10px")
             .style("background", "#000");
 
-        let rightArea = d3.select(divSelector)
+        let rightArea = d3.select(containerSelector)
             .append("div")
-            // .attr("class", "remove")
+            .attr("class", "no-pointer-events")
             .style("display", "none")
             .style("position", "absolute")
             .style("z-index", "-50")
@@ -105,13 +106,13 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
             .style("left", "0px")
             .style("background", "rgba(60, 200, 60, 0.3)");
 
-        let tooltip = d3.select(divSelector)
+        let tooltip = d3.select(containerSelector)
             .append("div")
             .attr("class", "no-pointer-events")
             .style("display", "none")
             .style("position", "absolute")
             .style("z-index", "20")
-            .style("width", "155px")
+            .style("width", "161px")
             .style("height", "35px")
             .style("top", "10px")
             .style("bottom", "30px")
@@ -123,7 +124,7 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
             .style("border", "1px solid grey")
             .style("background", "rgba(255, 255, 255, 0.7)");
 
-        d3.select(divSelector + " svg")
+        d3.select(containerSelector + " svg")
             .on("mousemove", function (event) {
                 setupCursorBoxes(event, attendeeSum, attendeeNumberPerGroup, xScale, tooltip, verticalRuler, rightArea);
             })
@@ -133,12 +134,14 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
     }
 
     document.addEventListener("DOMContentLoaded", () => {
+        width = Math.max(880, $(containerSelector).parent().width());
+        width = width - margin.left - margin.right;
         let maxemissions = 0;
         let maxemissionsPercent = 0;
         let maxDistance = 0;
-        let svg = d3.select(divSelector)
+        let svg = d3.select(containerSelector)
             .append("svg")
-            // .attr("id", divSelector + "-svg")
+            // .attr("id", containerSelector + "-svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
