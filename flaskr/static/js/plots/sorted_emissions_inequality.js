@@ -78,17 +78,14 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
 
     }
 
-    function setupCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, box) {
-        // mousex = d3.mouse(this);
+    function setupCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, tooltip) {
         const x = d3.pointer(event)[0];
         const y = d3.pointer(event)[1];
         // var y = d3.event.pageY - document.getElementById(<id-of-your-svg>).getBoundingClientRect().y + 10
-        // x += 5;
-        box.style("left", (x + 10) + "px");
-        box.style("top", (y - 20) + "px");
+        tooltip.style("left", (x + 10) + "px");
+        tooltip.style("top", (y - 30) + "px");
         let xInGraph = xScale.invert(x - margin.left);
         let yInGraph = yScale.invert(y - margin.top);
-
 
         // let sliceId = xScale.invert(x * 1.025 - d3.selectAll("g.yl.axis")._groups[0][0].getBoundingClientRect().x- margin.left)/500 +1;
         // let attendeePercent = (getAttendeeOnRight(sliceId, attendeeNumberPerGroup) / attendeeSum * 100.0).toFixed(1);
@@ -101,32 +98,35 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
             ||
             y > height + margin.top
     ) {
-            vertical.style("width", 0);
-            horizontal.style("height", 0);
-            box.style("display", "none");
+            vertical.style("display", "none");
+            horizontal.style("display", "none");
+            tooltip.style("display", "none");
         }
         else {
-            vertical.style("width", "2px");
-            horizontal.style("height", "2px");
-            box.style("display", "inherit");
+            vertical.style("display", "inherit");
+            horizontal.style("display", "inherit");
+            tooltip.style("display", "inherit");
             let sliceCollision = getSliceCollision(xInGraph, yInGraph, barSettings);
             // console.log(sliceCollision);
             if (sliceCollision) {
+
                 if (sliceCollision.isXDriving) {
                     vertical.style("left", x + "px");
                     horizontal.style("top", yScale(sliceCollision.otherAxisLevel) + margin.top + "px");
 
-                    box.text(xInGraph + " " + sliceCollision.otherAxisLevel);
+                    tooltip.text(Math.round(xInGraph) + "% of participants emitted " + Math.round(sliceCollision.otherAxisLevel) + "% of CO\u2082eq");
                 } else {
                     horizontal.style("top", y + "px");
-                    vertical.style("left", xScale(sliceCollision.otherAxisLevel) + margin.right + "px");
+                    vertical.style("left", xScale(sliceCollision.otherAxisLevel) + margin.left + "px");
 
-                    box.text(sliceCollision.otherAxisLevel + " " + yInGraph);
+                    // noinspection JSSuspiciousNameCombination o.O
+                    tooltip.text(Math.round(100.0 - sliceCollision.otherAxisLevel) + "% of participants emitted " + Math.round(100.0 - yInGraph) + "% of CO\u2082eq");
+                    // tooltip.text(sliceCollision.otherAxisLevel + " " + yInGraph);
                 }
             }
 
         }
-        // box.text(attendeePercent + " % of attendees");
+        // tooltip.text(attendeePercent + " % of attendees");
         // console.log(d3.selectAll("g.x.axis")._groups[0][0]);
         // console.log(d3.selectAll("g.x.axis")._groups[0][0].getBoundingClientRect().x);
     }
@@ -135,11 +135,12 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
         let vertical = d3.select(containerSelector)
             .append("div")
             .attr("class", "no-pointer-events")
+            .style("display", "none")
             .style("position", "absolute")
             .style("z-index", "19")
             .style("width", "2px")
             .style("height", (height) + "px")
-            .style("top", (10 + margin.top) + "px")
+            .style("top", (margin.top) + "px")
             .style("bottom", "30px")
             .style("left", "0px")
             .style("background", "#000");
@@ -147,34 +148,37 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
         let horizontal = d3.select(containerSelector)
             .append("div")
             .attr("class", "no-pointer-events")
+            .style("display", "none")
             .style("position", "absolute")
             .style("z-index", "19")
             .style("width", (width) + "px")
             .style("height", "2px")
             .style("top", "0px")
             .style("bottom", "30px")
-            .style("left", (10 + margin.left) + "px")
+            .style("left", (margin.left) + "px")
             .style("background", "#000");
 
-        let box = d3.select(containerSelector)
+        let tooltip = d3.select(containerSelector)
             .append("div")
             .attr("class", "no-pointer-events")
+            .style("display", "none")
             .style("position", "absolute")
             .style("z-index", "20")
-            .style("width", "150px")
-            .style("height", "44px")
+            .style("width", "230px")
+            .style("height", "60px")
             .style("top", "10px")
             .style("bottom", "30px")
             .style("left", "0px")
+            .style("padding", "7px 10px")
             .style("border", "1px solid grey")
             .style("background", "rgba(255, 255, 255, 0.7)");
 
         d3.select(containerSelector)
             .on("mousemove", function (event) {
-                setupCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, box);
+                setupCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, tooltip);
             })
             .on("mouseover", function (event) {
-                setupCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, box);
+                setupCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, tooltip);
             });
     }
 
