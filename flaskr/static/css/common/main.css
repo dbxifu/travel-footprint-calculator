@@ -98,6 +98,9 @@ span.required-asterisk {
 .no-pointer-events {
     pointer-events: none;
 }
+.plot-tooltip {
+    border-radius: 3px;
+}
 
 
 /** TWEAKS *******************************************************************/
