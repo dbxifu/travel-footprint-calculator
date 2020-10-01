@@ -17,7 +17,7 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
 
     function getBottomTicks(maxDistance) {
         let range = getTicks(maxDistance, 2500, 2500);
-        range.push(500);
+        range.push(sliceThickness);
         return range;
     }
 
@@ -45,8 +45,6 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
         const x = d3.pointer(event)[0];
         const y = d3.pointer(event)[1];
         // var y = d3.event.pageY - document.getElementById(<id-of-your-svg>).getBoundingClientRect().y + 10
-        // x += 5;
-
         // console.log("Mouse move", x, y);
 
         vertical.style("left", x + "px");
@@ -55,10 +53,7 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
         tooltip.style("left", (x + 10) + "px");
         tooltip.style("top", (y - 20) + "px");
 
-        // let sliceId = xScale.invert(x - d3.selectAll("g.yl.axis")._groups[0][0].getBoundingClientRect().right) / 500;
-
         let sliceId = xScale.invert(x - margin.left) / sliceThickness;
-
         // console.log(`Slice ${sliceId} under the mouse.`);
 
         // let sliceId = xScale.invert(x * 1.025 - d3.selectAll("g.yl.axis")._groups[0][0].getBoundingClientRect().x- margin.left)/500 +1;
@@ -72,24 +67,22 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
             ||
             y > height + margin.top
         ) {
-            rightArea.style("width", 0);
-            vertical.style("width", 0);
+            rightArea.style("display", "none");
+            vertical.style("display", "none");
             tooltip.style("display", "none");
-        }
-        else {
-            rightArea.style("width", d3.selectAll("g.yr.axis")._groups[0][0].getBoundingClientRect().x - x);
-            vertical.style("width", "2px");
+        } else {
+            rightArea.style("display", "inherit");
+            vertical.style("display", "inherit");
             tooltip.style("display", "inherit");
         }
         tooltip.text(attendeePercent + " % of attendees");
-        // console.log(d3.selectAll("g.x.axis")._groups[0][0]);
-        // console.log(d3.selectAll("g.x.axis")._groups[0][0].getBoundingClientRect().x);
     }
 
     function addVerticalLineAndListenCursor(xScale, attendeeNumberPerGroup, attendeeSum) {
         let verticalRuler = d3.select(divSelector)
             .append("div")
             // .attr("class", "remove")
+            .style("display", "none")
             .style("position", "absolute")
             .style("z-index", "19")
             .style("width", "2px")
@@ -102,6 +95,7 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
         let rightArea = d3.select(divSelector)
             .append("div")
             // .attr("class", "remove")
+            .style("display", "none")
             .style("position", "absolute")
             .style("z-index", "-50")
             .style("width", "0px")
@@ -117,11 +111,15 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
             .style("display", "none")
             .style("position", "absolute")
             .style("z-index", "20")
-            .style("width", "150px")
-            .style("height", "22px")
+            .style("width", "155px")
+            .style("height", "35px")
             .style("top", "10px")
             .style("bottom", "30px")
             .style("left", "0px")
+            .style("padding-left", "10px")
+            .style("padding-right", "0px")
+            .style("padding-top", "6px")
+            .style("padding-bottom", "6px")
             .style("border", "1px solid grey")
             .style("background", "rgba(255, 255, 255, 0.7)");
 
@@ -162,7 +160,7 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
             let attendeeNumber = trainAttendee + planeAttendee;
             let distance_km = datum.distance_km / attendeeNumber;
             let co2_kg = parseFloat(datum.co2_kg);
-            if (co2_kg === "NaN" || distance_km / 500 > 37 || distance_km === "NaN") {
+            if (co2_kg === "NaN" || distance_km / sliceThickness > 37 || distance_km === "NaN") {
                 return;
             }
             rows.push(datum);
@@ -172,7 +170,7 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
         };
 
         const on_csv_ready = function () {
-            for (let i = 0; i <= maxDistance / 500; i++) {
+            for (let i = 0; i <= maxDistance / sliceThickness; i++) {
                 emissionsPerGroup[i] = 0;
                 attendeeNumberPerGroup[i] = 0;
             }
@@ -182,8 +180,8 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
                 let attendeeNumber = trainAttendee + planeAttendee;
                 let distance_km = element.distance_km / attendeeNumber;
                 let co2_kg = parseFloat(element.co2_kg);
-                emissionsPerGroup[Math.floor(distance_km / 500)] += parseFloat(co2_kg);
-                attendeeNumberPerGroup[Math.floor(distance_km / 500)] += attendeeNumber;
+                emissionsPerGroup[Math.floor(distance_km / sliceThickness)] += parseFloat(co2_kg);
+                attendeeNumberPerGroup[Math.floor(distance_km / sliceThickness)] += attendeeNumber;
                 attendeeSum += attendeeNumber;
             });
             emissionsPerGroup.forEach((element, index) => {
@@ -196,7 +194,7 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
             // Title
             svg.append("text")
                 .attr("transform",
-                    "translate(" + (0) + ", -18)")
+                    "translate(" + (0) + ", "+ (-18) +")")
                 .style("font-weight", "bold")
                 .style("font-size", "130%")
                 .text("Emissions per distance");
@@ -264,7 +262,7 @@ function draw_emissions_per_distance(divSelector, csvUrl) {
             // set the parameters for the histogram
             const histogram = d3.histogram()
                 .domain(x.domain())  // then the domain of the graphic
-                .thresholds(x.ticks(Math.floor(maxDistance / 500))); // then the numbers of bins
+                .thresholds(x.ticks(Math.floor(maxDistance / sliceThickness))); // then the numbers of bins
 
             let histolol = histogram(0);
             // console.log(histolol);
