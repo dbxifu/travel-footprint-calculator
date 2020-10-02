@@ -277,6 +277,13 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
                         leftBorder: histolol[index].x0,
                         rightBorder: histolol[index].x1,
                     };
+                svg.append("text")
+                    .attr("transform", "translate(" + ((x(histolol[index].x0) + x(histolol[index].x1))/2) + margin.left + ", " + ( yl(element) - 20) +  ")")
+                    .attr("y", 0)
+                    .attr("x", 0 )
+                    .attr("dy", "1em")
+                    .style("text-anchor", "middle")
+                    .text(attendeeNumberPerGroup[index]);
                 // console.log(index);
                 // console.log(barSettings[index]);
             });
