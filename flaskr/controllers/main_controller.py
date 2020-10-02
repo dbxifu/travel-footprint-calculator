@@ -174,7 +174,7 @@ def estimate():  # register new estimation request, more accurately
     form = EstimateForm()
 
     def show_form():
-        return render_template("request-estimation.html", form=form, models=models)
+        return render_template("estimation-request.html", form=form, models=models)
 
     if form.validate_on_submit():
 
