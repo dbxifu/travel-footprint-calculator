@@ -122,6 +122,16 @@
 {% endif %}
 {#############################################################################}
 
+{# SORTED EMISSIONS INEQUALITY ##########################################}
+{# That plot makes no sense with our many to many data. #}
+{% if not estimation.is_many_to_many() %}
+<div class="row">
+    <div id="sorted_emissions_inequality" class="plot-container"></div>
+</div>
+<hr>
+{% endif %}
+{#############################################################################}
+
 {% endif %}{# not estimation.has_failed() #}
 
 
@@ -244,17 +254,22 @@
 <script src="/static/js/vendor/d3-geo-projection.v2.min.js"></script>
 <script src="/static/js/plots/utils.js"></script>
 <script src="/static/js/plots/emissions-per-distance.js"></script>
+<script src="/static/js/plots/sorted_emissions_inequality.js"></script>
 <script src="/static/js/plots/travel-legs-worldmap.js"></script>
 
 <script type="text/javascript">
 
-var plots_config = {
+const plots_config = {
     'cities_count': {{ estimation_output.cities | length }}
 };
 
 {% if not estimation.is_many_to_many() %}
 draw_emissions_per_distance(
     "#emissions_per_distance_histogram",
+    "/estimation/{{ estimation.public_id }}.csv"
+);
+draw_sorted_emissions_inequality(
+    "#sorted_emissions_inequality",
     "/estimation/{{ estimation.public_id }}.csv"
 );
 {% endif %}

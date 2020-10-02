@@ -1,7 +1,7 @@
 function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
 
     // set the dimensions and margins of the graph
-    let margin = {top: 30, right: 10, bottom: 62, left: 72},
+    let margin = {top: 50, right: 30, bottom: 80, left: 75},
         width = 600 - margin.left - margin.right,
         height = 700 - margin.top - margin.bottom;
 
@@ -78,7 +78,7 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
 
     }
 
-    function setupCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, tooltip) {
+    function refreshCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, tooltip) {
         const x = d3.pointer(event)[0];
         const y = d3.pointer(event)[1];
         // var y = d3.event.pageY - document.getElementById(<id-of-your-svg>).getBoundingClientRect().y + 10
@@ -109,19 +109,26 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
             let sliceCollision = getSliceCollision(xInGraph, yInGraph, barSettings);
             // console.log(sliceCollision);
             if (sliceCollision) {
-
                 if (sliceCollision.isXDriving) {
                     vertical.style("left", x + "px");
                     horizontal.style("top", yScale(sliceCollision.otherAxisLevel) + margin.top + "px");
 
-                    tooltip.text(Math.round(xInGraph) + "% of participants emitted " + Math.round(sliceCollision.otherAxisLevel) + "% of CO\u2082eq");
+                    tooltip.text(
+                        Math.round(xInGraph) +
+                        "% of 🖘 attendees emitted " +
+                        Math.round(sliceCollision.otherAxisLevel) +
+                        "% of CO\u2082 equivalent"
+                    );
                 } else {
                     horizontal.style("top", y + "px");
                     vertical.style("left", xScale(sliceCollision.otherAxisLevel) + margin.left + "px");
 
-                    // noinspection JSSuspiciousNameCombination o.O
-                    tooltip.text(Math.round(100.0 - sliceCollision.otherAxisLevel) + "% of participants emitted " + Math.round(100.0 - yInGraph) + "% of CO\u2082eq");
-                    // tooltip.text(sliceCollision.otherAxisLevel + " " + yInGraph);
+                    tooltip.text(
+                        Math.round(100.0 - sliceCollision.otherAxisLevel) +
+                        "% of 🖙 attendees emitted " +
+                        Math.round(100.0 - yInGraph) +
+                        "% of CO\u2082 equivalent"
+                    );
                 }
             }
 
@@ -160,7 +167,7 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
 
         let tooltip = d3.select(containerSelector)
             .append("div")
-            .attr("class", "no-pointer-events")
+            .attr("class", "no-pointer-events plot-tooltip")
             .style("display", "none")
             .style("position", "absolute")
             .style("z-index", "20")
@@ -175,10 +182,10 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
 
         d3.select(containerSelector)
             .on("mousemove", function (event) {
-                setupCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, tooltip);
+                refreshCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, tooltip);
             })
             .on("mouseover", function (event) {
-                setupCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, tooltip);
+                refreshCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, tooltip);
             });
     }
 
@@ -232,7 +239,7 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
                 }
                 return 0;
             });
-            console.log(data);
+            // console.log(data);
             let dataIndex = 0;
             data.forEach((datum, index) => {
                 let trainAttendee = parseInt(datum["train trips_amount"]);
@@ -255,8 +262,7 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
             //Title
             svg.append("text")
                 .attr("transform",
-                    "translate(" + (70 + margin.left) + ", -12)")
-                .style("text-anchor", "middle")
+                    "translate(" + (0) + ", -15)")
                 .style("font-weight", "bold")
                 .style("font-size", "130%")
                 .text("Sorted carbon emissions");
@@ -291,7 +297,7 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
 
             svg.append("text")
                 .attr("transform", "rotate(-90)")
-                .attr("y", 0 - margin.left)
+                .attr("y", 0 - 4*margin.left/5)
                 .attr("x", 0 - (height / 2))
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
