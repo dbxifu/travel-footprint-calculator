@@ -49,7 +49,7 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
 
         vertical.style("left", x + "px");
         rightArea.style("left", x + "px");
-        rightArea.style("width", (width+margin.left-x) + "px");
+        rightArea.style("width", (width + margin.left - x) + "px");
         tooltip.style("left", (x + 10) + "px");
         tooltip.style("top", (y - 20) + "px");
 
@@ -76,7 +76,7 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
             tooltip.style("display", "inherit");
         }
 
-        tooltip.text((((attendeePercent<10)?'0':'') + attendeePercent) + "% of attendees");
+        tooltip.text((((attendeePercent < 10) ? '0' : '') + attendeePercent) + "% of attendees");
     }
 
     function addVerticalLineAndListenCursor(xScale, attendeeNumberPerGroup, attendeeSum) {
@@ -197,7 +197,7 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
             // Title
             svg.append("text")
                 .attr("transform",
-                    "translate(" + (0) + ", "+ (-18) +")")
+                    "translate(" + (0) + ", " + (-18) + ")")
                 .style("font-weight", "bold")
                 .style("font-size", "130%")
                 .text("Emissions per distance");
@@ -271,19 +271,21 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
             // console.log(histolol);
             let barSettings = [];
             emissionsPerGroup.forEach((element, index) => {
-                barSettings[index] =
-                    {
-                        height: element,
-                        leftBorder: histolol[index].x0,
-                        rightBorder: histolol[index].x1,
-                    };
-                svg.append("text")
-                    .attr("transform", "translate(" + ((x(histolol[index].x0) + x(histolol[index].x1))/2) + margin.left + ", " + ( yl(element) - 20) +  ")")
-                    .attr("y", 0)
-                    .attr("x", 0 )
-                    .attr("dy", "1em")
-                    .style("text-anchor", "middle")
-                    .text(attendeeNumberPerGroup[index]);
+                barSettings[index] = {
+                    height: element,
+                    leftBorder: histolol[index].x0,
+                    rightBorder: histolol[index].x1,
+                };
+                if (attendeeNumberPerGroup[index] > 0) {
+                    svg.append("text")
+                        .attr("transform", "translate(" + ((x(histolol[index].x0) + x(histolol[index].x1)) / 2) + margin.left + ", " + (yl(element) - 15) + ")")
+                        .attr("y", 0)
+                        .attr("x", 0)
+                        .attr("dy", "1em")
+                        .style("text-anchor", "middle")
+                        .style("font-size", "0.618em")
+                        .text(attendeeNumberPerGroup[index] + "👱");
+                }
                 // console.log(index);
                 // console.log(barSettings[index]);
             });
