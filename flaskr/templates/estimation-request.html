@@ -221,7 +221,7 @@ $(function() {
     var isHell = navigator.platform.match(/(iPhone|iP[ao]d|Mac|Pike)/i);
 
     if (isHell) {
-        var style = $('<style>textarea[data-placeholder].active { color: #666; }</style>')
+        var style = $('<style>textarea[data-placeholder].active { color: #666; }</style>');
         $('html > head').append(style);
 
         $('textarea[placeholder]').each(function (index) {
@@ -236,23 +236,36 @@ $(function() {
             $(this).val(text);
         });
 
-        $('textarea[data-placeholder]').on('focus', function () {
-            if ($(this).attr('data-placeholder') === $(this).val()) {
-                $(this).attr('data-placeholder', $(this).val());
-                $(this).val('');
-                $(this).removeClass('active');
-            }
-        });
-
-        $('textarea[data-placeholder]').on('blur', function () {
-            if ($(this).val() === '') {
-                var text = $(this).attr('data-placeholder');
-                $(this).val(text);
-                $(this).addClass('active');
-            }
-        });
+        $('textarea[data-placeholder]')
+            .on('focus', function () {
+                if ($(this).attr('data-placeholder') === $(this).val()) {
+                    $(this).attr('data-placeholder', $(this).val());
+                    $(this).val('');
+                    $(this).removeClass('active');
+                }
+            })
+            .on('blur', function () {
+                if ($(this).val() === '') {
+                    $(this).val($(this).attr('data-placeholder'));
+                    $(this).addClass('active');
+                }
+            })
+        ;
     }
 });
+
+
+// Make sure the lists of cities are not required if we set files instead.
+$(() => {
+    $("#origin_addresses_file").change(() => {
+        $("#origin_addresses").attr('required', null);
+    });
+    $("#destination_addresses_file").change(() => {
+        $("#destination_addresses").attr('required', null);
+    });
+});
+
+
 
 </script>
 {% endblock %}
