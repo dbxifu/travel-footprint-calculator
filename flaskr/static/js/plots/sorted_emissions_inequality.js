@@ -78,7 +78,7 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
 
     }
 
-    function refreshCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, tooltip) {
+    function refreshCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, tooltip, selectedArea) {
         const x = d3.pointer(event)[0];
         const y = d3.pointer(event)[1];
         // var y = d3.event.pageY - document.getElementById(<id-of-your-svg>).getBoundingClientRect().y + 10
@@ -100,11 +100,13 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
     ) {
             vertical.style("display", "none");
             horizontal.style("display", "none");
+            selectedArea.style("display", "none");
             tooltip.style("display", "none");
         }
         else {
             vertical.style("display", "inherit");
             horizontal.style("display", "inherit");
+            selectedArea.style("display", "inherit");
             tooltip.style("display", "inherit");
             let sliceCollision = getSliceCollision(xInGraph, yInGraph, barSettings);
             // console.log(sliceCollision);
@@ -112,7 +114,10 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
                 if (sliceCollision.isXDriving) {
                     vertical.style("left", x + "px");
                     horizontal.style("top", yScale(sliceCollision.otherAxisLevel) + margin.top + "px");
-
+                    selectedArea.style("top", yScale(sliceCollision.otherAxisLevel) + margin.top + "px");
+                    selectedArea.style("height", yScale(0)  - yScale(sliceCollision.otherAxisLevel) + "px");
+                    selectedArea.style("left", xScale(0) + margin.left + "px");
+                    selectedArea.style("width", x - margin.left - xScale(0) + "px");
                     tooltip.text(
                         Math.round(xInGraph) +
                         "% of 🖘 attendees emitted " +
@@ -122,7 +127,10 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
                 } else {
                     horizontal.style("top", y + "px");
                     vertical.style("left", xScale(sliceCollision.otherAxisLevel) + margin.left + "px");
-
+                    selectedArea.style("top", margin.top + "px");
+                    selectedArea.style("height", y - margin.top + "px");
+                    selectedArea.style("left", xScale(sliceCollision.otherAxisLevel) + margin.left + "px");
+                    selectedArea.style("width", xScale(100) - (xScale(sliceCollision.otherAxisLevel)) + "px");
                     tooltip.text(
                         Math.round(100.0 - sliceCollision.otherAxisLevel) +
                         "% of 🖙 attendees emitted " +
@@ -180,12 +188,25 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
             .style("border", "1px solid grey")
             .style("background", "rgba(255, 255, 255, 0.7)");
 
+        let selectedArea = d3.select(containerSelector)
+            .append("div")
+            .attr("class", "no-pointer-events")
+            .style("display", "none")
+            .style("position", "absolute")
+            .style("z-index", "-50")
+            .style("width", "0px")
+            .style("height", (height) + "px")
+            .style("top", (margin.top) + "px")
+            .style("bottom", "30px")
+            .style("left", "0px")
+            .style("background", "rgba(60, 200, 60, 0.3)");
+
         d3.select(containerSelector)
             .on("mousemove", function (event) {
-                refreshCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, tooltip);
+                refreshCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, tooltip, selectedArea);
             })
             .on("mouseover", function (event) {
-                refreshCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, tooltip);
+                refreshCursorBoxes(event, xScale, yScale, barSettings, vertical, horizontal, tooltip, selectedArea);
             });
     }
 
