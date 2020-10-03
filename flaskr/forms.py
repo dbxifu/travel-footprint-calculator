@@ -94,7 +94,7 @@ class EstimateForm(FlaskForm):
         label=form_content['origin_addresses']['label'],
         description=form_content['origin_addresses']['description'],
         validators=[
-            validators.DataRequired(),
+            # validators.DataRequired(),
         ],
         render_kw={
             "placeholder": form_content['origin_addresses']['placeholder'],
@@ -104,7 +104,7 @@ class EstimateForm(FlaskForm):
         label=form_content['destination_addresses']['label'],
         description=form_content['destination_addresses']['description'],
         validators=[
-            validators.DataRequired(),
+            # validators.DataRequired(),
         ],
         render_kw={
             "placeholder": form_content['destination_addresses']['placeholder'],
@@ -176,6 +176,29 @@ class EstimateForm(FlaskForm):
                 )
                 return False
 
+        # Origins must be set either by field or file
+        if (
+            (not self.origin_addresses.data)
+            and
+            (not self.origin_addresses_file.data)
+        ):
+            self.origin_addresses.errors.append(
+                "You need to provide either a list of cities or a file."
+            )
+            return False
+
+        # Destinations must be set either by field or file
+        if (
+            (not self.destination_addresses.data)
+            and
+            (not self.destination_addresses_file.data)
+        ):
+            self.destination_addresses.errors.append(
+                "You need to provide either a list of cities or a file."
+            )
+            return False
+
+        # At least one model should be used
         uses_at_least_one_model = False
         for model in models:
             use_model = getattr(self, 'use_model_%s' % model.slug)
