@@ -212,6 +212,8 @@
 
         <hr>
 
+        <div id="d3viz_emissions_equidistant_map" class="plot-container-noborder"></div>
+
         <div id="d3viz_travels" class="plot-container-noborder"></div>
 
     </div>
@@ -254,6 +256,7 @@
 <script src="/static/js/vendor/d3-geo-projection.v2.min.js"></script>
 <script src="/static/js/plots/utils.js"></script>
 <script src="/static/js/plots/emissions-per-distance.js"></script>
+<script src="/static/js/plots/emissions-equidistant-map.js"></script>
 <script src="/static/js/plots/sorted-emissions-inequality.js"></script>
 <script src="/static/js/plots/travel-legs-worldmap.js"></script>
 
@@ -274,6 +277,15 @@ draw_sorted_emissions_inequality(
 );
 {% endif %}
 
+
+draw_emissions_equidistant_map(
+    "#d3viz_emissions_equidistant_map",
+    {#"/static/public/data/worldmap.geo.json",#}
+    "/static/public/data/world-earth.geojson",
+    "/static/public/data/countries-coordinates.csv",
+    "/estimation/{{ estimation.public_id }}.csv"
+    {#"/estimation/{{ estimation.public_id }}/trips_to_destination_0.csv"#}
+);
 
 draw_travel_legs_worldmap(
     "#d3viz_travels",
