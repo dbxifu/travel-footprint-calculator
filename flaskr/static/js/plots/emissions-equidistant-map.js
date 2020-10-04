@@ -1,4 +1,4 @@
-function draw_equidistant_emissions_map(containerSelector, csvUrl) {
+function draw_emissions_equidistant_map(containerSelector, csvUrl) {
     let margin = {top: 48, right: 88, bottom: 68, left: 98},
         width = 960 - margin.left - margin.right,
         height = 540 - margin.top - margin.bottom;
