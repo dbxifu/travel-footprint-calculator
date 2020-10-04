@@ -537,6 +537,8 @@ def compute():  # process the queue of estimation requests
                             'city': _key,
                             'country': _get_country_key(_destination),
                             'address': _destination.address,
+                            'latitude': _destination.latitude,
+                            'longitude': _destination.longitude,
                             'footprint': 0.0,
                             'distance': 0.0,
                             'train_trips': 0,
@@ -576,9 +578,11 @@ def compute():  # process the queue of estimation requests
                 city_train_trips = cities_dict_first_model[city]['train_trips']
                 city_plane_trips = cities_dict_first_model[city]['plane_trips']
                 cities_mean_dict[city] = {
-                    'address': destinations_by_city_key[city].address,
                     'city': city,
                     'country': _get_country_key(destinations_by_city_key[city]),
+                    'address': destinations_by_city_key[city].address,
+                    'latitude': destinations_by_city_key[city].latitude,
+                    'longitude': destinations_by_city_key[city].longitude,
                     'footprint': city_mean_foot,
                     'distance': city_mean_dist,
                     'train_trips': city_train_trips,
@@ -656,6 +660,8 @@ def compute():  # process the queue of estimation requests
                 city_results['city'] = city_key
                 city_results['country'] = country_key
                 city_results['address'] = destination.address
+                city_results['latitude'] = destination.latitude
+                city_results['longitude'] = destination.longitude
                 result_cities.append(city_results)
 
             result_cities = sorted(result_cities, key=lambda c: int(c['footprint']))
@@ -756,6 +762,7 @@ def consult_estimation(public_id, extension):
         cw = csv.writer(si, quoting=csv.QUOTE_ALL)
         cw.writerow([
             u"city", u"country", u"address",
+            u"latitude", u"longitude",
             u"co2_kg",
             u"distance_km",
             u"plane trips_amount",
@@ -768,6 +775,8 @@ def consult_estimation(public_id, extension):
                 city['city'].encode(OUT_ENCODING),
                 city['country'].encode(OUT_ENCODING),
                 city['address'].encode(OUT_ENCODING),
+                city['latitude'],
+                city['longitude'],
                 round(city['footprint'], 3),
                 round(city['distance'], 3),
                 city['plane_trips'],
