@@ -262,30 +262,33 @@
 
 <script type="text/javascript">
 
-const plots_config = {
+var plots_config = {
     'cities_count': {{ estimation_output.cities | length }}
 };
 
 {% if not estimation.is_many_to_many() %}
+/**
 draw_emissions_per_distance(
     "#emissions_per_distance_histogram",
     "/estimation/{{ estimation.public_id }}.csv"
 );
+**/
 draw_sorted_emissions_inequality(
     "#sorted_emissions_inequality",
     "/estimation/{{ estimation.public_id }}.csv"
 );
 {% endif %}
 
-
+/**
 draw_emissions_equidistant_map(
     "#d3viz_emissions_equidistant_map",
     {#"/static/public/data/worldmap.geo.json",#}
     "/static/public/data/world-earth.geojson",
-    "/static/public/data/countries-coordinates.csv",
+    {#"/static/public/data/countries-coordinates.csv",#}
     "/estimation/{{ estimation.public_id }}.csv"
     {#"/estimation/{{ estimation.public_id }}/trips_to_destination_0.csv"#}
 );
+**/
 
 draw_travel_legs_worldmap(
     "#d3viz_travels",
@@ -372,6 +375,7 @@ jQuery(document).ready(function($){
 
 
 jQuery(document).ready(function($){
+    console.info("[Footprint Lollipop] Starting…");
     var vizid = "#cities_footprints_d3viz_lollipop";
     var csvUrl = "/estimation/{{ estimation.public_id }}.csv";
     var y_key = 'city';
@@ -399,6 +403,7 @@ jQuery(document).ready(function($){
               "translate(" + margin.left + "," + margin.top + ")");
 
     d3.csv(csvUrl).then(function (data) {
+        console.info("[Footprint Lollipop] Generating…");
         // Extrema
         var data_x_max = d3.max(data, function (d) {
             return parseFloat(d[x_key]);
@@ -606,7 +611,7 @@ jQuery(document).ready(function($){
         });
 
         $('#cities_footprints_spinner').hide();
-
+        console.info("[Footprint Lollipop] Done.");
     });
 
 });
