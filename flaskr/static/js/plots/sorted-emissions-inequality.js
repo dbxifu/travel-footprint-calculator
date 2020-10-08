@@ -193,13 +193,13 @@ function draw_sorted_emissions_inequality(containerSelector, csvUrl) {
             .attr("class", "no-pointer-events")
             .style("display", "none")
             .style("position", "absolute")
-            .style("z-index", "-50")
+            .style("z-index", "10")
             .style("width", "0px")
             .style("height", (height) + "px")
             .style("top", (margin.top) + "px")
             .style("bottom", "30px")
             .style("left", "0px")
-            .style("background", "rgba(60, 200, 60, 0.3)");
+            .style("background", "rgba(60, 200, 60, 0.2)");
 
         d3.select(containerSelector)
             .on("mousemove", function (event) {
