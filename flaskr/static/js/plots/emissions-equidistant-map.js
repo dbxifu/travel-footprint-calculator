@@ -22,6 +22,8 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissio
     let center_latitude = 0.0;
     let center_longitude = 0.0;
 
+    let projectionScale = 79.4188;
+
     // Per city
     let maxAttendeeAmount = 0;
     let maxFootprint = 0;
@@ -340,7 +342,7 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissio
 
     const rebuildProjection = () => {
         mapProjection = d3.geoAzimuthalEquidistant()
-            .scale(79.4188)
+            .scale(projectionScale)
             .rotate([
                 // Don't ask me why
                 -1 * center_longitude,
@@ -351,17 +353,20 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissio
     };
 
 
+    const redrawProjected = () => {
+        redrawWorldMap();
+        redrawDistanceCircles();
+        redrawAttendees();
+        redrawCentralCircle();
+    };
+
     const recenterOnLatLon = (latitude, longitude) => {
         center_latitude = latitude;
         center_longitude = longitude;
 
         rebuildProjection();
         // Draw in order from back to front
-        redrawWorldMap();
-        redrawDistanceCircles();
-        redrawAttendees();
-        redrawCentralCircle();
-
+        redrawProjected()
         //setupLegend();
     };
 
@@ -447,6 +452,38 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissio
                 parseFloat(emissionsData[0].longitude)
             );
             console.info("[Emissions Equidistant Map] Done.-");
+        });
+
+        // console.log(d3.select(containerSelector));
+        let buttonContainer = d3.select(containerSelector)
+            .append("div")
+            .style("position", 'absolute')
+            .style("top", d3.select(containerSelector).property("clientTop") + 12)
+            .style("left",
+                d3.select(containerSelector).property("clientLeft") +
+                svg.attr("width")
+                - 40);
+        let zoomOutButton = buttonContainer
+            .append("input")
+            .attr("value", "-")
+            .attr("type", "button")
+            .style("width", 22);
+        let zoomInButton = buttonContainer
+            .append("input")
+            .attr("value", "+")
+            .attr("type", "button")
+            .style("width", 22);
+
+        zoomOutButton.on("click", () => {
+            projectionScale *= 0.9;
+            rebuildProjection();
+            redrawProjected();
+        });
+
+        zoomInButton.on("click", () => {
+            projectionScale *= 1.10;
+            rebuildProjection();
+            redrawProjected();
         });
 
         d3.select(containerSelector+" svg").on("mousedown", function(event) {
