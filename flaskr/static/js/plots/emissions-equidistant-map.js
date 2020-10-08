@@ -1,5 +1,7 @@
 // jQuery-free
 function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissionsDataUrl) {
+    const EARTH_RADIUS = 6371000; // meters
+
     let margin = {top: 48, right: 88, bottom: 68, left: 98},
         width = 960 - margin.left - margin.right,
         height = 540 - margin.top - margin.bottom;
@@ -13,6 +15,7 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissio
 
     let svg = null;
     let cartaContainer = null;
+    let attendeesLayer = null;
 
     let geoPath = d3.geoPath();
     let mapProjection = null;
@@ -147,8 +150,8 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissio
     // };
 
 
-    const drawCircle = function (x, y, radius, color, className = "circle") {
-        svg.append("circle")
+    const drawCircle = function (into, x, y, radius, color, className = "circle") {
+        into.append("circle")
             .attr("class", className)
             .attr("cx", x)
             .attr("cy", y)
@@ -181,7 +184,7 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissio
         let color = "rgba(" + (-(baseAttendeeCircleColorRatio / maxAttendeeAmount) + 255.0) +
             ", " + (-(baseAttendeeCircleColorRatio / maxAttendeeAmount) + 255.0) +
             ", 240, 0.7)";
-        drawCircle(x, y, radius, color);
+        drawCircle(svg, x, y, radius, color);
         for (let i = 1; i < legendAmount; i++) {
             svg.append("text")
                 .attr("class", "legend")
@@ -196,7 +199,7 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissio
             let color = "rgba(" + (-Math.sqrt(maxAttendeeAmount * (i / legendAmount)) * (baseAttendeeCircleColorRatio / maxAttendeeAmount) + 255.0) +
                 ", " + (-Math.sqrt(maxAttendeeAmount * (i / legendAmount)) * (baseAttendeeCircleColorRatio / maxAttendeeAmount) + 255.0) +
                 ", 240, 0.7)";
-            drawCircle(x, y, radius, color, "legend");
+            drawCircle(svg, x, y, radius, color, "legend");
         }
 
         // todo: describe those in the legend
@@ -281,7 +284,7 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissio
 
 
     const redrawAttendees = () => {
-        svg.selectAll("circle.attendee-dot").remove();
+        attendeesLayer.selectAll("circle.attendee-dot").remove();
 
         emissionsData.forEach((datum) => {
             // console.log("Emission datum", datum);
@@ -314,6 +317,7 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissio
                 )
             );
             drawCircle(
+                attendeesLayer,
                 x, y, radius,
                 `rgba(${color}, ${color}, 240.0, 0.618)`,
                 "attendee-dot"
@@ -323,12 +327,13 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissio
 
 
     const redrawWorldMap = () => {
-        cartaContainer.selectAll("path").remove();
+        cartaContainer.selectAll("path.world-map").remove();
         cartaContainer.selectAll("path")
             .data(worldData.features)
             .enter()
             .append("path")
             .attr("d", geoPath)
+            .classed("world-map", true)
             .style("fill", "#d5d5d5");
     };
 
@@ -360,6 +365,65 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissio
         //setupLegend();
     };
 
+    const distanceCircles = {};
+
+    const redrawDistanceCircle = (circle_name, distance_meters) => {
+        let distance_tooltip;
+        let distance_tooltip_shadow;
+        if ( ! distanceCircles.hasOwnProperty(circle_name)) {
+            distance_tooltip_shadow = svg
+                .append("text")
+                .classed("pointer-tooltip-"+circle_name, true)
+                .style("pointer-events", "none")
+                .style("stroke", "#FFFFFF99")
+                .style("stroke-width", "0.2em");
+            distance_tooltip = svg
+                .append("text")
+                .classed("pointer-tooltip-"+circle_name, true)
+                .style("pointer-events", "none");
+            distanceCircles[circle_name] = {
+                'distance_tooltip': distance_tooltip,
+                'distance_tooltip_shadow': distance_tooltip_shadow,
+            };
+        } else {
+            distance_tooltip = distanceCircles[circle_name]['distance_tooltip'];
+            distance_tooltip_shadow = distanceCircles[circle_name]['distance_tooltip_shadow'];
+        }
+
+        const gCircleRadius = (distance_meters / EARTH_RADIUS) * 360 / Math.TAU;
+        const gCircle = d3.geoCircle();
+        gCircle
+            .center([center_longitude, center_latitude])
+            .radius(gCircleRadius);
+
+        svg.selectAll("path.pointer-circle-"+circle_name).remove();
+        svg
+            .append("path")
+            .attr("d", geoPath(gCircle()))
+            .classed("pointer-circle-"+circle_name, true)
+            // .style("fill", "#21d51d");
+            .style("fill", "#00000000")
+            .style("stroke", "#0e5b0c")
+            .style("stroke-dasharray", 3);
+
+        const tooltip_pos = mapProjection([center_longitude+gCircleRadius, center_latitude]);
+        distance_tooltip
+            .attr("transform", `translate(${tooltip_pos[0]}, ${tooltip_pos[1]})`)
+            .text(
+                ((distance_meters*0.001)).toFixed(0)
+                +
+                "km"
+            );
+        distance_tooltip_shadow
+            .attr("transform", `translate(${tooltip_pos[0]}, ${tooltip_pos[1]})`)
+            .text(
+                ((distance_meters*0.001)).toFixed(0)
+                +
+                "km"
+            );
+
+    };
+
 
     document.addEventListener("DOMContentLoaded", () => {
         console.info("[Emissions Equidistant Map] Starting…");
@@ -369,7 +433,8 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissio
             .append("svg")
             .attr("width", width)
             .attr("height", height);
-        cartaContainer = svg.append("g");
+        cartaContainer = svg.append("g").classed("carta-layer", true);
+        attendeesLayer = svg.append("g").classed("attendees-layer", true);
         Promise.all([
             d3.csv(emissionsDataUrl),
             d3.json(worldDataUrl),
@@ -387,6 +452,20 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissio
         d3.select(containerSelector+" svg").on("mousedown", function(event) {
             const pointerLonLat = mapProjection.invert(d3.pointer(event));
             recenterOnLatLon(pointerLonLat[1], pointerLonLat[0]);
+        });
+
+        d3.select(containerSelector+" svg").on("mousemove", function(event) {
+            if ( ! mapProjection) {
+                console.warn("Too fast!  Wait a little.");
+                return;
+            }
+            const pointerLonLat = mapProjection.invert(d3.pointer(event));
+            const centerLonLat = [center_longitude, center_latitude];
+            // Great Circle Distance
+            const gcd_radians = d3.geoDistance(pointerLonLat, centerLonLat);
+            const gcd_meters = gcd_radians * EARTH_RADIUS;
+
+            redrawDistanceCircle("pointer", gcd_meters)
         });
     });
 }

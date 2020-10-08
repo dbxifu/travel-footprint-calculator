@@ -1,6 +1,9 @@
 /** POLYFILLS **/
 Math.log10 = Math.log10 || function(x) { return Math.log(x) * Math.LOG10E; };
 
+Math.TAU = Math.TAU || Math.PI * 2;
+
+
 /**
  * Useful for axes' domains on plots.
  * @param value

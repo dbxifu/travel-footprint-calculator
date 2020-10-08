@@ -267,19 +267,19 @@ var plots_config = {
 };
 
 {% if not estimation.is_many_to_many() %}
-/**
+
 draw_emissions_per_distance(
     "#emissions_per_distance_histogram",
     "/estimation/{{ estimation.public_id }}.csv"
 );
-**/
+
 draw_sorted_emissions_inequality(
     "#sorted_emissions_inequality",
     "/estimation/{{ estimation.public_id }}.csv"
 );
 {% endif %}
 
-/**
+
 draw_emissions_equidistant_map(
     "#d3viz_emissions_equidistant_map",
     {#"/static/public/data/worldmap.geo.json",#}
@@ -288,7 +288,7 @@ draw_emissions_equidistant_map(
     "/estimation/{{ estimation.public_id }}.csv"
     {#"/estimation/{{ estimation.public_id }}/trips_to_destination_0.csv"#}
 );
-**/
+
 
 draw_travel_legs_worldmap(
     "#d3viz_travels",
