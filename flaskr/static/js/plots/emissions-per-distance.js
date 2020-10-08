@@ -200,8 +200,8 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
                 (co2_kg === "NaN")
                 ||
                 (distance_km === "NaN")
-                ||
-                (distance_km / sliceThickness > 37)
+                // ||
+                // (distance_km / sliceThickness > 37)
             ) {
                 return;
             }
