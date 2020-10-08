@@ -8,10 +8,20 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
 
 
     function getTicks(maxValue, interval, startValue = 0) {
+        // console.log("getTicks", maxValue, interval, startValue);
+        if (0 === interval) {
+            console.error("No interval for ticks.");
+            return [0];
+        }
+        if (Math.sign(maxValue-startValue) !== Math.sign(interval)) {
+            console.warn("Wrong interval sign for ticks.  Corrected.");
+            interval *= -1;
+        }
         let range = [];
         for (let i = startValue; i <= maxValue; i += interval) {
             range.push(i);
         }
+        // console.log("range", range);
         return range;
     }
 
@@ -21,8 +31,30 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
         return range;
     }
 
-    function getLeftTicks(maxemissions) {
-        return getTicks(maxemissions, Math.floor((maxemissions / 8) / 1000) * 1000);
+    function getLeftTicks(maximumValue) {
+        maximumValue = 3200+1;
+        if (0 > maximumValue) {
+            console.error("Only positive values are supported on left axis.");
+        }
+        if (0 === maximumValue) {
+            return [0];
+        }
+        let ticksAmount = 8.0; // MUST BE > 2
+        let magnitude = 100000.0;
+        let interval = 0;
+        while (interval * (ticksAmount) < maximumValue) {
+            interval = (
+                Math.floor(
+                    (maximumValue / (ticksAmount-1)) / magnitude
+                )
+                *
+                magnitude
+            );
+            //console.log("interval + magnitude", interval, magnitude);
+            magnitude *= 0.1;
+        }
+
+        return getTicks(maximumValue, interval);
     }
 
     function getRightTicks(maxemissionsPercent) {
@@ -134,6 +166,7 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
     }
 
     document.addEventListener("DOMContentLoaded", () => {
+        console.info("[Emissions Per Distance] Starting…");
         width = Math.max(880, $(containerSelector).parent().width());
         width = width - margin.left - margin.right;
         let maxemissions = 0;
@@ -163,7 +196,13 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
             let attendeeNumber = trainAttendee + planeAttendee;
             let distance_km = datum.distance_km / attendeeNumber;
             let co2_kg = parseFloat(datum.co2_kg);
-            if (co2_kg === "NaN" || distance_km / sliceThickness > 37 || distance_km === "NaN") {
+            if (
+                (co2_kg === "NaN")
+                ||
+                (distance_km === "NaN")
+                ||
+                (distance_km / sliceThickness > 37)
+            ) {
                 return;
             }
             rows.push(datum);
@@ -173,6 +212,7 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
         };
 
         const on_csv_ready = function () {
+            console.info("[Emissions Per Distance] Generating…");
             for (let i = 0; i <= maxDistance / sliceThickness; i++) {
                 emissionsPerGroup[i] = 0;
                 attendeeNumberPerGroup[i] = 0;
@@ -192,7 +232,6 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
                 maxemissionsPercent = Math.max(maxemissionsPercent, element / emissionsSum * 100.0)
             });
             maxDistance += 2000;
-            // console.log(maxDistance);
 
             // Title
             svg.append("text")
@@ -207,7 +246,9 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
                 .domain([0, maxDistance])
                 .range([0, width]);
             let xAxis = d3.axisBottom(x)
-                .tickValues(getBottomTicks(maxDistance));
+                .ticks(11)
+                // .tickValues(getBottomTicks(maxDistance))
+            ;
             svg.append("g")
                 .attr("transform", "translate(0," + height + ")")
                 .attr("class", "x axis")
@@ -224,7 +265,9 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
                 .domain([0, maxemissions])
                 .range([height, 0]);
             let ylAxis = d3.axisLeft(yl)
-                .tickValues(getLeftTicks(maxemissions));
+                    .ticks(13)
+                // .tickValues(getLeftTicks(maxemissions))
+            ;
             svg.append("g")
                 .attr("class", "yl axis")
                 .call(ylAxis);
@@ -234,7 +277,9 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
                 .domain([0, maxemissionsPercent])
                 .range([height, 0]);
             let yrAxis = d3.axisRight(yr)
-                .tickValues(getRightTicks(maxemissionsPercent));
+                    .ticks(20)
+                // .tickValues(getRightTicks(maxemissionsPercent))
+            ;
             svg.append("g")
                 .attr("transform", "translate(" + width + ", 0)")
                 .attr("class", "yr axis")
@@ -268,7 +313,6 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
                 .thresholds(x.ticks(Math.floor(maxDistance / sliceThickness))); // then the numbers of bins
 
             let histolol = histogram(0);
-            // console.log(histolol);
             let barSettings = [];
             emissionsPerGroup.forEach((element, index) => {
                 barSettings[index] = {
@@ -306,6 +350,7 @@ function draw_emissions_per_distance(containerSelector, csvUrl) {
                 .style("z-index", "500")
                 .style("fill", "#4444E5");
             addVerticalLineAndListenCursor(x, attendeeNumberPerGroup, attendeeSum);
+            console.info("[Emissions Per Distance] Done.");
         };
 
         d3.csv(csvUrl, on_csv_datum)
