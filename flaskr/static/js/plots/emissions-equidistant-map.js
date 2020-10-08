@@ -1,5 +1,5 @@
 // jQuery-free
-function draw_emissions_equidistant_map(containerSelector, worldDataUrl, countriesDataUrl, emissionsDataUrl) {
+function draw_emissions_equidistant_map(containerSelector, worldDataUrl, emissionsDataUrl) {
     let margin = {top: 48, right: 88, bottom: 68, left: 98},
         width = 960 - margin.left - margin.right,
         height = 540 - margin.top - margin.bottom;
@@ -362,6 +362,7 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, countri
 
 
     document.addEventListener("DOMContentLoaded", () => {
+        console.info("[Emissions Equidistant Map] Starting…");
         width = document.querySelector(containerSelector).parentElement.offsetWidth;
         width = width - margin.left - margin.right;
         svg = d3.select(containerSelector)
@@ -373,12 +374,14 @@ function draw_emissions_equidistant_map(containerSelector, worldDataUrl, countri
             d3.csv(emissionsDataUrl),
             d3.json(worldDataUrl),
         ]).then((allTheData) => {
+            console.info("[Emissions Equidistant Map] Generating…");
             [emissionsData, worldData] = allTheData;
             crunchEmissionsData();
             recenterOnLatLon(
                 parseFloat(emissionsData[0].latitude),
                 parseFloat(emissionsData[0].longitude)
             );
+            console.info("[Emissions Equidistant Map] Done.-");
         });
 
         d3.select(containerSelector+" svg").on("mousedown", function(event) {
