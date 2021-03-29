@@ -1,9 +1,9 @@
 import csv
 import re
-# from io import StringIO
-from cStringIO import StringIO
+# from cStringIO import StringIO
 from copy import deepcopy
-from os import unlink
+from io import StringIO
+from os import unlink, getenv
 from os.path import join
 
 import geopy
@@ -13,6 +13,7 @@ from flask import (
     Blueprint,
     Response,
     render_template,
+    request,
     flash,
     redirect,
     url_for,
@@ -699,7 +700,9 @@ def compute():  # process the queue of estimation requests
 
     except Exception as e:
         errmsg = u"Computation failed : %s" % (e,)
-        # errmsg = u"%s\n\n%s" % (errmsg, traceback.format_exc())
+        if 'production' != getenv('FLASK_ENV', 'production'):
+            import traceback
+            errmsg = u"%s\n\n%s" % (errmsg, traceback.format_exc())
         if estimation:
             _handle_failure(estimation, errmsg)
         return _respond(errmsg)
