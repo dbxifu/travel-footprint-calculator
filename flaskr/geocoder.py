@@ -2,7 +2,7 @@ import geopy
 import shelve
 import time
 
-from core import get_path
+from flaskr.core import get_path
 
 
 class CachedGeocoder:
