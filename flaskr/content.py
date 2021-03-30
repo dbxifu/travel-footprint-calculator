@@ -1,7 +1,10 @@
 from collections import namedtuple
-from yaml import safe_load as yaml_safe_load
 from os.path import abspath, dirname, join
 
+from yaml import safe_load as yaml_safe_load
+
+# Move this to ENV, perhaps
+base_url = "https://travel-footprint-calculator.irap.omp.eu"
 
 PROJECT_DIRECTORY = abspath(dirname(dirname(__file__)))
 
@@ -21,7 +24,7 @@ class Struct(object):
     def __new__(cls, data):
         if isinstance(data, dict):
             return namedtuple(
-                'Struct', data.iterkeys()
+                'Struct', data.keys()
             )(
                 *(Struct(val) for val in data.values())
             )
@@ -32,9 +35,6 @@ class Struct(object):
 
 
 content = Struct(content_dict)
-
-# Move this to ENV, perhaps
-base_url = "https://travel-footprint-calculator.irap.omp.eu"
 
 
 # For Python3?
