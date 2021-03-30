@@ -378,13 +378,12 @@ jQuery(document).ready(function($){
     console.info("[Footprint Lollipop] Starting…");
     var vizid = "#cities_footprints_d3viz_lollipop";
     var csvUrl = "/estimation/{{ estimation.public_id }}.csv";
-    var y_key = 'city';
+    var y_key = 'address';
     var x_key = 'co2_kg';
 
-    var margin = {top: 40, right: 40, bottom: 150, left: 180},
-        height = Math.max(300, 100 + 16*plots_config['cities_count']) - margin.top - margin.bottom;
-    var width = Math.max(800, $(vizid).parent().width());
-    width = width - margin.left - margin.right;
+    var margin = {top: 40, right: 40, bottom: 150, left: 180};
+    var height = Math.max(300, 100 + 16*plots_config['cities_count']) - margin.top - margin.bottom;
+    var width = Math.max(800, $(vizid).parent().width()) - margin.left - margin.right;
 
     var svg_tag = d3.select(vizid)
       .append("svg")
@@ -404,6 +403,20 @@ jQuery(document).ready(function($){
 
     d3.csv(csvUrl).then(function (data) {
         console.info("[Footprint Lollipop] Generating…");
+
+        // Resize left margin from locations' character length
+        var max_character_length = 0;
+        data.forEach(function(datum){
+            max_character_length = Math.max(max_character_length, datum[y_key].length);
+        });
+        margin.left = Math.min(Math.round(0.618 * width), 42 + Math.round(5.13*max_character_length));
+        width = Math.max(800, $(vizid).parent().width()) - margin.left - margin.right;
+        svg_tag
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom);
+        svg.attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
+
         // Extrema
         var data_x_max = d3.max(data, function (d) {
             return parseFloat(d[x_key]);

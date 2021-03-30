@@ -37,7 +37,7 @@ from flaskr.models import db, Estimation, StatusEnum, ScenarioEnum
 main = Blueprint('main', __name__)
 
 
-OUT_ENCODING = 'utf-8'
+#OUT_ENCODING = 'utf-8'
 
 
 # -----------------------------------------------------------------------------
@@ -489,6 +489,13 @@ def compute():  # process the queue of estimation requests
 
         # UTILITY PRIVATE FUNCTION(S) #########################################
 
+        # _locations
+        def _get_location_key(_location):
+            return "%s, %s" % (
+                _get_city_key(_location),
+                _get_country_key(_location),
+            )
+
         def _get_city_key(_location):
             return _location.address.split(',')[0]
 
@@ -512,7 +519,7 @@ def compute():  # process the queue of estimation requests
             _results = {}
             footprints = {}
 
-            destinations_by_city_key = {}
+            destinations_by_key = {}
 
             cities_sum_foot = {}
             cities_sum_dist = {}
@@ -528,13 +535,13 @@ def compute():  # process the queue of estimation requests
                         extra_config=_extra_config,
                     )
 
-                    _key = _get_city_key(_destination)
-
-                    destinations_by_city_key[_key] = _destination
+                    _key = _get_location_key(_destination)
+                    destinations_by_key[_key] = _destination
 
                     if _key not in cities_dict:
                         cities_dict[_key] = {
-                            'city': _key,
+                            'location': _get_location_key(_destination),
+                            'city': _get_city_key(_destination),
                             'country': _get_country_key(_destination),
                             'address': _destination.address,
                             'latitude': _destination.latitude,
@@ -578,11 +585,12 @@ def compute():  # process the queue of estimation requests
                 city_train_trips = cities_dict_first_model[city]['train_trips']
                 city_plane_trips = cities_dict_first_model[city]['plane_trips']
                 cities_mean_dict[city] = {
-                    'city': city,
-                    'country': _get_country_key(destinations_by_city_key[city]),
-                    'address': destinations_by_city_key[city].address,
-                    'latitude': destinations_by_city_key[city].latitude,
-                    'longitude': destinations_by_city_key[city].longitude,
+                    'location': _get_location_key(destinations_by_key[city]),
+                    'city': _get_city_key(destinations_by_key[city]),
+                    'country': _get_country_key(destinations_by_key[city]),
+                    'address': destinations_by_key[city].address,
+                    'latitude': destinations_by_key[city].latitude,
+                    'longitude': destinations_by_key[city].longitude,
                     'footprint': city_mean_foot,
                     'distance': city_mean_dist,
                     'train_trips': city_train_trips,
@@ -638,19 +646,21 @@ def compute():  # process the queue of estimation requests
         # SCENARIO C : At Least One Origin, At Least One Destination ##########
         #
         # Run Scenario A for each Destination, and expose optimum Destination.
+        # Skip destinations already visited.  (collapse duplicate destinations)
         #
         else:
             estimation.scenario = ScenarioEnum.many_to_many
-            unique_city_keys = []
+            unique_location_keys = []
             result_cities = []
             for destination in destinations:
+                location_key = _get_location_key(destination)
                 city_key = _get_city_key(destination)
                 country_key = _get_country_key(destination)
 
-                if city_key in unique_city_keys:
+                if location_key in unique_location_keys:
                     continue
                 else:
-                    unique_city_keys.append(city_key)
+                    unique_location_keys.append(location_key)
 
                 city_results = compute_one_to_many(
                     _origin=destination,
@@ -659,6 +669,7 @@ def compute():  # process the queue of estimation requests
                 )
                 city_results['city'] = city_key
                 city_results['country'] = country_key
+                city_results['location'] = location_key
                 city_results['address'] = destination.address
                 city_results['latitude'] = destination.latitude
                 city_results['longitude'] = destination.longitude
@@ -719,7 +730,7 @@ def consult_estimation(public_id, extension):
     except sqlalchemy.orm.exc.NoResultFound:
         return abort(404)
     except Exception as e:
-        # TODO: log?
+        # log? (or not)
         return abort(500)
 
     # allowed_formats = ['html']
@@ -763,6 +774,7 @@ def consult_estimation(public_id, extension):
         si = StringIO()
         cw = csv.writer(si, quoting=csv.QUOTE_ALL)
         cw.writerow([
+            u"location",
             u"city", u"country", u"address",
             u"latitude", u"longitude",
             u"co2_kg",
@@ -774,9 +786,11 @@ def consult_estimation(public_id, extension):
         results = estimation.get_output_dict()
         for city in results['cities']:
             cw.writerow([
-                city['city'].encode(OUT_ENCODING),
-                city['country'].encode(OUT_ENCODING),
-                city['address'].encode(OUT_ENCODING),
+                # city['location'].encode(OUT_ENCODING),
+                city['location'],
+                city['city'],
+                city['country'],
+                city['address'],
                 city.get('latitude', 0.0),
                 city.get('longitude', 0.0),
                 round(city['footprint'], 3),
@@ -948,6 +962,51 @@ def get_scaling_laws_csv():
             'Content-disposition': 'attachment; filename=scaling_laws.csv',
         },
     )
+
+
+@main.route('/geocode')
+@main.route('/geocode.html')
+def query_geocode():
+    requested = request.args.getlist('address')
+    if not requested:
+        requested = request.args.getlist('address[]')
+    if not requested:
+        requested = request.args.getlist('a')
+    if not requested:
+        requested = request.args.getlist('a[]')
+    #requested = _collect_request_args_list(('address', 'a'))
+    if not requested:
+        return Response(
+            response="""
+<p>
+Usage example: <a href="/geocode.html?address=Toulouse,France&amp;address=Paris,France">/geocode?address=Toulouse,France</a>
+</p>
+
+<p>
+Please do not request this endpoint more than every two seconds.
+</p>
+
+
+"""
+        )
+
+    response = u""
+
+    geocoder = CachedGeocoder()
+    for address in requested:
+        location = geocoder.geocode(address)
+
+        response += """
+<pre>
+Requested: `%s'
+Geocoded: `%s'
+Longitude: `%f`
+Latitude: `%f`
+Altitude: `%f` (unreliable)
+</pre>
+""" % (address, location, location.longitude, location.latitude, location.altitude)
+
+    return Response(response=response)
 
 
 @main.route("/test")
