@@ -2,7 +2,7 @@
 # Travel Carbon Footprint Calculator
 
 - https://travel-footprint-calculator.apps.goutenoir.com  (private demo)
-- http://travel-footprint-calculator.irap.omp.eu  (official, for later)
+- http://travel-footprint-calculator.irap.omp.eu  (official)
 
 
 ## Overview
@@ -16,20 +16,25 @@
 
 ## Installation
 
-Tested only on Python `2.7`.  _Sprint._ 
+Works on Python `2.7` up to `1.2` version.
+Works on Python `3.7` from `1.3` version.
+
 
 ### Create a virtual environment
 
 You don't _have to_.  But it's useful for development.
 
-    virtualenv venv
+    virtualenv .venv
 
 Then, source it to enable it.
 
-    source venv/bin/activate
+    source .venv/bin/activate
 
 ### Install the python dependencies
 
+You will need Cython.
+
+    sudo apt install cython
     pip install -r requirements.txt
 
 ### Create an empty database
@@ -44,18 +49,16 @@ Then, source it to enable it.
 ### Configure permissions
 
 `var/runs` must be writeable by the application.
+It is the file-based part of the database.
 
-
-## Build CSS and JS ()for prod)
+## Build CSS and JS (for prod)
 
     flask assets build
 
 
-
-
 ## Development
 
-    source venv/bin/activate
+    source .venv/bin/activate
     source .env.flaskrun
     flask run
 
