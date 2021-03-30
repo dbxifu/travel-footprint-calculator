@@ -374,7 +374,7 @@ def compute():  # process the queue of estimation requests
                 continue
 
             try:
-                origin = geocoder.geocode(origin_address.encode('utf-8'))
+                origin = geocoder.geocode(origin_address)
             except geopy.exc.GeopyError as e:
                 warning = u"Ignoring origin `%s` " \
                           u"since we failed to geocode it.\n%s\n" % (
@@ -430,9 +430,7 @@ def compute():  # process the queue of estimation requests
                 continue
 
             try:
-                destination = geocoder.geocode(
-                    destination_address.encode('utf-8')
-                )
+                destination = geocoder.geocode(destination_address)
             except geopy.exc.GeopyError as e:
                 warning = u"Ignoring destination `%s` " \
                           u"since we failed to geocode it.\n%s\n" % (
