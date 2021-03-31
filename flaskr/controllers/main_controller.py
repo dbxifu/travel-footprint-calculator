@@ -20,7 +20,7 @@ from flask import (
     abort,
     send_from_directory,
 )
-from pandas.compat import StringIO as PandasStringIO
+# from pandas.compat import StringIO as PandasStringIO
 from wtforms import validators
 from yaml import safe_dump as yaml_dump
 
@@ -90,7 +90,7 @@ def gather_addresses(from_list, from_file):
         if 'text/csv' == file_mimetype:
 
             rows_dicts = pandas \
-                .read_csv(PandasStringIO(file_contents)) \
+                .read_csv(StringIO(file_contents)) \
                 .rename(str.lower, axis='columns') \
                 .to_dict(orient="row")
 
@@ -111,7 +111,7 @@ def gather_addresses(from_list, from_file):
                 or from_file.filename.endswith('xlsx'):
 
             rows_dicts = pandas \
-                .read_excel(PandasStringIO(file_contents)) \
+                .read_excel(StringIO(file_contents)) \
                 .rename(str.lower, axis='columns') \
                 .to_dict(orient="row")
 
