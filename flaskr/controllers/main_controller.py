@@ -29,7 +29,7 @@ from flaskr.core import (
     get_emission_models,
     increment_hit_counter,
 )
-from flaskr.extensions import cache, send_email
+from flaskr.extensions import send_email
 from flaskr.forms import EstimateForm
 from flaskr.geocoder import CachedGeocoder
 from flaskr.models import db, Estimation, StatusEnum, ScenarioEnum
@@ -49,7 +49,7 @@ pi_email = "didier.barret@gmail.com"  # todo: move to content YAML or .env
 
 
 @main.route('/favicon.ico')
-@cache.cached(timeout=10000)
+# @cache.cached(timeout=10000)
 def favicon():  # we want it served from the root, not from static/
     return send_from_directory(
         join(main.root_path, '..', 'static', 'img'),
