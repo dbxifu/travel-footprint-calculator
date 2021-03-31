@@ -4,8 +4,8 @@
 
 version: '2.0'
 services:
-    com_goutenoir_apps_travel-footprint-calculator:
-        container_name: com_goutenoir_apps_travel-footprint-calculator
+    travel_footprint_calculator:
+        container_name: travel_footprint_calculator
         restart: always
         build: .
         volumes:
@@ -22,13 +22,12 @@ services:
             LETSENCRYPT_HOST: travel-footprint-calculator.apps.goutenoir.com
             LETSENCRYPT_EMAIL: antoine@goutenoir.com
             VIRTUAL_HOST: travel-footprint-calculator.apps.goutenoir.com
-            # 80 is the default port
             VIRTUAL_PORT: 80
             ###################################################
 
 
-    com_goutenoir_apps_travel-footprint-calculator_mahcron:
-        container_name: com_goutenoir_apps_travel-footprint-calculator_mahcron
+    travel_footprint_calculator_mahcron:
+        container_name: travel_footprint_calculator_mahcron
         image: jsonfry/curl-cron
         restart: always
         environment:
