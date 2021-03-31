@@ -32,5 +32,8 @@ class CachedGeocoder:
             )
         return self.cache[address]
 
+    def __del__(self):
+        self.close()
+
     def close(self):
         self.cache.close()
