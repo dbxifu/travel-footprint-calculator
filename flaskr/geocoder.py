@@ -1,6 +1,7 @@
-import geopy
 import shelve
 import time
+
+import geopy
 
 from flaskr.core import get_path
 
@@ -8,7 +9,7 @@ from flaskr.core import get_path
 class CachedGeocoder:
 
     def __init__(self, source="Nominatim", geocache="geocache.db"):
-        self.geocoder = getattr(geopy.geocoders, source)()
+        self.geocoder = getattr(geopy.geocoders, source)(scheme='http')
         self.cache = shelve.open(get_path(geocache), writeback=True)
         # self.timestamp = time.time() + 1.5
 
