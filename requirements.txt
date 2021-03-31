@@ -21,7 +21,7 @@ cssmin==0.2.0
 jsmin==2.2.1
 pyyaml==5.1.2
 Markdown==3.1.1
-numpy==1.16.5
+numpy==1.18.5
 enum34==1.1.6
 geopy==1.20.0
 python-dotenv==0.10.3
@@ -33,7 +33,7 @@ Werkzeug==0.16.1
 
 # Spreadsheet reading
 # Note that 0.24 is the most recent version still supporting python 2.7
-pandas==0.24.2
+pandas==0.25.3
 # Excel support for wisdom-impaired Microsoft users
 xlrd==1.2.0
 # ODS reading support is only available natively in pandas 0.25
