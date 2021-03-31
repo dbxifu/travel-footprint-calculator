@@ -8,14 +8,14 @@ import geopy.geocoders
 
 from flaskr.core import get_path
 
-ctx = ssl.create_default_context(cafile=certifi.where())
-geopy.geocoders.options.default_ssl_context = ctx
+ssl_ctx = ssl.create_default_context(cafile=certifi.where())
+geopy.geocoders.options.default_ssl_context = ssl_ctx
 
 
 class CachedGeocoder:
 
     def __init__(self, source="Nominatim", geocache="geocache.db"):
-        self.geocoder = getattr(geopy.geocoders, source)(scheme='http')
+        self.geocoder = getattr(geopy.geocoders, source)(scheme='https')
         self.cache = shelve.open(get_path(geocache), writeback=True)
         # self.timestamp = time.time() + 1.5
 
