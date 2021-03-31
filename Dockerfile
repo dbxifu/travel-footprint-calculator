@@ -1,4 +1,4 @@
-FROM tiangolo/uwsgi-nginx-flask:python3.7
+FROM tiangolo/uwsgi-nginx-flask:python3.8
 ADD . /app
 WORKDIR /app
 RUN pip install -r requirements.txt
