@@ -1,7 +1,7 @@
 FROM tiangolo/uwsgi-nginx-flask:python3.8
 ADD . /app
 WORKDIR /app
-RUN apt-get install cython
+RUN apt-get update && apt-get install -y cython3
 RUN pip install -r requirements.txt
 ENV FLASK_APP "flaskr"
 ENV FLASK_ENV "production"
