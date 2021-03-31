@@ -974,7 +974,7 @@ def query_geocode():
         requested = request.args.getlist('a')
     if not requested:
         requested = request.args.getlist('a[]')
-    #requested = _collect_request_args_list(('address', 'a'))
+    # requested = _collect_request_args_list(('address', 'a'))
     if not requested:
         return Response(
             response="""
@@ -985,8 +985,6 @@ Usage example: <a href="/geocode.html?address=Toulouse,France&amp;address=Paris,
 <p>
 Please do not request this endpoint more than every two seconds.
 </p>
-
-
 """
         )
 
