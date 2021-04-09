@@ -70,6 +70,43 @@
                 {% endif %}
             {% endwith %}
 
+            <style>
+                .nojs {
+                    opacity: 0;
+                    animation: 16.18s fadeIn;
+                    animation-delay: 1.618s;
+                    animation-fill-mode: forwards;
+
+                    visibility: hidden;
+                    pointer-events: none;
+                }
+
+                @keyframes fadeIn {
+                    0% {
+                        opacity: 0;
+                    }
+                    25% {
+                        visibility: visible;
+                        opacity: 1;
+                    }
+                    93% {
+                        visibility: visible;
+                        opacity: 1;
+                    }
+                    99% {
+                        visibility: visible;
+                        opacity: 0;
+                    }
+                    100% {
+                        visibility: hidden;
+                    }
+                }
+            </style>
+            <div class="alert alert-danger nojs">
+                Javascript appears disabled, and we totally get that.
+                You'll need javascript to render the plots, though.
+            </div>
+
             {% block body %}
             {% endblock %}
         </div>
