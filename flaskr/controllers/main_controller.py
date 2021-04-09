@@ -83,7 +83,7 @@ def gather_addresses(from_list, from_file):
     addresses = []
     if from_file:
         file_mimetype = from_file.mimetype
-        file_contents = from_file.read()
+        file_contents = from_file.read().decode()
 
         rows_dicts = None
 
