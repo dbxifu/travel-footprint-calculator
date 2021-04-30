@@ -466,6 +466,12 @@ home:
           _This list is obviously not exhaustive but represents
           a variety of estimates from lower to higher values._
 
+      - title: Updating the emission factors 
+        content: |
+          The emission factors will be regularly updated. In April 2021, the emission factors 
+          from ADEME were updated. The average emission factors for short, medium, long flights 
+          are considered.
+
 
       - title: How are the different methods built? 
         content: |
