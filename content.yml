@@ -470,7 +470,8 @@ home:
         content: |
           The emission factors will be regularly updated. In April 2021, the emission factors 
           from ADEME were updated. The average emission factors for short, medium, long flights 
-          are considered.
+          are considered. The same data are considered by the 
+          Labos1.5 organisation (https://labos1point5.org/ges-1point5).
 
 
       - title: How are the different methods built? 
