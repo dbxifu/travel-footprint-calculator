@@ -88,9 +88,11 @@ def gather_addresses(from_list, from_file):
         rows_dicts = None
 
         if 'text/csv' == file_mimetype:
-
+            delimiter = ','
+            if ';' in file_contents:
+                delimiter = ';'
             rows_dicts = pandas \
-                .read_csv(StringIO(file_contents)) \
+                .read_csv(StringIO(file_contents), delimiter=delimiter) \
                 .rename(str.lower, axis='columns') \
                 .to_dict(orient="row")
 
@@ -194,7 +196,7 @@ def estimate():  # register new estimation request, more accurately
                 form.origin_addresses_file.data
             )
         except validators.ValidationError as e:
-            form.origin_addresses_file.errors.append(e.message)
+            form.origin_addresses_file.errors.append(str(e))
             return show_form()
 
         try:
@@ -203,7 +205,7 @@ def estimate():  # register new estimation request, more accurately
                 form.destination_addresses_file.data
             )
         except validators.ValidationError as e:
-            form.destination_addresses_file.errors.append(e.message)
+            form.destination_addresses_file.errors.append(str(e))
             return show_form()
 
         estimation.use_train_below_km = form.use_train_below_km.data
