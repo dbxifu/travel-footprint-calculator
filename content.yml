@@ -600,7 +600,14 @@ home:
           In case of very large many-to-many origin-to-destination 
           combinations, the computing time may become very large. The advice is
           to split the inputs into parts. This may happen when comparing tens 
-          of thousands origins with hundreds of destinations.
+          of thousands origins with hundreds of destinations. 
+          
+          If the format of the input data is not respected, the calculator will
+          crash, without being too informative. Please check your inputs first.
+          
+          If you experienced an error, it will always help to empty the Cache of 
+          your navigator. Alternatively, you may want to try with a different 
+          browser.
 
       - title: Caveats
         content: |
