@@ -11,7 +11,6 @@ from wtforms import validators
 
 from .content import content_dict as content
 from .core import models
-from .extensions import captcha
 from .models import User
 
 form_content = content['estimate']['form']
@@ -134,14 +133,14 @@ class EstimateForm(FlaskForm):
             # )
         ],
     )
-    captcha = StringField(
-        label=form_content['captcha']['label'],
-        description=form_content['captcha']['description'],
-        validators=[
-            validators.InputRequired(),
-            validators.Length(max=16),
-        ],
-    )
+    # captcha = StringField(
+    #     label=form_content['captcha']['label'],
+    #     description=form_content['captcha']['description'],
+    #     validators=[
+    #         validators.InputRequired(),
+    #         validators.Length(max=16),
+    #     ],
+    # )
 
     upload_set = ['csv', 'xls', 'xlsx']
 
@@ -169,12 +168,12 @@ class EstimateForm(FlaskForm):
         if not check_validate:
             return False
 
-        if self.captcha.data != IS_HUMAN:
-            if not captcha.validate():
-                self.captcha.errors.append(
-                    "Captcha do not match.  Try again."
-                )
-                return False
+        # if self.captcha.data != IS_HUMAN:
+        #     if not captcha.validate():
+        #         self.captcha.errors.append(
+        #             "Captcha do not match.  Try again."
+        #         )
+        #         return False
 
         # Origins must be set either by field or file
         if (

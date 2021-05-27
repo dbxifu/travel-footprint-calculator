@@ -1,8 +1,9 @@
 #! ../venv/bin/python
 import os
-from markdown import markdown
 
 from dotenv import load_dotenv, find_dotenv, dotenv_values
+from markdown import markdown
+
 # Load config from .env ; do this before importing local libs (and flask)
 # 1. Write into OS environment -- if this fails you forgot to create .env file
 load_dotenv(find_dotenv(raise_error_if_not_found=True), override=True)
@@ -63,7 +64,7 @@ def create_app(object_name):
     app.config['BASIC_AUTH_USERNAME'] = os.getenv('ADMIN_USERNAME')
     app.config['BASIC_AUTH_PASSWORD'] = os.getenv('ADMIN_PASSWORD')
 
-    app.config['CAPTCHA_ENABLE'] = True
+    app.config['CAPTCHA_ENABLE'] = False
     app.config['CAPTCHA_LENGTH'] = 5
     app.config['CAPTCHA_WIDTH'] = 256
     app.config['CAPTCHA_HEIGHT'] = 158
