@@ -1,7 +1,7 @@
+import enum
 import shelve
 from os.path import join, isfile
 
-import enum
 from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin, AnonymousUserMixin
 from flask_sqlalchemy import SQLAlchemy
@@ -123,7 +123,11 @@ class Estimation(db.Model):
     def set_output_dict(self, output):
         # with shelve.open(filename=self.get_output_filename(), protocol=2) as shelf:
         #     shelf['output'] = output
-        shelf = shelve.open(filename=self.get_output_filename(), protocol=2)
+        shelf = shelve.open(
+            filename=self.get_output_filename(),
+            flag='c',  # read/write, create if needed
+            protocol=2
+        )
         shelf['output'] = output
         shelf.close()
 
@@ -134,13 +138,22 @@ class Estimation(db.Model):
             if self.output_yaml is None:
                 output_filename = self.get_output_filename()
                 if isfile(output_filename):
-                    # with shelve.open(filename=output_filename,
-                    #                  protocol=2) as shelf:
-                    #     self._output_dict = shelf['output']
-                    shelf = shelve.open(filename=output_filename, protocol=2)
+
+                    # Perhaps we'll need a mutex around here
+                    # from threading import Lock
+                    # mutex = Lock()
+                    # mutex.acquire()
+
+                    # Not using the `with …` syntax, but we may in python3
+                    shelf = shelve.open(
+                        filename=output_filename,
+                        flag='r',
+                        protocol=2
+                    )
                     self._output_dict = shelf['output']
-                    # self._output_dict = copy(shelf['output'])
                     shelf.close()
+
+                    # mutex.release()
                 else:
                     self._output_dict = None
             else:
