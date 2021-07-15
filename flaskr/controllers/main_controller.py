@@ -254,7 +254,6 @@ def estimate():  # register new estimation request, more accurately
             public_id=estimation.public_id,
             extension='html'
         ))
-        # return render_template("estimate-debrief.html", form=form)
 
     return show_form()
 
@@ -720,9 +719,6 @@ def compute():  # process the queue of estimation requests
         return _respond(errmsg)
 
 
-unavailable_statuses = [StatusEnum.pending, StatusEnum.working]
-
-
 @main.route("/estimation/<public_id>.<extension>")
 def consult_estimation(public_id, extension):
     try:
@@ -741,13 +737,16 @@ def consult_estimation(public_id, extension):
 
     if extension in ['xhtml', 'html', 'htm']:
 
-        if estimation.status in unavailable_statuses:
+        if estimation.status in estimation.unavailable_statuses:
             return render_template(
                 "estimation-queue-wait.html",
                 estimation=estimation
             )
         else:
-            estimation_output = estimation.get_output_dict()
+            try:
+                estimation_output = estimation.get_output_dict()
+            except Exception as e:
+                return abort(404)
             estimation_sum = 0
             if estimation_output:
                 for city in estimation_output['cities']:
@@ -762,16 +761,16 @@ def consult_estimation(public_id, extension):
 
     elif extension in ['yaml', 'yml']:
 
-        if estimation.status in unavailable_statuses:
-            abort(404)
+        if not estimation.is_available():
+            return abort(404)
 
         return u"%s" % yaml_dump(estimation.get_output_dict())
         # return estimation.output_yaml
 
     elif 'csv' == extension:
 
-        if estimation.status in unavailable_statuses:
-            abort(404)
+        if not estimation.is_available():
+            return abort(404)
 
         si = StringIO()
         cw = csv.writer(si, quoting=csv.QUOTE_ALL)
@@ -811,7 +810,7 @@ def consult_estimation(public_id, extension):
         )
 
     else:
-        abort(404)
+        return abort(404)
 
 
 def get_locations(addresses):
@@ -877,8 +876,8 @@ def get_trips_csv(public_id, destination_index=0):
     except Exception as e:
         return abort(500)
 
-    if estimation.status in unavailable_statuses:
-        abort(404)
+    if not estimation.is_available():
+        return abort(404)
 
     si = StringIO()
     cw = csv.writer(si, quoting=csv.QUOTE_ALL)
@@ -891,12 +890,12 @@ def get_trips_csv(public_id, destination_index=0):
     results = estimation.get_output_dict()
 
     if not 'cities' in results:
-        abort(500)
+        return abort(500)
 
     cities_length = len(results['cities'])
 
     if 0 == cities_length:
-        abort(500, Response("No cities in results."))
+        return abort(500, Response("No cities in results."))
 
     destination_index = min(destination_index, cities_length - 1)
     destination_index = max(destination_index, 0)

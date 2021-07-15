@@ -42,6 +42,8 @@ class Estimation(db.Model):
         default=lambda: generate_unique_id(),
         unique=True
     )
+
+    unavailable_statuses = [StatusEnum.pending, StatusEnum.working]
     status = db.Column(db.Enum(StatusEnum), default=StatusEnum.pending)
 
     email = db.Column(db.Unicode(1024))
@@ -121,8 +123,6 @@ class Estimation(db.Model):
         return join(runs_dir, self.public_id)
 
     def set_output_dict(self, output):
-        # with shelve.open(filename=self.get_output_filename(), protocol=2) as shelf:
-        #     shelf['output'] = output
         shelf = shelve.open(
             filename=self.get_output_filename(),
             flag='c',  # read/write, create if needed
@@ -139,21 +139,25 @@ class Estimation(db.Model):
                 output_filename = self.get_output_filename()
                 if isfile(output_filename):
 
-                    # Perhaps we'll need a mutex around here
-                    # from threading import Lock
-                    # mutex = Lock()
-                    # mutex.acquire()
+                    try:
+                        # Perhaps we'll need a mutex around here
+                        # from threading import Lock
+                        # mutex = Lock()
+                        # mutex.acquire()
 
-                    # Not using the `with …` syntax, but we may in python3
-                    shelf = shelve.open(
-                        filename=output_filename,
-                        flag='r',
-                        protocol=2
-                    )
-                    self._output_dict = shelf['output']
-                    shelf.close()
+                        # Not using the `with …` syntax, but we may in python3
+                        shelf = shelve.open(
+                            filename=output_filename,
+                            flag='r',
+                            protocol=2
+                        )
+                        self._output_dict = shelf['output']
+                        shelf.close()
 
-                    # mutex.release()
+                        # mutex.release()
+                    except Exception as e:
+
+                        return None
                 else:
                     self._output_dict = None
             else:
@@ -176,9 +180,15 @@ class Estimation(db.Model):
 
     def get_models(self):
         if self._models is None:
-            mdl_slugs = self.models_slugs.split("\n")
-            self._models = [m for m in models if m.slug in mdl_slugs]
+            slugs = self.models_slugs.split("\n")
+            self._models = [m for m in models if m.slug in slugs]
         return self._models
+
+    def is_available(self):
+        if self.status in self.unavailable_statuses:
+            return False
+        # We might add more conditions here, such as file data availability
+        return True
 
 
 # BACKOFFICE CONFIGURATION ####################################################
