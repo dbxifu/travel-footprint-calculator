@@ -26,6 +26,7 @@ enum34==1.1.6
 geopy==1.23.0
 certifi==2019.11.28
 python-dotenv==0.10.3
+chardet==4.0.0
 
 # Force stable werkzeug
 # see https://gitlab.irap.omp.eu/carbon/travel-carbon-footprint.irap.omp.eu/issues/38

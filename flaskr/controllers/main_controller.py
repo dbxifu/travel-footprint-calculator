@@ -6,6 +6,7 @@ from io import StringIO
 from os import unlink, getenv
 from os.path import join
 
+import chardet
 import geopy
 import pandas
 import sqlalchemy
@@ -83,7 +84,14 @@ def gather_addresses(from_list, from_file):
     addresses = []
     if from_file:
         file_mimetype = from_file.mimetype
-        file_contents = from_file.read().decode()
+        file_contents_raw = from_file.read()
+        detected = chardet.detect(file_contents_raw)
+        if detected['encoding']:
+            file_contents = file_contents_raw.decode(
+                encoding=detected['encoding']
+            )
+        else:
+            file_contents = file_contents_raw.decode()
 
         rows_dicts = None
 
@@ -198,6 +206,12 @@ def estimate():  # register new estimation request, more accurately
         except validators.ValidationError as e:
             form.origin_addresses_file.errors.append(str(e))
             return show_form()
+        except UnicodeDecodeError as e:
+            form.origin_addresses_file.errors.append(
+                "We only accept UTF-8 and UTF-16 encoded files, \n" +
+                "or files we can detect encoding from."
+            )
+            return show_form()
 
         try:
             estimation.destination_addresses = gather_addresses(
@@ -206,6 +220,12 @@ def estimate():  # register new estimation request, more accurately
             )
         except validators.ValidationError as e:
             form.destination_addresses_file.errors.append(str(e))
+            return show_form()
+        except UnicodeDecodeError as e:
+            form.origin_addresses_file.errors.append(
+                "We only accept UTF-8 and UTF-16 encoded files, \n" +
+                "or files we can detect encoding from."
+            )
             return show_form()
 
         estimation.use_train_below_km = form.use_train_below_km.data
