@@ -252,8 +252,12 @@ for model in models:
 # LOGIN FORM ##################################################################
 
 class LoginForm(FlaskForm):
-    username = StringField(u'Username', validators=[validators.required()])
-    password = PasswordField(u'Password', validators=[validators.optional()])
+    username = StringField(u'Username', validators=[
+        # validators.required()
+    ])
+    password = PasswordField(u'Password', validators=[
+        # validators.optional()
+    ])
 
     def validate(self):
         check_validate = super(LoginForm, self).validate()
