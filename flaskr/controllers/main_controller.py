@@ -132,7 +132,7 @@ def gather_addresses(from_list, from_file):
         #         .to_dict(orient="row")
 
         if rows_dicts is not None:
-            for row_dict in rows_dicts:
+            for row_index, row_dict in enumerate(rows_dicts):
                 if 'address' in row_dict:
                     addresses.append(row_dict['address'])
                     continue
@@ -140,10 +140,17 @@ def gather_addresses(from_list, from_file):
                 if 'city' in row_dict:
                     address = row_dict['city']
                 if 'country' in row_dict:
+                    if not row_dict['country']:
+                        # If not specified, we'll have a NaN in row_dict['country'], somehow
+                        # It's best to raise instead of letting the geocoder assume the country
+                        raise validators.ValidationError(
+                            "One of the addresses (%s, at row %d) is lacking a country." % (address, row_index)
+                        )
+                    country = str(row_dict['country'])
                     if address is None:
-                        address = row_dict['country']
+                        address = country
                     else:
-                        address += "," + row_dict['country']
+                        address += "," + country
                 if address is not None:
                     addresses.append(address)
                 else:
