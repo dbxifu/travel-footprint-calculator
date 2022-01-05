@@ -1,3 +1,4 @@
+import re
 import sys
 import traceback
 from os import getenv
@@ -16,16 +17,16 @@ from flask_session_captcha import FlaskSessionCaptcha
 from flaskr.models import User
 
 
-# Setup flask cache
+# Setup flask cache, that we mostly do not use, but it's there just in case
 cache = Cache()
 
-# Flask assets
+# Flask assets, for CSS, JS and such
 assets_env = Assets()
 
 # Session Store for captcha and perhaps visits counter
 session = Session()
 
-# Captcha
+# Captcha, eventually disabled for better UX, but it's available if needed
 captcha = FlaskSessionCaptcha()
 
 # Mail handler
@@ -38,10 +39,10 @@ debug_toolbar = DebugToolbarExtension()
 login_manager = LoginManager()
 login_manager.login_view = "main.login"
 login_manager.login_message_category = "warning"
+basic_auth = BasicAuth()
 
 # Admin backoffice
 admin = Admin()
-basic_auth = BasicAuth()
 
 
 @login_manager.user_loader
@@ -71,7 +72,6 @@ def send_email(to_recipient, subject, message):
 
 
 def icon2html(text):
-    import re
     icon_html = r"""<svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="/static/bootstrap-icons-1.0.0/bootstrap-icons.svg#\1"/></svg>"""
     return re.sub(
         "<icon +([^ ]+)>",
