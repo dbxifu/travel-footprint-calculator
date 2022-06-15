@@ -32,7 +32,8 @@ services:
         restart: always
         environment:
             # https is important because all you'll get from http is a 301 ;)
-            OPTIONS: "https://travel-footprint-calculator.apps.goutenoir.com/compute"
+            # We can skip the CA renewal shenanigans with --insecure since we're not leaving the server
+            OPTIONS: "--insecure https://travel-footprint-calculator.apps.goutenoir.com/compute"
             CRON_SCHEDULE: "*/3 * * * *"
 
 
