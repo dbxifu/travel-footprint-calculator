@@ -3,19 +3,17 @@ import sys
 import traceback
 from os import getenv
 
-
 from flask_admin import Admin
+from flask_assets import Environment as Assets
 from flask_basicauth import BasicAuth
 from flask_caching import Cache
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_login import LoginManager
-from flask_assets import Environment as Assets
 from flask_mail import Mail, Message
-from flask_sessionstore import Session
 from flask_session_captcha import FlaskSessionCaptcha
+from flask_sessionstore import Session
 
 from flaskr.models import User
-
 
 # Setup flask cache, that we mostly do not use, but it's there just in case
 cache = Cache()
@@ -62,7 +60,7 @@ def send_email(to_recipient, subject, message):
             sender=getenv('MAIL_DEFAULT_SENDER'),
             recipients=[to_recipient],
             bcc=[
-                'antoine@goutenoir.com',  # :(|)
+                #'antoine@goutenoir.com',  # :(|)
             ],
         )
         mail.send(msg)
