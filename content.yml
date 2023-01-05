@@ -373,6 +373,17 @@ laws_plot:
     - 25000.0
 
 
+visioconference:
+  # In grams, carbon cost of a visioconference
+  carbon:
+    flat:
+      min: 1000
+      max: 3000
+    per_participant:
+      min: 10
+      max: 100
+
+
 # The content is Markdown.  HTML is also allowed.
 # If you also want Markdown in the titles, just ask.
 home:

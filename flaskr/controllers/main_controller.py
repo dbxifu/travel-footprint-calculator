@@ -1,15 +1,11 @@
-import csv
-import re
-# from cStringIO import StringIO
-from copy import deepcopy
-from io import StringIO
-from os import unlink, getenv
-from os.path import join
-
 import chardet
+import csv
 import geopy
 import pandas
+import re
 import sqlalchemy
+# from cStringIO import StringIO
+from copy import deepcopy
 from flask import (
     Blueprint,
     Response,
@@ -21,6 +17,9 @@ from flask import (
     abort,
     send_from_directory,
 )
+from io import StringIO
+from os import unlink, getenv
+from os.path import join
 # from pandas.compat import StringIO as PandasStringIO
 from wtforms import validators
 from yaml import safe_dump as yaml_dump
@@ -774,16 +773,23 @@ def consult_estimation(public_id, extension):
                 estimation_output = estimation.get_output_dict()
             except Exception as e:
                 return abort(404)
+
             estimation_sum = 0
             if estimation_output:
                 for city in estimation_output['cities']:
                     estimation_sum += city['footprint']
+
+            # TODO
+            estimation_visio_min = 42
+            estimation_visio_max = 69
 
             return render_template(
                 "estimation.html",
                 estimation=estimation,
                 estimation_output=estimation_output,
                 estimation_sum=estimation_sum,
+                estimation_visio_min=estimation_visio_min,
+                estimation_visio_max=estimation_visio_max,
             )
 
     elif extension in ['yaml', 'yml']:
