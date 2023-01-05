@@ -168,6 +168,15 @@
         {{ render_cities(estimation_output.cities) }}
     {% endif %}
 
+        <h3>🎙 As a Visioconference</h3>
+        <div>
+            If the meeting/seminar was held online as a visioconference,
+            it would emit between
+            {{ "%.1f" | format(estimation_visio_min) }} kg CO<sub>2</sub><small>EQ</small>
+            and
+            {{ "%.1f" | format(estimation_visio_max) }} kg CO<sub>2</sub><small>EQ</small>.
+        </div>
+
     </div>
 
     <div class="col-md-6">
@@ -249,7 +258,7 @@
 {% block js %}
 {% if not estimation.has_failed() %}
 
-{# Eventually, once we're done with plots, use flask's asset minifier #}
+{# Eventually, once we're done with plots, use flask's asset minifier perhaps? #}
 <script src="/static/js/vendor/d3.v6.js"></script>
 <script src="/static/js/vendor/d3-legend.js"></script>
 <script src="/static/js/vendor/d3-scale-chromatic.v1.min.js"></script>
@@ -277,6 +286,7 @@ draw_sorted_emissions_inequality(
     "#sorted_emissions_inequality",
     "/estimation/{{ estimation.public_id }}.csv"
 );
+
 {% endif %}
 
 
