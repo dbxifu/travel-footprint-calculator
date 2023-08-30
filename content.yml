@@ -534,7 +534,8 @@ home:
           Deviations from the shortest path is accounted by a 
           1.35 multiplication factor. The tool thus assumes the 
           mean of the emission factors of national and international rails, 
-          as provided by DEFRA (i.e. 23 grams per passenger km). 
+          as provided by DEFRA (i.e. 23 grams per passenger km). This value is consistent with the ADEME values, 
+          if one considers trains powered by non-nuclear energy (it would be a factor of ~10 lower in that case).
           To relate the duration of a train journey to a travel distance, 
           an average speed of 100 km/h is assumed. 
 
