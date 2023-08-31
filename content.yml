@@ -237,12 +237,12 @@ models:
           - [24000.0, 4017.0]
           - [25000.0, 4184.4]
 
-  - name: French Ministry of Ecology (no mul. factor, not recommended)
+  - name: ADEME (2023, without the trail impacts, not recommended)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
     # MUST be unique, two models MUST NOT have the same slug.
-    slug: fr-ministry-ecology-no-rfi
+    slug: fr-ademe-no-rfi
     # There MUST exist a python file named like this in `flaskr/laws`
     # And it MUST contain a class named EmissionModel
     # Please keep this lowercased, letters-only (or I will breathe fire)
@@ -268,33 +268,36 @@ models:
         # The travel_emission_lerp_fit uses points instead of intervals
         # List of (distance in km, footprint in kg)
         points:
-          - [0.0, 0.0 ]
-          - [299.9, 0.0 ]
-          - [300.0, 103.02499999999998 ]
-          - [999.9, 158.492075 ]
-          - [1000.0, 158.50000000000003 ]
-          - [1999.9, 250.32414999999997 ]
-          - [2000, 250.33333333333326 ]
-          - [2999.9, 301.9948333333333 ]
-          - [3000, 302.0000000000004 ]
-          - [3999.9, 447.9854000000004 ]
-          - [4000, 448.0000000000002 ]
-          - [4999.9, 587.48605 ]
-          - [5000, 587.4999999999999 ]
-          - [5999.9, 608.9978499999997 ]
-          - [6000, 609.0000000000002 ]
-          - [6999.9, 629.9979000000001 ]
-          - [7000, 629.9999999999999 ]
-          - [7999.9, 719.9909999999996 ]
-          - [8000, 720.0000000000002 ]
-          - [8999.9, 760.4959500000004 ]
-          - [9000, 760.4999999999997 ]
-          - [9999.9, 864.9895499999997 ]
-          - [10000, 865.0000000000005 ]
-          - [10999.9, 1039.482549999999 ]
-          - [11000, 1035.9000000000015 ]
-          - [19999.9, 1879.1906300000016 ]
-          - [25000.0, 2347.7000000000016 ]
+          - [0.0, 0.0]
+          - [500.0, 63.0]
+          - [1000.0, 126.0]
+          - [1500.0, 1465.5]
+          - [2000.0, 1954.0]
+          - [2500.0, 2442.5]
+          - [3000.0, 2931.0]
+          - [3500.0, 3419.5]
+          - [4000.0, 332.2]
+          - [5000.0, 415.3]
+          - [6000.0, 498.4]
+          - [7000.0, 581.4]
+          - [8000.0, 664.5]
+          - [9000.0, 747.5]
+          - [10000.0, 830.6]
+          - [11000.0, 913.7]
+          - [12000.0, 996.7]
+          - [13000.0, 1079.8]
+          - [14000.0, 1162.8]
+          - [15000.0, 1245.9]
+          - [16000.0, 1329.0]
+          - [17000.0, 1412.0]
+          - [18000.0, 1495.1]
+          - [19000.0, 1578.1]
+          - [20000.0, 1661.2]
+          - [21000.0, 1744.3]
+          - [22000.0, 1827.3]
+          - [23000.0, 1910.4]
+          - [24000.0, 1993.4]
+          - [25000.0, 2076.5]
 
   - name: KLM data best fit (no mul. factor, not recommended)
     # Slugged version of the display name above
@@ -476,11 +479,9 @@ home:
           Providing more than one method enables to get 
           a mean value, while illustrating the significant differences in 
           their estimates. In alphabetic order, the data considered are 
-          from ADEME: the French Environment & Energy Management 
-          Agency, atmosfair: a German carbon offsetting company, 
+          from ADEME: French Agency for Ecological Transition, atmosfair: a German carbon offsetting company, 
           DEFRA: the UK Department for Environment, Food & Rural 
-          Affairs, the French Ministry for the Ecological and Inclusive Transition, 
-          ICAO: International Civil Aviation Organization, from the 
+          Affairs, ICAO: International Civil Aviation Organization, from the 
           KLM carbon compensation service data and finally from 
           myclimate, a Carbon offseting company, used in particular by Lufthansa. 
           
@@ -514,7 +515,8 @@ home:
           been run for a wide range of flights of varying distances (~100 
           flights spanning from 300 km to 12000 km) and the estimates 
           have been fitted with linear functions, covering adjacent 
-          distance intervals. For its carbon compensation service, KLM 
+          distance intervals (the calculators were run in 2020). 
+          For its carbon compensation service, KLM 
           provides on its web site a table of emissions for a large range 
           of flights. The KLM data have been also been fitted with linear 
           functions. Differences up to a few tens of percent may be found between
@@ -540,14 +542,13 @@ home:
           C. Int J Life Cycle Assess (2019) 24: 404](https://doi.org/10.1007/s11367-018-1556-3).).
           ATMOSFAIR considers a multiplier of 3, for all emissions above 9 km,
           accounting for the profile of the flight.
-          ICAO, KLM and the French Ministry for the 
-          Ecological and Inclusive Transition do not include a multiplier.
-          Therefore, the methods based on ICAO, the French Ministry for the 
-          Ecological and Inclusive Transition and KLM data are not recommended,
+          ICAO, KLM and the French Agency for Ecological Transition provides emission factors 
+          with and without the impacts associated with the trails.
+          Therefore, the methods based on ICAO and KLM data are not recommended,
           as they do not account for non-CO2 effects, but are still 
           given as methods providing the lowest emissions.
 
-          [![Models used](static/img/recap_scaling_laws.jpg)](static/img/recap_scaling_laws.jpg)
+#          [![Models used](static/img/recap_scaling_laws.jpg)](static/img/recap_scaling_laws.jpg)
 
       - title: Seating category
         content: |
@@ -705,7 +706,7 @@ home:
           - Labos1.5 organisation (https://labos1point5.org/ges-1point5)
           - Offset your flight with [atmosfair](https://www.atmosfair.de/en/offset/flight)
           - [ADEME](https://www.ademe.fr/en/frontpage/)
-            (French Environment & Energy Management Agency)
+            (French Agency for Ecological Transition)
           - [DEFRA](https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2023)
             emission conversion factors 2023
           - [ICAO](https://www.icao.int/environmental-protection/carbonoffset/pages/default.aspx)
