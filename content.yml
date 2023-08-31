@@ -493,7 +493,8 @@ home:
           The emission factors will be regularly updated. In April 2021, the emission factors 
           from ADEME were updated (a minor revision took place on september 2023, from (https://impactco2.fr/transport/avion)). 
           The average emission factors for short, medium, long flights 
-          are considered for planes of 200 seats or more (for ADEME). Very similar data are considered by the 
+          are considered as asverages for planes of ~200 seats or more (for ADEME, 
+          larger emissions for lower capaacity planes). Very similar data are considered by the 
           Labos1.5 organisation (https://labos1point5.org/ges-1point5). In September 2023, 
           the emission factors from DEFRA were updated. Similarly to the ADEME factors, 
           short-hauls have a distance less than 1000 km, medium-hauls between 1000 and 3500 km, 
