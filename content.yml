@@ -175,7 +175,7 @@ models:
           - [25000.0, 4163.431314509144 ]
 
 
-  - name: DEFRA 2023 (with radiative forcing)
+  - name: DEFRA (2023, with radiative forcing)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -702,10 +702,10 @@ home:
       - title: Additional resources
         content: |
           - Offset your flight with [atmosfair](https://www.atmosfair.de/en/offset/flight)
-          - [ADEME](http://www.bilans-ges.ademe.fr/en/accueil)
+          - [ADEME](https://www.ademe.fr/en/frontpage/)
             (French Environment & Energy Management Agency)
-          - [DEFRA](https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019)
-            emission conversion factors 2019
+          - [DEFRA](https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2023)
+            emission conversion factors 2023
           - [ICAO](https://www.icao.int/environmental-protection/carbonoffset/pages/default.aspx)
             Carbon Emissions Calculator
           - [KLM data](https://www.klm.com/travel/nl_en/prepare_for_travel/fly_co2_neutral/all_about_sustainable_travel/index.htm)
