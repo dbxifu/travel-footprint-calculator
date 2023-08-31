@@ -70,7 +70,7 @@ models:
           - [ 19999.9, 5606.129335551792 ]
           - [ 25000.0, 7094.270252762378 ]
 
-  - name: ADEME (2023, with contrail impacts)
+  - name: ADEME (2023, with trail impacts)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
