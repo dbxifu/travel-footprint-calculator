@@ -175,7 +175,7 @@ models:
           - [25000.0, 4163.431314509144 ]
 
 
-  - name: DEFRA (mul. factor=RFI=1.9)
+  - name: DEFRA 2023 (with radiative forcing)
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -206,15 +206,36 @@ models:
         # The travel_emission_lerp_fit uses points instead of intervals
         # List of (distance in km, footprint in kg)
         points:
-          - [0.0, 0.0 ]
-          - [299.9, 0.0 ]
-          - [300.0, 47.496000000000016 ]
-          - [499.9, 79.14416800000002 ]
-          - [500.0, 78.03232675954409 ]
-          - [3699.9, 576.0667775328388 ]
-          - [3700.0, 541.2334271596557 ]
-          - [19999.9, 2878.9047733493503 ]
-          - [25000.0, 3596.0006143105275 ]
+          - [0.0, 0.0]
+          - [500.0, 136.3]
+          - [1000.0, 272.6]
+          - [1500.0, 287.2]
+          - [2000.0, 383.0]
+          - [2500.0, 478.7]
+          - [3000.0, 574.5]
+          - [3500.0, 670.2]
+          - [4000.0, 669.5]
+          - [5000.0, 836.9]
+          - [6000.0, 1004.2]
+          - [7000.0, 1171.6]
+          - [8000.0, 1339.0]
+          - [9000.0, 1506.4]
+          - [10000.0, 1673.8]
+          - [11000.0, 1841.1]
+          - [12000.0, 2008.5]
+          - [13000.0, 2175.9]
+          - [14000.0, 2343.2]
+          - [15000.0, 2510.6]
+          - [16000.0, 2678.0]
+          - [17000.0, 2845.4]
+          - [18000.0, 3012.8]
+          - [19000.0, 3180.1]
+          - [20000.0, 3347.5]
+          - [21000.0, 3514.9]
+          - [22000.0, 3682.2]
+          - [23000.0, 3849.6]
+          - [24000.0, 4017.0]
+          - [25000.0, 4184.4]
 
   - name: French Ministry of Ecology (no mul. factor, not recommended)
     # Slugged version of the display name above
@@ -471,7 +492,15 @@ home:
           The emission factors will be regularly updated. In April 2021, the emission factors 
           from ADEME were updated. The average emission factors for short, medium, long flights 
           are considered. The same data are considered by the 
-          Labos1.5 organisation (https://labos1point5.org/ges-1point5).
+          Labos1.5 organisation (https://labos1point5.org/ges-1point5). In September 2023, 
+          the emission factors from DEFRA were updated. Similarly to the ADEME factors, 
+          short-hauls have a distance less than 1000 km, medium-hauls between 1000 and 3500 km, 
+          and long-hauls above 3500 km. The DEFRA emission factor for medius-hauls is the mean
+          of the factors for domestic flights and short-haul international flights. 
+          The DEFRA emission factor for long-hauls is the mean between long-haul flights (to/from UK) 
+          and international flights(to/from non-UK). The DEFRA 2023 data and ADEME 2021 
+          data are consistent with one another within uncertainties (from 10% to 70% for 
+          short and long flight emissions respectively).
 
 
       - title: How are the different methods built? 
@@ -504,7 +533,7 @@ home:
           (a 100-year time horizon was adopted for the Kyoto Protocol to the 
           United Nations Framework Convention on Climate Change). There is a debate 
           in the science community on how non-CO2 effects should be modelled. 
-          For instance, a RFI multiplier of 1.9–2 is used by DEFRA,
+          For instance, a RFI multiplier of 1.7 (update 2023) is used by DEFRA,
           and a multiplier of 2 is considered by myclimate and ADEME
           (see discussion in [Jungbluth, N. & Meili,
           C. Int J Life Cycle Assess (2019) 24: 404](https://doi.org/10.1007/s11367-018-1556-3).).
