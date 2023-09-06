@@ -143,6 +143,6 @@ class EmissionModel(BaseEmissionModel):
                  along Earth's great circles.
         """
         return great_circle(
-            (np.float(origin_latitude), np.float(origin_longitude)),
-            (np.float(destination_latitude), np.float(destination_longitude))
+            (np.float64(origin_latitude), np.float64(origin_longitude)),
+            (np.float64(destination_latitude), np.float64(destination_longitude))
         ).kilometers
