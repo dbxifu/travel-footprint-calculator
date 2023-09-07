@@ -41,6 +41,6 @@ services:
 # Create it first: docker network create webproxy
 networks:
     default:
-        external:
-            name: webproxy
+        name: webproxy
+        external: true
 
