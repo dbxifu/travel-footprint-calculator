@@ -18,35 +18,41 @@ Flask-WTF==0.14
 # Other
 itsdangerous==0.24
 cssmin==0.2.0
-jsmin==2.2.1
+jsmin==3.0.0
 pyyaml==5.1.2
 Markdown==3.1.1
-numpy==1.18.5
+#numpy==1.18.5
+numpy==1.25.2
 enum34==1.1.6
 geopy==1.23.0
 certifi==2019.11.28
 python-dotenv==0.10.3
 chardet==4.0.0
 
-# Force stable werkzeug
-# see https://gitlab.irap.omp.eu/carbon/travel-carbon-footprint.irap.omp.eu/issues/38
-# see https://github.com/pallets/werkzeug/issues/1714
-Werkzeug==0.16.1
-
 # Spreadsheet reading
 # Note that 0.24 is the most recent version still supporting python 2.7
-pandas==0.25.3
+#pandas==0.25.3
+pandas==2.1.0
 # Excel support for wisdom-impaired Microsoft users
 xlrd==1.2.0
 # ODS reading support is only available natively in pandas 0.25
 # This package only works with python 3.7
 # pandas_ods_reader==0.0.7
 
+# Force stable werkzeug
+# see https://gitlab.irap.omp.eu/carbon/travel-carbon-footprint.irap.omp.eu/issues/38
+# see https://github.com/pallets/werkzeug/issues/1714
+Werkzeug==0.16.1
+
 # Fix to keep flask 1.x
 # https://stackoverflow.com/questions/71718167/importerror-cannot-import-name-escape-from-jinja2
 jinja2<3.1.0
 
-# Testing
+# Fix compat with Flask-SQLAlchemy
+# https://stackoverflow.com/questions/75391653/importerror-cannot-import-name-association-proxy-from-sqlalchemy-ext-associa
+sqlalchemy<2.0
+
+# Testing Utilities
 pytest==3.0.5
 pytest-cov==2.4.0
 mccabe==0.3
