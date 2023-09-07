@@ -1,6 +1,7 @@
-from db_scaling_laws import *
 import numpy as np
 from geopy.distance import great_circle
+
+from db_scaling_laws import *
 
 
 # Sample function used by Didier in the prototype.
@@ -13,8 +14,8 @@ def db_get_co2eq_per_city_pairs(in_methods, lat_city1, long_city1, lat_city2,
                                 seat_category_non_economy,
                                 gcd_min_for_business,
                                 frac_flights_in_non_economy):
-    gcd = great_circle((np.float(lat_city1), np.float(long_city1)),
-                       (np.float(lat_city2), np.float(long_city2))).km
+    gcd = great_circle((np.float64(lat_city1), np.float64(long_city1)),
+                       (np.float64(lat_city2), np.float64(long_city2))).km
     round_trip_distance = gcd * coeff_connecting_flight * 2.
     verbose = True
     co2eq = []
