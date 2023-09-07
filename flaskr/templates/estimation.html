@@ -168,13 +168,14 @@
         {{ render_cities(estimation_output.cities) }}
     {% endif %}
 
-        <h3>🎙 As a Visioconference</h3>
+        <h3>🖵 As a Visioconference</h3>
         <div>
-            If the meeting/seminar was held online as a visioconference,
-            it would emit between
-            {{ "%.1f" | format(estimation_visio_min) }} kg CO<sub>2</sub><small>EQ</small>
-            and
-            {{ "%.1f" | format(estimation_visio_max) }} kg CO<sub>2</sub><small>EQ</small>.
+            If the meeting was held online as a visioconference
+            for <em>{{ "%d" | format(estimation_visio_duration_days) }}</em> days,
+            with {{ estimation_output.participants }} participants,
+            it would emit in total about
+            <strong>{{ "%.1f" | format(estimation_visio_total) }}</strong>&nbsp;kg&nbsp;CO<sub>2</sub><small>EQ</small>.
+            <a href="https://arxiv.org/pdf/2009.11344.pdf">(formula)</a>
         </div>
 
     </div>
@@ -231,7 +232,6 @@
 
 <hr>
 
-
 {#<div class="row">#}
 {#    <div class="col-md-6">#}
 {#        <h3>Raw Output <small>(YAML)</small></h3>#}
@@ -240,7 +240,6 @@
 {#        </pre>#}
 {#    </div>#}
 {#</div>#}
-
 
 <div>
     {{ content.estimation.footer | markdown | safe }}
@@ -259,6 +258,7 @@
 {% if not estimation.has_failed() %}
 
 {# Eventually, once we're done with plots, use flask's asset minifier perhaps? #}
+{# Note: jsmin is abandoned #}
 <script src="/static/js/vendor/d3.v6.js"></script>
 <script src="/static/js/vendor/d3-legend.js"></script>
 <script src="/static/js/vendor/d3-scale-chromatic.v1.min.js"></script>
@@ -396,7 +396,7 @@ jQuery(document).ready(function($){
     var width = Math.max(800, $(vizid).parent().width()) - margin.left - margin.right;
 
     var svg_tag = d3.select(vizid)
-      .append("svg")
+        .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom);
 
@@ -407,7 +407,7 @@ jQuery(document).ready(function($){
         .attr("fill", "#ffffff");
 
     var svg = svg_tag
-      .append("g")
+        .append("g")
         .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")");
 

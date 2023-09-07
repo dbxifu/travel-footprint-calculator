@@ -1,11 +1,15 @@
-import chardet
 import csv
-import geopy
-import pandas
 import re
-import sqlalchemy
 # from cStringIO import StringIO
 from copy import deepcopy
+from io import StringIO
+from os import unlink, getenv
+from os.path import join
+
+import chardet
+import geopy
+import pandas
+import sqlalchemy
 from flask import (
     Blueprint,
     Response,
@@ -17,9 +21,6 @@ from flask import (
     abort,
     send_from_directory,
 )
-from io import StringIO
-from os import unlink, getenv
-from os.path import join
 # from pandas.compat import StringIO as PandasStringIO
 from wtforms import validators
 from yaml import safe_dump as yaml_dump
@@ -507,7 +508,6 @@ def compute():  # process the queue of estimation requests
 
         extra_config = {
             'use_train_below_distance': estimation.use_train_below_km,
-            # 'use_train_below_distance': 300,
         }
 
         # PREPARE RESULT DICTIONARY THAT WILL BE STORED #######################
@@ -635,10 +635,8 @@ def compute():  # process the queue of estimation requests
                 'cities': cities_mean
             }
             _results['cities'] = cities_mean
-
             _results['total'] = total_foot  # DEPRECATED
             _results['footprint'] = total_foot
-
             _results['distance'] = total_dist
             _results['train_trips'] = total_train_trips
             _results['plane_trips'] = total_plane_trips
@@ -657,8 +655,9 @@ def compute():  # process the queue of estimation requests
                 _destinations=destinations,
                 _extra_config=extra_config,
             )
+            results['participants'] = 1
 
-        # SCENARIO B : At Least One Origin, One Destination ###################
+        # SCENARIO B : At Least One Origin, only One Destination ##############
         #
         # Same as A for now.
         #
@@ -669,6 +668,7 @@ def compute():  # process the queue of estimation requests
                 _destinations=origins,
                 _extra_config=extra_config,
             )
+            results['participants'] = len(origins)
 
         # SCENARIO C : At Least One Origin, At Least One Destination ##########
         #
@@ -705,6 +705,7 @@ def compute():  # process the queue of estimation requests
             result_cities = sorted(result_cities, key=lambda c: int(c['footprint']))
             results = {
                 'cities': result_cities,
+                'participants': len(origins),
             }
 
         # WRITE RESULTS INTO THE DATABASE #####################################
@@ -753,7 +754,7 @@ def consult_estimation(public_id, extension):
             .one()
     except sqlalchemy.orm.exc.NoResultFound:
         return abort(404)
-    except Exception as e:
+    except Exception as _e:
         # log? (or not)
         return abort(500)
 
@@ -771,7 +772,7 @@ def consult_estimation(public_id, extension):
         else:
             try:
                 estimation_output = estimation.get_output_dict()
-            except Exception as e:
+            except Exception as _e:
                 return abort(404)
 
             estimation_sum = 0
@@ -780,16 +781,95 @@ def consult_estimation(public_id, extension):
                     estimation_sum += city['footprint']
 
             # TODO
-            estimation_visio_min = 42
-            estimation_visio_max = 69
+            estimation_amount_of_participants = estimation_output['participants']
+
+            estimation_visio_participation_ratio = 0.8
+            estimation_visio_duration_days = 5.0  # day
+            estimation_visio_clients_hours_per_day = 5.5  # hour/day
+            estimation_visio_network_mbps = 1.2  # Mbps
+            estimation_visio_network_consumption = 0.06  # kWh/GB
+            estimation_visio_electricity_pollution = 0.24  # kg/kWh
+
+            estimation_visio_laptop_consumption = 30.0  # W
+            estimation_visio_server_consumption = 300.0  # W
+            estimation_visio_server_hours_per_day = 10.0  # hour/day
+
+            estimation_visio_network = (
+                estimation_visio_duration_days
+                *
+                estimation_visio_clients_hours_per_day
+                *
+                estimation_visio_participation_ratio
+                *
+                estimation_amount_of_participants
+                *
+                estimation_visio_network_mbps
+                *
+                3600.0  # s/h
+                *
+                (1.0 / 8.0)  # bytes/bit
+                *
+                0.001  # MB/GB
+                *
+                estimation_visio_network_consumption
+                *
+                estimation_visio_electricity_pollution
+            )  # kg CO2EQ
+
+            estimation_visio_laptops = (
+                estimation_visio_duration_days
+                *
+                estimation_visio_clients_hours_per_day
+                *
+                estimation_visio_participation_ratio
+                *
+                estimation_amount_of_participants
+                *
+                estimation_visio_laptop_consumption
+                *
+                0.001  # kW/W
+                *
+                estimation_visio_electricity_pollution
+            )  # kg CO2EQ
+
+            estimation_visio_server = (
+                estimation_visio_duration_days
+                *
+                estimation_visio_server_hours_per_day
+                *
+                estimation_visio_server_consumption
+                *
+                0.001  # kW/W
+                *
+                estimation_visio_electricity_pollution
+            )  # kg CO2EQ
 
             return render_template(
                 "estimation.html",
                 estimation=estimation,
                 estimation_output=estimation_output,
                 estimation_sum=estimation_sum,
-                estimation_visio_min=estimation_visio_min,
-                estimation_visio_max=estimation_visio_max,
+
+                estimation_amount_of_participants=estimation_amount_of_participants,
+                estimation_visio_participation_ratio=estimation_visio_participation_ratio,
+                estimation_visio_duration_days=estimation_visio_duration_days,
+                estimation_visio_clients_hours_per_day=estimation_visio_clients_hours_per_day,
+                estimation_visio_network_mbps=estimation_visio_network_mbps,
+                estimation_visio_network_consumption=estimation_visio_network_consumption,
+                estimation_visio_electricity_pollution=estimation_visio_electricity_pollution,
+                estimation_visio_laptop_consumption=estimation_visio_laptop_consumption,
+                estimation_visio_server_consumption=estimation_visio_server_consumption,
+                estimation_visio_server_hours_per_day=estimation_visio_server_hours_per_day,
+                estimation_visio_network=estimation_visio_network,
+                estimation_visio_laptops=estimation_visio_laptops,
+                estimation_visio_server=estimation_visio_server,
+                estimation_visio_total=(
+                    estimation_visio_network
+                    +
+                    estimation_visio_laptops
+                    +
+                    estimation_visio_server
+                ),
             )
 
     elif extension in ['yaml', 'yml']:
@@ -833,7 +913,6 @@ def consult_estimation(public_id, extension):
                 city['train_trips'],
             ])
 
-        # return si.getvalue().strip('\r\n')
         return Response(
             response=si.getvalue().strip('\r\n'),
             headers={
