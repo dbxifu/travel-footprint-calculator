@@ -502,11 +502,11 @@ home:
       - title: Updating the emission factors 
         content: |
           The emission factors will be regularly updated. In April 2021, the emission factors 
-          from ADEME were updated (a minor revision took place on september 2023, from (https://impactco2.fr/transport/avion)). 
+          from ADEME were updated (a minor revision took place on september 2023, from the [impact of CO2 web site] (https://impactco2.fr/transport/avion)). 
           The average emission factors for short, medium, long flights 
           are considered as asverages for planes of ~200 seats or more (for ADEME, 
-          larger emissions for lower capaacity planes). Very similar data are considered by the 
-          Labos1.5 organisation (https://labos1point5.org/ges-1point5). In September 2023, 
+          larger emissions for lower capacity planes). Very similar data are considered by the 
+          [Labos1.5 organisation] (https://labos1point5.org/ges-1point5). In September 2023, 
           the emission factors from DEFRA were updated. Similarly to the ADEME factors, 
           short-hauls have a distance less than 1000 km, medium-hauls between 1000 and 3500 km, 
           and long-hauls above 3500 km. The DEFRA emission factor for medius-hauls is the mean
@@ -691,7 +691,7 @@ home:
           first developed to compute the travel footprint 
           associated with the development of the X-ray Integral 
           Field Unit to fly on board the Athena space observatory 
-          in the early 2030s. The rather large number derived, 
+          in the mid 2030s. The rather large number derived, 
           typically one hundred ton of carbon dioxide per bi-annual consortium meeting,
           imposed concrete actions to reduce the footprint 
           of the project, by re-considering the number of 
@@ -914,7 +914,7 @@ estimation:
       Duplicates in the destinations are removed.
   footer: |
     ### See also
-    - [EPA's Equivalencies Calculator](https://www.epa.gov/sites/production/files/widgets/ghg-calc/calculator.html#emissions)
+    - [EPA's Equivalencies Calculator](https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator)
 
     ### Contact Us
     - <icon envelope> [didier.barret@irap.omp.eu](mailto:didier.barret@irap.omp.eu)
