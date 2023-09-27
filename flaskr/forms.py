@@ -240,7 +240,7 @@ for model in models:
         'use_model_%s' % model.slug,
         BooleanField(
             label=model.name,
-            # description=model.short_description,
+            description=model.description,
             default=model.selected,
             validators=[
                 validators.Optional(),

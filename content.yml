@@ -32,7 +32,8 @@ shared_config:
 
 # Aka. Laws
 models:
-  - name: Atmosfair (mul. factor=3 for altitude > 9 km)
+  - name: Atmosfair (mul. factor=3 for altitude > 9 km, not recommended)
+    description: This model's methodology lacks transparency and is therefore not recommended.
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -46,6 +47,8 @@ models:
     color: "#9933ff"
     # Whether this model is selected by default in the list.
     selected: false
+    # Is the methodology of this model dubious ?  Lacking transparency ?
+    dubious: true
     # The configuration that will be fed to the model.
     # May be anything, really.  Go bonkers!
     config:
@@ -71,6 +74,7 @@ models:
           - [ 25000.0, 7094.270252762378 ]
 
   - name: ADEME (2021, with trail impacts)
+    description: ""
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -84,6 +88,8 @@ models:
     color: "#33ff99"
     # Whether this model is selected by default in the list.
     selected: true
+    # Is the methodology of this model dubious ?  Lacking transparency ?
+    dubious: false
     # The configuration that will be fed to the model.
     # May be anything, really.  Go bonkers!
     config:
@@ -134,6 +140,7 @@ models:
 
  
   - name: MYCLIMATE (mul. factor=2)
+    description: ""
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -147,6 +154,8 @@ models:
     color: "#99ff33"
     # Whether this model is selected by default in the list.
     selected: true
+    # Is the methodology of this model dubious ?  Lacking transparency ?
+    dubious: false
     # The configuration that will be fed to the model.
     # May be anything, really.  Go bonkers!
     config:
@@ -176,6 +185,7 @@ models:
 
 
   - name: DEFRA (2023, with radiative forcing)
+    description: ""
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -189,6 +199,8 @@ models:
     color: "#3399ff"
     # Whether this model is selected by default in the list.
     selected: true
+    # Is the methodology of this model dubious ?  Lacking transparency ?
+    dubious: false
     # The configuration that will be fed to the model.
     # May be anything, really.  Go bonkers!
     config:
@@ -238,6 +250,7 @@ models:
           - [25000.0, 4184.4]
 
   - name: ADEME (2021, without the trail impacts, not recommended)
+    description: "Prefer using the model with the trail impacts."
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -251,6 +264,8 @@ models:
     color: "#333333"
     # Whether this model is selected by default in the list.
     selected: false
+    # Is the methodology of this model dubious ?  Lacking transparency ?
+    dubious: false
     # The configuration that will be fed to the model.
     # May be anything, really.  Go bonkers!
     config:
@@ -300,6 +315,7 @@ models:
           - [25000.0, 2080.0]
 
   - name: KLM data best fit (no mul. factor, not recommended)
+    description: This model's methodology lacks transparency and is therefore not recommended.
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -339,6 +355,7 @@ models:
           - [25000.0, 1522.7313138757793 ]
 
   - name: ICAO data best fit (no mul. factor, not recommended)
+    description: This model's methodology lacks transparency and is therefore not recommended.
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
     # In other words, MUST match ^[a-z]([a-z0-9-]*[a-z0-9])?$ eg: icao-with-rfi
@@ -352,6 +369,8 @@ models:
     color: "#ff9933"
     # Whether this model is selected by default in the list.
     selected: false
+    # Is the methodology of this model dubious ?  Lacking transparency ?
+    dubious: true
     # The configuration that will be fed to the model.
     # May be anything, really.  Go bonkers!
     config:

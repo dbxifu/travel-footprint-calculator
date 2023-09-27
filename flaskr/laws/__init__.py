@@ -3,6 +3,7 @@
 class BaseEmissionModel():
     def __init__(self, config, shared_config):  # Constructor
         self.name = config.name
+        self.description = config.description
         self.slug = config.slug
         self.color = config.color
         self.selected = config.selected
