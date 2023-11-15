@@ -775,13 +775,12 @@ def consult_estimation(public_id, extension):
             except Exception as _e:
                 return abort(404)
 
+            estimation_amount_of_participants = 0
             estimation_sum = 0
             if estimation_output:
                 for city in estimation_output['cities']:
                     estimation_sum += city['footprint']
-
-            # TODO
-            estimation_amount_of_participants = estimation_output['participants']
+                estimation_amount_of_participants = estimation_output['participants']
 
             estimation_visio_participation_ratio = 0.8
             estimation_visio_duration_days = 5.0  # day
