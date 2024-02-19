@@ -1,10 +1,9 @@
-import shelve
-import ssl
-import time
-
 import certifi
 import geopy
 import geopy.geocoders
+import shelve
+import ssl
+import time
 
 from flaskr.core import get_path
 
@@ -27,7 +26,8 @@ class CachedGeocoder:
             self.cache[address] = self.geocoder.geocode(
                 query=address,
                 timeout=5,
-                language='en_US',  # urgh
+                # language='en_US',
+                language='en',  # urgh
                 addressdetails=True,  # only works with Nominatim /!.
             )
         return self.cache[address]
