@@ -521,7 +521,7 @@ home:
       - title: Updating the emission factors 
         content: |
           The emission factors will be regularly updated. In April 2021, the emission factors 
-          from ADEME were updated (a minor revision took place on september 2023, from the [impact of CO<sub>2</sub>  web site](https://impactco2.fr/transport/avion)). 
+          from ADEME were updated (a minor revision took place on september 2023, from the [impact of CO<sub>2</sub>  web site](https://impactco2.fr/transport)). 
           The average emission factors for short, medium, long flights 
           are considered as asverages for planes of ~200 seats or more (for ADEME, 
           larger emissions for lower capacity planes). Very similar data are considered by the 
