@@ -838,6 +838,8 @@ estimate:
           value: 700
         - label: 1000 km (~ 13h by train)
           value: 1000
+        - label: Only use train
+          value: 1000000000
 
     origin_addresses:
       label: Origin Cities
