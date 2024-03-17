@@ -857,7 +857,7 @@ estimate:
         One address per line, in the form `City, Country`.
         Make sure your addresses are correctly spelled.
       placeholder: |
-        Washington, United States of America
+        Madrid, Spain
     origin_addresses_file:
       label: Origin Cities
       description: |
