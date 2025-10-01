@@ -73,7 +73,7 @@ models:
           - [ 19999.9, 5606.129335551792 ]
           - [ 25000.0, 7094.270252762378 ]
 
-  - name: ADEME (GES1.5, 2025, with trail impacts)
+  - name: "ADEME (GES1.5, 2025, with trail impacts)"
     description: ""
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
@@ -136,9 +136,9 @@ models:
           - [22000.0, 3344.0]
           - [23000.0, 3496.0]
           - [24000.0, 3648.0]
-          - [25000.0, 3800.0
- 
-  - name: MYCLIMATE (mul. factor=2)
+          - [25000.0, 3800.0]
+
+  - name: "MYCLIMATE (mul. factor=2)"
     description: ""
     # Slugged version of the display name above
     # Only lowercase alphanumeric, starting with a letter, using - as liaison
