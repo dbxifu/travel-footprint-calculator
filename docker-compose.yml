@@ -2,7 +2,9 @@
 # You *could* use this for development.  Don't.
 # You *could* use this for production.  Don't.
 
-version: '2.0'
+# We do not need to specify a version number here anymore
+#version: '2.0'
+
 services:
 
     # The actual Flask application
@@ -18,7 +20,7 @@ services:
 
         environment:
             STATIC_PATH: /app/flaskr/static
-            # Config for server's nginx-reverse-proxy container
+            # Config for server's nginx-reverse-proxy container, ignore this
             LETSENCRYPT_HOST: travel-footprint-calculator.apps.goutenoir.com
             LETSENCRYPT_EMAIL: antoine@goutenoir.com
             VIRTUAL_HOST: travel-footprint-calculator.apps.goutenoir.com
@@ -26,6 +28,7 @@ services:
             ###################################################
 
     # The CRON triggers the computation runs every three minutes.
+    # FIXME: use another docker image, this one appends multiple times to the CRON schedule file
     travel_footprint_calculator_mahcron:
         container_name: travel_footprint_calculator_mahcron
         image: jsonfry/curl-cron
