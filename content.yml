@@ -436,7 +436,7 @@ home:
     # Using a pipe (|) allows you to set multiline content
     # Careful, indentation matters.
     description: |
-      Travel footpint calculator provided by Didier Barret
+      Travel footprint calculator provided by Didier Barret
       <br>
       <icon globe>
       CNRS,
