@@ -45,7 +45,9 @@ nosetests.xml
 __pycache__
 database.db
 database_*.db
+database_*.db.*
 geocache.db
+geocache.db.*
 
 # Sphinx
 docs/_build
