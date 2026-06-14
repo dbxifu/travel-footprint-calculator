@@ -51,6 +51,7 @@
             </pre>
         </td>
     </tr>
+{% if estimation.use_train_below_km < 1000000000 %}
     <tr>
         <td style="padding-right: 30px;">
             Models
@@ -62,6 +63,25 @@
             </pre>
         </td>
     </tr>
+{% endif %}
+{% if estimation.use_train_below_km > 0 %}
+    <tr>
+        <td style="padding-right: 30px;">
+            Train
+        </td>
+        <td>
+            <pre>
+
+{% if estimation.use_train_below_km < 1000000000 %}
+Below {{ estimation.use_train_below_km }} km
+{% else %}
+Using train only
+{% endif %}
+at 23 g CO2-eq/km
+            </pre>
+        </td>
+    </tr>
+{% endif %}
     </tbody>
 </table>
 {% endblock %}

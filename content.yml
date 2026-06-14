@@ -838,6 +838,7 @@ estimate:
         - label: 1000 km (~ 13h by train)
           value: 1000
         - label: Only use train
+          # Careful if you change this value, it is hardcoded in some other places
           value: 1000000000
 
     origin_addresses:
