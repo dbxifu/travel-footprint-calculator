@@ -1,0 +1,29 @@
+# In here we exclude files from the docker context when building our image.
+# It's easier to do this and use "ADD . ." instead of allowlisting in COPY.
+
+# Our various databases (they'll be volumes, we don't want them in the image)
+/database*.db
+/database*.db.*
+
+/geocache.db
+/geocache.db.*
+
+# Our runtime files, if any (from local dev, mostly)
+/var/log/*
+/var/runs/*
+
+# Local dev virtualenv
+/venv*
+
+# Docker
+/Dockerfile
+/docker-compose.yml
+/docker-compose.*.yml
+/compose.yml
+/compose.*.yml
+
+# OS
+.directory
+
+# IDE
+.idea
