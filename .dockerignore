@@ -9,8 +9,7 @@
 /geocache.db.*
 
 # Our runtime files, if any (from local dev, mostly)
-/var/log/*
-/var/runs/*
+/var/*
 
 # Local dev virtualenv
 /venv*
