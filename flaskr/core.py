@@ -9,7 +9,7 @@ from .content import get_path, content
 # Using this as misc bag
 
 
-hit_count_path = get_path("VISITS")
+hit_count_path = get_path("var/VISITS")
 
 
 def generate_unique_id():
