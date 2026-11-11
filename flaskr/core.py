@@ -1,11 +1,9 @@
-import abc
 import importlib
-from os.path import isfile, join, abspath, dirname
 from datetime import datetime
+from os.path import isfile
 from uuid import uuid4
 
 from .content import get_path, content
-
 
 # This is not really a core. Look in __init__.py
 # Using this as misc bag
@@ -63,9 +61,3 @@ def increment_hit_counter():
 
     return hit_count
 
-
-# # unused
-# class FootprintEstimatorDriver(abc.ABCMeta):
-#     @abc.abstractmethod
-#     def get_travel_footprint(self, from_location, to_location):  # TBD
-#         pass
