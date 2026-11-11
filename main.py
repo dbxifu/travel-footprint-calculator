@@ -2,10 +2,9 @@ import os
 import sys
 
 PROJECT_ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+sys.path.insert(0, PROJECT_ROOT_DIR)
 
-sys.path.append(PROJECT_ROOT_DIR)
-
-# Only now can we import locals
+# Only now can we import from local modules
 from flaskr import create_app
 
 app = create_app('flaskr.settings.ProductionConfig')
