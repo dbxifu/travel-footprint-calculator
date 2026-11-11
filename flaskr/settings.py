@@ -15,7 +15,8 @@ class Config(object):
 class ProductionConfig(Config):
     ENV = 'production'
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///../database_prod.db'
+    # Note: path is relative to the flaskr/ directory
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///../var/db/database_prod.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     CACHE_TYPE = 'simple'
@@ -26,7 +27,8 @@ class DevelopmentConfig(Config):
     DEBUG = True
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///../database.db'
+    # Note: path is relative to the flaskr/ directory
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///../var/db/database.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     CACHE_TYPE = 'null'
