@@ -1,6 +1,6 @@
 services:
   app:
-    container_name: travel_footprint_calculator
+    container_name: travel_footprint_calculator-app
     ports: !override []
     environment:
       # Config "example" for server's nginx-reverse-proxy container

@@ -39,7 +39,6 @@ ENV SMTP_PASSWORD_FILE=""
 # Create user and its group.
 RUN groupadd -g "$CRON_USER_GID" $CRON_USER
 RUN useradd -m -u "$CRON_USER_UID" -g "$CRON_USER_GID" -d "$CRON_USER_HOME" $CRON_USER
-RUN ln -f -s /usr/bin/msmtp /usr/sbin/sendmail
 
 COPY --chmod=500 ./entrypoint.sh /entrypoint.sh
 

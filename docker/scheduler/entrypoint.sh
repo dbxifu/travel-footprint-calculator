@@ -118,6 +118,9 @@ if [ "$RUN_CHOWN" = "yes" ] ; then
     chown -R "$CRON_USER_UID:$CRON_USER_GID" "$CRON_USER_HOME"
 fi
 
+# Clean up, or we might end up with duplicates (unless we --force-recreate)
+rm -f /tmp/crontab
+
 if [ -n "$CRON_MAILTO" ] ; then
     echo MAILTO=${CRON_MAILTO} > /tmp/crontab
 fi
@@ -128,4 +131,13 @@ cat "$CRON_SPEC_FILE" >> /tmp/crontab
 crontab -u "$CRON_USER" /tmp/crontab
 
 source_script_folder "$CRON_ENTRYPOINT_PRE_DIR"
+
+# Usage: crond [-fbS] [-l N] [-d N] [-L LOGFILE] [-c DIR]
+#        -f      Foreground
+#        -b      Background (default)
+#        -S      Log to syslog (default)
+#        -l N    Set log level. Most verbose 0, default 8
+#        -d N    Set log level, log to stderr
+#        -L FILE Log to FILE
+#        -c DIR  Cron dir. Default:/var/spool/cron/crontabs
 crond -f -d "$CRON_VERBOSITY" -l "$CRON_VERBOSITY"
