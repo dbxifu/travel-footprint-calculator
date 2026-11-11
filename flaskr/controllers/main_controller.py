@@ -24,7 +24,7 @@ from flask import (
 from wtforms import validators
 from yaml import safe_dump as yaml_dump
 
-from flaskr.content import content, BASE_URL
+from flaskr.content import content, BASE_URL, get_path, GEOCACHE_PATH
 from flaskr.core import (
     get_emission_models,
     increment_hit_counter,
@@ -299,9 +299,7 @@ def invalidate():
 @main.route("/invalidate-geocache")
 @main.route("/invalidate-geocache.html")
 def invalidate_geocache():
-    geocache = 'geocache.db'
-
-    unlink(geocache)
+    unlink(get_path(GEOCACHE_PATH))
 
     return "Geocache invalidated."
 
@@ -333,8 +331,6 @@ def compute():  # process the queue of estimation requests
             _estimation.warnings = _warning_message
         else:
             _estimation.warnings += _warning_message
-            # _estimation.warnings = u"%s\n%s" % \
-            #                        (_estimation.warnings, _warning_message)
         db.session.commit()
 
     estimation = None
@@ -512,7 +508,6 @@ def compute():  # process the queue of estimation requests
 
         # UTILITY PRIVATE FUNCTION(S) #########################################
 
-        # _locations
         def _get_location_key(_location):
             return "%s, %s" % (
                 _get_city_key(_location),
@@ -751,7 +746,6 @@ def consult_estimation(public_id, extension):
     except sqlalchemy.orm.exc.NoResultFound:
         return abort(404)
     except Exception as _e:
-        # log? (or not)
         return abort(500)
 
     # allowed_formats = ['html']

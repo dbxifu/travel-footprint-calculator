@@ -6,6 +6,7 @@ import certifi
 import geopy
 import geopy.geocoders
 
+from flaskr.content import GEOCACHE_PATH
 from flaskr.core import get_path
 
 ssl_ctx = ssl.create_default_context(cafile=certifi.where())
@@ -14,7 +15,7 @@ geopy.geocoders.options.default_ssl_context = ssl_ctx
 
 class CachedGeocoder:
 
-    def __init__(self, source="Nominatim", geocache="geocache.db"):
+    def __init__(self, source="Nominatim", geocache=GEOCACHE_PATH):
         self.geocoder = getattr(geopy.geocoders, source)(
             scheme='https',
             user_agent='TravelCarbonFootprintCalculator',

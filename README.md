@@ -1,7 +1,6 @@
 # Travel Carbon Footprint Calculator
 
-- https://travel-footprint-calculator.apps.goutenoir.com  (private demo)
-- http://travel-footprint-calculator.irap.omp.eu  (official)
+http://travel-footprint-calculator.irap.omp.eu
 
 
 ## Overview
@@ -15,7 +14,15 @@
 
 ## Installation (docker)
 
-    docker compose up --detach
+1. Create your environment config file:
+
+       cp .env.dist .env
+
+2. Configure your `.env`.
+
+3. Run docker:
+
+       docker compose up --detach
 
 
 ## Installation

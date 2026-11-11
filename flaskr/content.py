@@ -10,6 +10,9 @@ if BASE_URL is None:
 
 PROJECT_DIRECTORY = abspath(dirname(dirname(__file__)))
 
+# Relative to the project directory
+GEOCACHE_PATH = 'var/db/geocache.db'
+
 
 def get_path(relative_path):
     """
@@ -22,6 +25,8 @@ with open(get_path('content.yml'), 'r') as content_file:
     content_dict = yaml_safe_load(content_file.read())
 
 
+# Python2 hacky conversion from dict to object
+# Our YAML file is only writable by devs (and Didier), so it's OK.
 class Struct(object):
     def __new__(cls, data):
         if isinstance(data, dict):
