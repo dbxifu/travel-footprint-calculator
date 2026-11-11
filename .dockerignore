@@ -15,6 +15,7 @@
 /venv*
 
 # Docker
+/docker
 /docker/*
 /Dockerfile
 /docker-compose.yml
