@@ -2,47 +2,28 @@
 # You *could* use this for development.  Don't.
 # You *could* use this for production.  Don't.
 
-# We do not need to specify a version number here anymore
-#version: '2.0'
-
 services:
 
-    # The actual Flask application
-    travel_footprint_calculator:
-        container_name: travel_footprint_calculator
-        restart: unless-stopped
-        build: .
-        volumes:
-        - .:/app
+  # The actual Flask application
+  app:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - "./var:/app/var"
+    hostname: travel_footprint_calculator_app
+    ports:
+      - "80:80"
+    environment:
+      STATIC_PATH: /app/flaskr/static
+      #ENV: production
 
-        #ports:
-        #- "5000:5000"
-
-        environment:
-            STATIC_PATH: /app/flaskr/static
-            # Config for server's nginx-reverse-proxy container, ignore this
-            LETSENCRYPT_HOST: travel-footprint-calculator.apps.goutenoir.com
-            LETSENCRYPT_EMAIL: antoine@goutenoir.com
-            VIRTUAL_HOST: travel-footprint-calculator.apps.goutenoir.com
-            VIRTUAL_PORT: 80
-            ###################################################
-
-    # The CRON triggers the computation runs every three minutes.
-    # FIXME: use another docker image, this one appends multiple times to the CRON schedule file
-    travel_footprint_calculator_mahcron:
-        container_name: travel_footprint_calculator_mahcron
-        image: jsonfry/curl-cron
-        restart: unless-stopped
-        environment:
-            # https is important because all you'll get from http is a 301 ;)
-            # We can skip the CA renewal shenanigans with --insecure since we're not leaving the server
-            OPTIONS: "--insecure https://travel-footprint-calculator.apps.goutenoir.com/compute"
-            CRON_SCHEDULE: "*/3 * * * *"
-
-
-# Create it first: docker network create webproxy
-networks:
-    default:
-        name: webproxy
-        external: true
-
+  # The CRON triggers the computation runs every three minutes.
+  # FIXME: use another docker image, this one appends multiple times to the CRON schedule file
+  scheduler:
+    image: jsonfry/curl-cron
+    restart: unless-stopped
+    environment:
+      OPTIONS: "http://travel_footprint_calculator_app/compute"
+      CRON_SCHEDULE: "*/3 * * * *"
