@@ -4,6 +4,9 @@ VISITS
 
 # Project
 var/runs/*
+var/log/*
+var/db/*
+var/*
 
 # Python
 *.pyc
