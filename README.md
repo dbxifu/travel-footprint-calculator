@@ -13,6 +13,11 @@
 - Controllers are in `flaskr/controllers`.
 
 
+## Installation (docker)
+
+    docker compose up --detach
+
+
 ## Installation
 
 Works on Python `2.7` up to version `1.2`.

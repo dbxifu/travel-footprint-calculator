@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from yaml import safe_load as yaml_load
 
-from flaskr.content import get_path, base_url
+from flaskr.content import get_path, BASE_URL
 from flaskr.core import generate_unique_id, models
 
 # These are not the emission "models" in the scientific meaning of the word.
@@ -76,7 +76,7 @@ class Estimation(db.Model):
     @property
     def link(self):
         return u"%s/estimation/%s.html" \
-               % (base_url, self.public_id)
+               % (BASE_URL, self.public_id)
 
     @property
     def author_name(self):

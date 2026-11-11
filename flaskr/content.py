@@ -1,10 +1,12 @@
 from collections import namedtuple
+from os import getenv
 from os.path import abspath, dirname, join
 
 from yaml import safe_load as yaml_safe_load
 
-# Move this to ENV, perhaps
-base_url = "https://travel-footprint-calculator.irap.omp.eu"
+BASE_URL = getenv('BASE_URL')
+if BASE_URL is None:
+    raise EnvironmentError("BASE_URL is not set")
 
 PROJECT_DIRECTORY = abspath(dirname(dirname(__file__)))
 

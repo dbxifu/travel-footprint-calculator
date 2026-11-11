@@ -7,9 +7,9 @@ from markdown import markdown
 # Load config from .env ; do this before importing local libs (and flask)
 # 1. Write into OS environment -- if this fails you forgot to create .env file
 load_dotenv(find_dotenv(raise_error_if_not_found=True), override=True)
-# 2. Load it as well to inject it later into app.config
+# 2. Grab it in a var as well, to inject it later into app.config
 local_env = dotenv_values(find_dotenv())
-# 3. Cast integers to integers
+# 3. Cast integers to integers (oh boy)
 for key in local_env.keys():
     try:
         local_env[key] = int(local_env[key])

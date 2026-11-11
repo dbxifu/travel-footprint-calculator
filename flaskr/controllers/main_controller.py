@@ -1,6 +1,5 @@
 import csv
 import re
-# from cStringIO import StringIO
 from copy import deepcopy
 from io import StringIO
 from os import unlink, getenv
@@ -25,7 +24,7 @@ from flask import (
 from wtforms import validators
 from yaml import safe_dump as yaml_dump
 
-from flaskr.content import content, base_url
+from flaskr.content import content, BASE_URL
 from flaskr.core import (
     get_emission_models,
     increment_hit_counter,
@@ -36,9 +35,6 @@ from flaskr.geocoder import CachedGeocoder
 from flaskr.models import db, Estimation, StatusEnum, ScenarioEnum
 
 main = Blueprint('main', __name__)
-
-
-#OUT_ENCODING = 'utf-8'
 
 
 # -----------------------------------------------------------------------------
@@ -270,7 +266,7 @@ def estimate():  # register new estimation request, more accurately
             subject="[TCFM] New Estimation Request: %s" % estimation.public_id,
             message=render_template(
                 'email/run_requested.html',
-                base_url=base_url,
+                base_url=BASE_URL,
                 estimation=estimation,
             )
         )
@@ -327,7 +323,7 @@ def compute():  # process the queue of estimation requests
             subject="[TCFM] Run failed: %s" % _estimation.public_id,
             message=render_template(
                 'email/run_failed.html',
-                base_url=base_url,
+                base_url=BASE_URL,
                 estimation=_estimation,
             )
         )
@@ -724,7 +720,7 @@ def compute():  # process the queue of estimation requests
             subject="[TCFM] Run completed: %s" % estimation.public_id,
             message=render_template(
                 'email/run_completed.html',
-                base_url=base_url,
+                base_url=BASE_URL,
                 estimation=estimation,
             )
         )
