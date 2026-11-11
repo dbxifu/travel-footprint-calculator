@@ -1,5 +1,20 @@
-FROM tiangolo/uwsgi-nginx-flask:python3.9
+# Python + UWSGI + NGINX
+# https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/docker-images/python3.12.dockerfile
+# based on
+# https://github.com/tiangolo/uwsgi-nginx-docker/blob/master/docker-images/python3.12.dockerfile
+# based on python-3.12-trixie
+#
+# Notes:
+# - +150Mio in RAM
+# - Sort of abandoned
+# - UWSGI is as well
+# - Tips on the tiangolo repo <3
+# - Consider using a hardened debian instead of this
+# - Consider using multiple services instead
+#
+FROM tiangolo/uwsgi-nginx-flask:python3.12
 
+# Unsure why this was in here…
 #ENV FLASK_APP "flaskr"
 #ENV FLASK_ENV "production"
 #ENV FLASK_RUN_EXTRA_FILES "content.yml"

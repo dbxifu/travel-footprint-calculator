@@ -15,24 +15,30 @@ Flask-Session-Captcha==1.2.0
 Flask-SQLAlchemy==2.5.1
 Flask-WTF==0.14
 
-# Other
-itsdangerous==0.24
+# Reading our config files
+Markdown==3.11.3
+python-dotenv==0.10.3
+pyyaml==5.1.2
+
+# Minifying for the web
 cssmin==0.2.0
 jsmin==3.0.0
-pyyaml==5.1.2
-Markdown==3.1.1
-#numpy==1.18.5
-numpy==1.25.2
+
+# Crunching numbers efficiently
+# https://numpy.org/news/#releases
+# We're on the last leg of v1.  v2 is out, bump if you dare
+numpy==1.26.4
+
+# Other
+itsdangerous==0.24
 enum34==1.1.6
 geopy==1.23.0
 certifi==2019.11.28
-python-dotenv==0.10.3
 chardet==4.0.0
 
 # Spreadsheet reading
-# Note that 0.24 is the most recent version still supporting python 2.7
-#pandas==0.25.3
-pandas==2.1.0
+pandas==2.3.3
+#pandas==3.1.1  # requires numpy 2 — maybe later
 # Excel support for wisdom-impaired Microsoft users
 xlrd==1.2.0
 # ODS reading support is only available natively in pandas 0.25
