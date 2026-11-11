@@ -6,10 +6,10 @@ services:
 
   # The actual Flask application
   app:
-    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile
+    restart: unless-stopped
     volumes:
       - "./var:/app/var"
     hostname: travel_footprint_calculator_app
@@ -19,11 +19,25 @@ services:
       STATIC_PATH: /app/flaskr/static
       #ENV: production
 
-  # The CRON triggers the computation runs every three minutes.
-  # FIXME: use another docker image, this one appends multiple times to the CRON schedule file
+  # This CRON scheduler triggers the computation runs every three minutes.
+  # Submitting a new estimation triggers a run too ; but only if javascript is enabled.
+  # Somehow, we don't have a proper job queue and async messaging in this project.
+  # This scheduler is actually only useful for the users without js, for now.
   scheduler:
-    image: jsonfry/curl-cron
+    build:
+      context: docker/scheduler
+      dockerfile: Dockerfile
     restart: unless-stopped
+    configs:
+      - source: crontab-config
+        target: /crontab
     environment:
-      OPTIONS: "http://travel_footprint_calculator_app/compute"
-      CRON_SCHEDULE: "*/3 * * * *"
+      # Verbosity goes from 0 (verbose) to 8 (almost silent) at the time of this writing
+      # Don't ask me why they inverted the values ; probably a "log level" legacy.
+      CRON_VERBOSITY: ${CRON_VERBOSITY:-8}
+
+configs:
+  crontab-config:
+    content: |
+      # min  hour  day  month  weekday  command
+        */3     *    *      *        *  wget --no-verbose --output-file /dev/null http://travel_footprint_calculator_app/compute
